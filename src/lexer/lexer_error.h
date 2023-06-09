@@ -2,6 +2,7 @@
 #define azura_error_h
 
 #include <iostream>
+#include <sstream>
 
 #include "helper.h"
 
@@ -37,7 +38,18 @@ static void error_lexer(Scanner* scanner, const char* message) {
               << "\033[0m] Lexical Error!" << "\n";
 
     // Print the error message
-    std::cout << message << "\n\n";
+    std::cout << message;
+}
+
+void errorFunction(const std::string& inputString, Color color, const std::string& additionalMessage) {
+    std::ostringstream oss;
+    oss << inputString << colorize(color) << additionalMessage << colorize(RESET) << std::endl;
+    std::string message = oss.str();
+
+    // Call error_lexer function with the appropriate arguments
+    error_lexer(&scanner, message.c_str());
+
+    if(is_at_end()) exit(1);
 }
 
 #endif

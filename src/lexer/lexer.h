@@ -1,5 +1,5 @@
-#ifndef azura_lexer_h
-#define azura_lexer_h
+#ifndef azua_lexer_h
+#define azua_lexer_h
 
 #include <cstdio>
 #include <cstring>
@@ -17,14 +17,8 @@ static Token string() {
         advance();
     }
 
-    if (is_at_end()) { 
-        std::ostringstream oss;
-        oss << "Unterminated string! " << colorize(RED) << scanner.start << colorize(RESET) << std::endl;
-        std::string message = oss.str();
-
-        error_lexer(&scanner, message.c_str());
-        return error_token("Unterminated string.");
-    }
+    if (is_at_end()) 
+        errorFunction("Unterminated string.", RED, scanner.start);
     advance(); // The closing ".
     return make_token(STRING);
 }
@@ -61,11 +55,7 @@ Token scan_token() {
         case '"': return string();
     }
 
-    std::ostringstream oss;
-    oss << "Unexpected character: " << colorize(RED) << c << colorize(RESET) << std::endl;
-    std::string message = oss.str();
-
-    error_lexer(&scanner, message.c_str());
+    errorFunction("Unexpected character: ", RED, std::string(1, c));
     return make_token(ERROR_TOKEN);
 }
 

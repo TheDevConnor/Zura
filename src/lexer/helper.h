@@ -2,6 +2,7 @@
 #define azura_helper_h
 
 #include <cctype>
+#include <cstring>
 #include <string>
 #include <unordered_map>
 
@@ -47,6 +48,7 @@ static char advance() {
     scanner.column++;
     return scanner.current[-1];
 }
+
 static char peek_next()     { return scanner.current[1]; }
 static char peek()          { return *scanner.current;   }
 
@@ -66,16 +68,6 @@ static Token make_token(TokenKind kind) {
     token.start = scanner.start;
     token.column = scanner.column;
     token.length = (int)(scanner.current - scanner.start);
-    return token;
-}
-
-static Token error_token(const char* message) {
-    Token token;
-    token.kind = ERROR_TOKEN;
-    token.start = message;
-    token.length = (int)strlen(message);
-    token.line = scanner.line;
-    token.column = scanner.column;
     return token;
 }
 
