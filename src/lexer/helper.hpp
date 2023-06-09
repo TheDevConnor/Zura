@@ -124,7 +124,7 @@ static TokenKind identifier_type() {
                 }
             }
             break;
-        case 'i':
+        case 'i': 
             if (scanner.current - scanner.start > 1) {
                 switch (scanner.start[1]) {
                     case 'f': return IF;
