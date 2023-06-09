@@ -41,7 +41,7 @@ static void error_lexer(Scanner* scanner, const char* message) {
     std::cout << message;
 }
 
-void errorFunction(const std::string& inputString, Color color, const std::string& additionalMessage) {
+void error_function(const std::string& inputString, Color color, const std::string& additionalMessage) {
     std::ostringstream oss;
     oss << inputString << colorize(color) << additionalMessage << colorize(RESET) << std::endl;
     std::string message = oss.str();

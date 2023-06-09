@@ -18,7 +18,7 @@ static Token string() {
     }
 
     if (is_at_end()) 
-        errorFunction("Unterminated string.", RED, scanner.start);
+        error_function("Unterminated string.", RED, scanner.start);
     advance(); // The closing ".
     return make_token(STRING);
 }
@@ -55,7 +55,7 @@ Token scan_token() {
         case '"': return string();
     }
 
-    errorFunction("Unexpected character: ", RED, std::string(1, c));
+    error_function("Unexpected character: ", RED, std::string(1, c));
     return make_token(ERROR_TOKEN);
 }
 
