@@ -93,15 +93,11 @@ static void skip_whitespace() {
                 scanner.column = 0;
                 advance();
                 break;
-            case '#':
-                while (peek() != '\n' && !is_at_end()) advance();
-                break;
             case '/':
                 if (peek_next() == '/') while (peek() != '\n' && !is_at_end()) advance();
                 else return;
                 break;
-            default:
-                return;
+            default: return;
         }
     }
 }
