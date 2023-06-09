@@ -96,6 +96,10 @@ static void skip_whitespace() {
             case '#':
                 while (peek() != '\n' && !is_at_end()) advance();
                 break;
+            case '/':
+                if (peek_next() == '/') while (peek() != '\n' && !is_at_end()) advance();
+                else return;
+                break;
             default:
                 return;
         }
