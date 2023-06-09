@@ -54,7 +54,7 @@ Token scan_token() {
         case '<': return make_token(match('=') ? LESS_EQUAL    : LESS);
         case '"': return string();
     }
-    
+
     error_function("Unexpected character: ", RED, std::string(1, c));
     return make_token(ERROR_TOKEN);
 }
