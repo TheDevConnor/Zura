@@ -10,4 +10,6 @@ for (i = 0; i <10) {
     i = i + 1;
 }
 
-have x := "Hello World;
+have x := [1, 2, 3, 4, 5];
+
+have x := "Hello There!;

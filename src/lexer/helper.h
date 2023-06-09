@@ -145,27 +145,4 @@ static Token number() {
     return make_token(NUMBER);
 }
 
-static Token string() {
-    while ((peek() != '"') && !is_at_end()) {
-        if (peek() == '\n') scanner.line++;
-        advance();
-    }
-
-    if (is_at_end()) { 
-        char* message;
-        std::ostringstream oss;
-        oss << "Unterminated string! " << colorize(RED) << scanner.start << colorize(RESET) << std::endl;
-        std::string str = oss.str();
-        message = new char[str.size() + 1];
-        std::copy(str.begin(), str.end(), message);
-        message[str.size()] = '\0';
-
-        error_lexer(&scanner, message);
-        delete[] message;
-        return error_token("Unterminated string.");
-    }
-    advance(); // The closing ".
-    return make_token(STRING);
-}
-
 #endif

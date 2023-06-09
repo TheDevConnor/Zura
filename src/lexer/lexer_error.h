@@ -30,7 +30,7 @@ const char* colorize(Color color) {
     }
 }
 
-static void error_lexer(Scanner* scanner, char* message) {
+static void error_lexer(Scanner* scanner, const char* message) {
     // [line: 1, column: 1] Error: Unexpected character.
     std::cout << "\n[" << colorize(YELLOW) <<"line: " << colorize(CYAN) << scanner->line
               << "\033[0m] [" << colorize(YELLOW) <<"pos: "  << colorize(CYAN) << scanner->column - 1 
