@@ -162,7 +162,7 @@ static Token number() {
     if (peek() == '.' && is_digit(peek_next())) {
         advance(); // Consume the "."
 
-        while (is_digit(peek())) advance;
+        while (is_digit(peek())) advance();
     }
     return make_token(NUMBER);
 }
