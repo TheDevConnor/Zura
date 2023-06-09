@@ -1,0 +1,14 @@
+have x := 45;
+info x;
+
+have y := x + 45;
+info y;
+
+have i;
+for (i = 0; i <10) {
+    info i;
+    i = i + 1;
+}
+
+
+[]
