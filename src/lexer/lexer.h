@@ -4,9 +4,34 @@
 #include <cstdio>
 #include <cstring>
 #include <cctype>
+#include <iostream>
+#include <sstream>
 
-#include "tokens.hpp"
-#include "helper.hpp"
+#include "tokens.h"
+#include "helper.h"
+#include "lexer_error.h"
+
+static Token string() {
+    while ((peek() != '"') && !is_at_end()) {
+        if (peek() == '\n') scanner.line++;
+        advance();
+    }
+
+    if (is_at_end()) { 
+        char* message;
+        std::ostringstream oss;
+        oss << "Unterminated string! " << colorize(RED) << scanner.start << colorize(RESET) << std::endl;
+        std::string str = oss.str();
+        message = new char[str.size() + 1];
+        std::copy(str.begin(), str.end(), message);
+        message[str.size()] = '\0';
+
+        error_lexer(&scanner, message);
+        delete[] message;
+    }
+    advance(); // The closing ".
+    return make_token(STRING);
+}
 
 Token scan_token() {
     skip_whitespace();
@@ -39,7 +64,15 @@ Token scan_token() {
         case '<': return make_token(match('=') ? LESS_EQUAL    : LESS);
         case '"': return string();
     }
-    std::fprintf(stderr, "Unexpected character at line -> ");
+    char* message;
+    std::ostringstream oss;
+    oss << "Unexpected character: " << colorize(RED) << c << colorize(RESET) << std::endl;
+    std::string str = oss.str();
+    message = new char[str.size() + 1];
+    std::copy(str.begin(), str.end(), message);
+    message[str.size()] = '\0';
+
+    error_lexer(&scanner, message);
     return make_token(ERROR_TOKEN);
 }
 

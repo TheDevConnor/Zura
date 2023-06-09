@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "tokens.hpp"
+#include "tokens.h"
 
 typedef struct {
     const char* start;
@@ -143,17 +143,6 @@ static Token number() {
         while (is_digit(peek())) advance();
     }
     return make_token(NUMBER);
-}
-
-static Token string() {
-    while ((peek() != '"') && !is_at_end()) {
-        if (peek() == '\n') scanner.line++;
-        advance();
-    }
-
-    if (is_at_end()) return error_token("Unterminated string.");
-    advance(); // The closing ".
-    return make_token(STRING);
 }
 
 #endif

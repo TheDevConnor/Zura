@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "lexer/lexer.hpp"
+#include "lexer/lexer.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     Token token;
     do {
         token = scan_token();
-        printf("%d %d %.*s \n", token.line, token.column, token.length, token.start);
+        // printf("%d %d %.*s \n", token.line, token.column, token.length, token.start);
     } while (token.kind != EOF_TOKEN);
 
     return 0;
