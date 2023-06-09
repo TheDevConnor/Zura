@@ -1,8 +1,9 @@
 #ifndef azura_helper_h
 #define azura_helper_h
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <string>
+#include <unordered_map>
 
 #include "tokens.hpp"
 
@@ -78,14 +79,6 @@ static Token error_token(const char* message) {
     return token;
 }
 
-static TokenKind check_keyword(int start, int length, const char* rest, TokenKind kind) {
-    if (scanner.current - scanner.start == start + length &&
-        memcmp(scanner.start + start, rest, length) == 0) {
-            return kind;
-        }
-    return IDENTIFIER;
-}
-
 static void skip_whitespace() {
     for(;;) {
         char c = peek();
@@ -109,44 +102,29 @@ static void skip_whitespace() {
     }
 }
 
-// TODO: MAKE THIS NICER!
 static TokenKind identifier_type() {
-    switch (scanner.start[0]) {
-        case 'a': return check_keyword(1, 2, "nd", AND);
-        case 'c': return check_keyword(1, 4, "lass", CLASS);
-        case 'e': return check_keyword(1, 3, "lse", ELSE);
-        case 'f':
-            if (scanner.current - scanner.start > 1) {
-                switch (scanner.start[1]) {
-                    case 'a': return check_keyword(2, 3, "lse", FALSE);
-                    case 'o': return check_keyword(2, 1, "r", FOR);
-                    case 'u': return check_keyword(2, 1, "n", FUNC);
-                }
-            }
-            break;
-        case 'i': 
-            if (scanner.current - scanner.start > 1) {
-                switch (scanner.start[1]) {
-                    case 'f': return IF;
-                    case 'n': return check_keyword(2, 2, "fo", INFO);
-                }
-            }
-            break;
-        case 'n': return check_keyword(1, 2, "il", NIL);
-        case 'o': return check_keyword(1, 1, "r", OR);
-        case 'r': return check_keyword(1, 5, "eturn", RETURN);
-        case 's': return check_keyword(1, 4, "uper", SUPER);
-        case 't':
-            if (scanner.current - scanner.start > 1) {
-                switch (scanner.start[1]) {
-                    case 'h': return check_keyword(2, 2, "is", THIS);
-                    case 'r': return check_keyword(2, 2, "ue", TRUE);
-                }
-            }
-            break;
-        case 'h': return check_keyword(1, 3, "ave", HAVE);
-        case 'w': return check_keyword(1, 4, "hile", WHILE);
-    }
+    std::unordered_map<std::string, TokenKind> keywordMap = {
+        {"and", AND},
+        {"class", CLASS},
+        {"else", ELSE},
+        {"false", FALSE},
+        {"for", FOR},
+        {"fun", FUNC},
+        {"if", IF},
+        {"info", INFO},
+        {"nil", NIL},
+        {"or", OR},
+        {"return", RETURN},
+        {"super", SUPER},
+        {"this", THIS},
+        {"true", TRUE},
+        {"have", HAVE},
+        {"while", WHILE}
+    };
+
+    std::string keyword(scanner.start, scanner.current);
+    auto it = keywordMap.find(keyword);
+    if(it != keywordMap.end()) return it->second;
     return IDENTIFIER;
 }
 
