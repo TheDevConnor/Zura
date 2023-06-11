@@ -1,7 +1,6 @@
 #ifndef azura_error_h
 #define azura_error_h
 
-#include <iostream>
 #include <sstream>
 
 #include "helper.h"
@@ -42,9 +41,9 @@ static void error_lexer(Scanner* scanner, const char* message) {
 }
 
 void error_function(const std::string& inputString, Color color, const std::string& additionalMessage) {
-    std::ostringstream oss;
-    oss << inputString << colorize(color) << additionalMessage << colorize(RESET) << std::endl;
-    std::string message = oss.str();
+    std::stringstream ss;
+    ss << inputString << colorize(color) << additionalMessage << colorize(RESET) << std::endl;
+    std::string message = ss.str();
 
     // Call error_lexer function with the appropriate arguments
     error_lexer(&scanner, message.c_str());

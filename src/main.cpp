@@ -1,16 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include "lexer/lexer.h"
+#include "lexer_stress_test.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <file>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <file> [stress]" << std::endl;
         return 1;
     }
 
     std::string filename = argv[1];
     std::ifstream file(filename);
-    if(!file) {
+    if (!file) {
         std::cerr << "Could not open file " << filename << std::endl;
         return 1;
     }
@@ -19,11 +20,16 @@ int main(int argc, char* argv[]) {
 
     init_tokenizer(source.c_str());
 
-    Token token;
-    do {
-        token = scan_token();
-        // printf("%d %d %.*s \n", token.line, token.column, token.length, token.start);
-    } while (token.kind != EOF_TOKEN);
+    if (argc > 2 && std::string(argv[2]) == "stress") {
+        std::cout << "Running lexer stress test..." << std::endl;
+        runStressTest(generateStressTestInput(2000000));
+    } else {
+        Token token;
+        do {
+            token = scan_token();
+            // printf("%d %d %.*s \n", token.line, token.column, token.length, token.start);
+        } while (token.kind != EOF_TOKEN);
+    }
 
     return 0;
 }

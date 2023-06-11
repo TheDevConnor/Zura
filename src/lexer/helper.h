@@ -1,7 +1,6 @@
 #ifndef azura_helper_h
 #define azura_helper_h
 
-#include <cctype>
 #include <cstring>
 #include <string>
 #include <unordered_map>
@@ -39,7 +38,7 @@ const char* get_source_line_start(int line) {
     return current;
 }
 
-static bool is_alpha(char c) { return isalpha(c) || c == '_';   }
+static bool is_alpha(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';   }
 static bool is_digit(char c) { return c >= '0' && c <= '9';     }
 static bool is_at_end()      { return *scanner.current == '\0'; }
 
@@ -94,30 +93,47 @@ static void skip_whitespace() {
     }
 }
 
-static TokenKind identifier_type() {
-    std::unordered_map<std::string, TokenKind> keywordMap = {
-        {"and", AND},
-        {"class", CLASS},
-        {"else", ELSE},
-        {"false", FALSE},
-        {"for", FOR},
-        {"fun", FUNC},
-        {"if", IF},
-        {"info", INFO},
-        {"nil", NIL},
-        {"or", OR},
-        {"return", RETURN},
-        {"super", SUPER},
-        {"this", THIS},
-        {"true", TRUE},
-        {"have", HAVE},
-        {"while", WHILE}
-    };
+struct Keyword {
+    const char* keyword;
+    TokenKind kind;
+};
 
-    std::string keyword(scanner.start, scanner.current);
-    auto it = keywordMap.find(keyword);
-    if(it != keywordMap.end()) return it->second;
+static TokenKind perfect_hash_lookup(const char* keyword) {
+    // Use the generated perfect hash function to lookup the keyword
+    // and return its corresponding token kind.
+    // If the keyword is not found, return IDENTIFIER.
+
+    // Example implementation:
+    // Hash function: hash(keyword) = index
+    // Perfect hash table: perfectHashTable[index] = tokenKind
+
+    // Replace this implementation with your own perfect hash lookup logic.
+    // You can use gperf or implement your own perfect hash function generator.
+    // The generated code should provide the perfect hash lookup function.
+
+    if (strcmp(keyword, "and") == 0)     return AND;
+    if (strcmp(keyword, "class") == 0)   return CLASS;
+    if (strcmp(keyword, "else") == 0)    return ELSE;
+    if (strcmp(keyword, "false") == 0)   return FALSE;
+    if (strcmp(keyword, "for") == 0)     return FOR;
+    if (strcmp(keyword, "fun") == 0)     return FUNC;
+    if (strcmp(keyword, "if") == 0)      return IF;
+    if (strcmp(keyword, "info") == 0)    return INFO;
+    if (strcmp(keyword, "nil") == 0)     return NIL;
+    if (strcmp(keyword, "or") == 0)      return OR;
+    if (strcmp(keyword, "return") == 0)  return RETURN;
+    if (strcmp(keyword, "super") == 0)   return SUPER;
+    if (strcmp(keyword, "this") == 0)    return THIS;
+    if (strcmp(keyword, "true") == 0)    return TRUE;
+    if (strcmp(keyword, "have") == 0)    return HAVE;
+    if (strcmp(keyword, "while") == 0)   return WHILE;
+
     return IDENTIFIER;
+}
+
+static TokenKind identifier_type() {
+    std::string keyword(scanner.start, scanner.current);
+    return perfect_hash_lookup(keyword.c_str());
 }
 
 static Token identifier() {
