@@ -6,10 +6,29 @@
 #include <cctype>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include "tokens.h"
 #include "helper.h"
 #include "lexer_error.h"
+
+std::vector<Token> tokenize(std::string source) {
+    scanner.source = source.c_str();
+    scanner.start = source.c_str();
+    scanner.current = source.c_str();
+    scanner.line = 1;
+    scanner.column = 1;
+
+    std::vector<Token> tokens;
+
+    while (!is_at_end()) {
+        scanner.start = scanner.current;
+        tokens.push_back(scan_token());
+    }
+
+    tokens.push_back(make_token(EOF_TOKEN));
+    return tokens;
+}
 
 static Token string() {
     while ((peek() != '"') && !is_at_end()) {
@@ -39,6 +58,8 @@ Token scan_token() {
         case '(': return make_token(LEFT_PAREN);
         case '{': return make_token(LEFT_BRACE);
         case '}': return make_token(RIGHT_BRACE);
+        case '[': return make_token(LEFT_BRACKET);
+        case ']': return make_token(RIGHT_BRACKET);
         case ';': return make_token(SEMICOLON);
         case ',': return make_token(COMMA);
         case '.': return make_token(DOT);

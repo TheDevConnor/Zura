@@ -2,7 +2,7 @@
 #include <fstream>
 #include <chrono>
 
-#include "lexer/lexer.h"
+#include "parser/lexer/lexer.h"
 
 std::string generateStressTestInput(int numTokens) {
     std::string input;
@@ -50,10 +50,6 @@ void runStressTest(const std::string& input) {
         if (token.kind == EOF_TOKEN) {
             break;
         }
-
-        // Print the scanned token for verification
-        // std::cout << "Token kind: " << token.kind << ", Length: " << token.length
-        //           << ", Start: " << std::string(token.start, token.length) << std::endl;
     }
 
     // Stop the timer and calculate the elapsed time

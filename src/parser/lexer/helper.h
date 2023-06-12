@@ -8,6 +8,7 @@
 #include "tokens.h"
 
 typedef struct {
+    const char* source;
     const char* start;
     const char* current;
     int line;
@@ -17,6 +18,7 @@ typedef struct {
 Scanner scanner;
 
 void init_tokenizer(const char* source) {
+    scanner.source = source;
     scanner.start = source;
     scanner.current = source;
     scanner.line = 1;

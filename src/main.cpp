@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include "lexer/lexer.h"
+#include <sstream>
+
+#include "parser/lexer/lexer.h"
 #include "lexer_stress_test.h"
 
 int main(int argc, char* argv[]) {
@@ -27,7 +29,8 @@ int main(int argc, char* argv[]) {
         Token token;
         do {
             token = scan_token();
-            // printf("%d %d %.*s \n", token.line, token.column, token.length, token.start);
+            if (token.kind < 10) std::cout << " " << token.kind << " | " << std::string(token.start, token.length) << std::endl;
+            else std::cout << token.kind << " | " << std::string(token.start, token.length) << std::endl;
         } while (token.kind != EOF_TOKEN);
     }
 
