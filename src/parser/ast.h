@@ -2,7 +2,10 @@ enum NodeKind {
     // Statements
     block, if_stmt, while_stmt, for_stmt, 
     return_stmt, break_stmt, continue_stmt, 
-    expr_stmt, decl_stmt, empty_stmt,
+    expr_stmt, empty_stmt,
+
+    // Declarations
+    var_decl, func_decl, class_decl,
 
     // Expressions
     binary_expr, unary_expr, postfix_expr, 
