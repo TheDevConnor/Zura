@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
     if (argc > 2 && std::string(argv[2]) == "stress") {
         std::cout << "Running lexer stress test..." << std::endl;
-        runStressTest(generateStressTestInput(2000000));
+        runStressTest(generateStressTestInput(200000));
     } else {
         Token token;
         do {

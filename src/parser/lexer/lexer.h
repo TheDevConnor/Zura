@@ -1,34 +1,10 @@
 #ifndef azua_lexer_h
 #define azua_lexer_h
 
-#include <cstdio>
-#include <cstring>
-#include <cctype>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
+#include "lexer_error.h"
+#include "import.h"
 #include "tokens.h"
 #include "helper.h"
-#include "lexer_error.h"
-
-std::vector<Token> tokenize(std::string source) {
-    scanner.source = source.c_str();
-    scanner.start = source.c_str();
-    scanner.current = source.c_str();
-    scanner.line = 1;
-    scanner.column = 1;
-
-    std::vector<Token> tokens;
-
-    while (!is_at_end()) {
-        scanner.start = scanner.current;
-        tokens.push_back(scan_token());
-    }
-
-    tokens.push_back(make_token(EOF_TOKEN));
-    return tokens;
-}
 
 static Token string() {
     while ((peek() != '"') && !is_at_end()) {

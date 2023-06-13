@@ -1,8 +1,7 @@
 #ifndef azura_error_h
 #define azura_error_h
 
-#include <sstream>
-
+#include "import.h"
 #include "helper.h"
 
 typedef enum {

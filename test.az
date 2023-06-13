@@ -1,7 +1,7 @@
 have x := 45;
 info x;
 
-have y := x + 45;
+have y := x + 45; `
 info y;
 
 have t := [1, 2, 3, 4]; ~

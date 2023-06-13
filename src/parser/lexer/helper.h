@@ -1,10 +1,7 @@
 #ifndef azura_helper_h
 #define azura_helper_h
 
-#include <cstring>
-#include <string>
-#include <unordered_map>
-
+#include "import.h"
 #include "tokens.h"
 
 typedef struct {
@@ -113,22 +110,22 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     // You can use gperf or implement your own perfect hash function generator.
     // The generated code should provide the perfect hash lookup function.
 
-    if (strcmp(keyword, "and") == 0)     return AND;
-    if (strcmp(keyword, "class") == 0)   return CLASS;
-    if (strcmp(keyword, "else") == 0)    return ELSE;
-    if (strcmp(keyword, "false") == 0)   return FALSE;
-    if (strcmp(keyword, "for") == 0)     return FOR;
-    if (strcmp(keyword, "fun") == 0)     return FUNC;
-    if (strcmp(keyword, "if") == 0)      return IF;
-    if (strcmp(keyword, "info") == 0)    return INFO;
-    if (strcmp(keyword, "nil") == 0)     return NIL;
-    if (strcmp(keyword, "or") == 0)      return OR;
-    if (strcmp(keyword, "return") == 0)  return RETURN;
-    if (strcmp(keyword, "super") == 0)   return SUPER;
-    if (strcmp(keyword, "this") == 0)    return THIS;
-    if (strcmp(keyword, "true") == 0)    return TRUE;
-    if (strcmp(keyword, "have") == 0)    return HAVE;
-    if (strcmp(keyword, "while") == 0)   return WHILE;
+    if (strcmp(keyword, "and")     == 0)     return AND;
+    if (strcmp(keyword, "class")   == 0)   return CLASS;
+    if (strcmp(keyword, "else")    == 0)    return ELSE;
+    if (strcmp(keyword, "false")   == 0)   return FALSE;
+    if (strcmp(keyword, "for")     == 0)     return FOR;
+    if (strcmp(keyword, "fun")     == 0)     return FUNC;
+    if (strcmp(keyword, "if")      == 0)      return IF;
+    if (strcmp(keyword, "info")    == 0)    return INFO;
+    if (strcmp(keyword, "nil")     == 0)     return NIL;
+    if (strcmp(keyword, "or")      == 0)      return OR;
+    if (strcmp(keyword, "return")  == 0)  return RETURN;
+    if (strcmp(keyword, "super")   == 0)   return SUPER;
+    if (strcmp(keyword, "this")    == 0)    return THIS;
+    if (strcmp(keyword, "true")    == 0)    return TRUE;
+    if (strcmp(keyword, "have")    == 0)    return HAVE;
+    if (strcmp(keyword, "while")   == 0)   return WHILE;
 
     return IDENTIFIER;
 }
