@@ -2,7 +2,7 @@
 #include <fstream>
 #include <chrono>
 
-#include "parser/lexer/lexer.h"
+#include "../parser/lexer/lexer.h"
 
 std::string generateStressTestInput(int numTokens) {
     std::string input;

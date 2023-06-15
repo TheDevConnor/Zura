@@ -1,8 +1,8 @@
 #ifndef azua_lexer_h
 #define azua_lexer_h
 
-#include "lexer_error.h"
-#include "import.h"
+#include "../helper/lexer_error.h"
+#include "../helper/import.h"
 #include "tokens.h"
 #include "helper.h"
 

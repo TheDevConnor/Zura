@@ -2,7 +2,7 @@
 #define azura_error_h
 
 #include "import.h"
-#include "helper.h"
+#include "../lexer/helper.h"
 
 typedef enum {
     RED,

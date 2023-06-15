@@ -3,7 +3,7 @@ CXXFLAGS := -O2 -std=c++11 -Wall -Wextra
 
 BIN_PATH := bin
 OBJ_PATH := obj
-SRC_PATH := src
+SRC_PATH := src/parser
 
 TARGET := $(BIN_PATH)/main
 
@@ -16,10 +16,9 @@ endif
 
 PWD := $(shell echo %cd%)
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*)
 
 all:
 	$(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
-
 clean:
 	$(RM) $(TARGET)

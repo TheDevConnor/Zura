@@ -1,9 +1,9 @@
 #ifndef azura_error_h
 #define azura_error_h
 
-#include "../lexer/import.h"
 #include "../lexer/tokens.h"
 #include "parser_struct.h"
+#include "import.h"
 
 Parser parser;
 

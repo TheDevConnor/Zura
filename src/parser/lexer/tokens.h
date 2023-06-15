@@ -1,5 +1,5 @@
-#ifndef azura_tokens_h
-#define azura_tokens_h
+#ifndef azura_tokens_h__
+#define azura_tokens_h__
 
 typedef enum {
     // Single-character Tokens!

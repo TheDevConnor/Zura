@@ -1,7 +1,7 @@
 #ifndef azura_helper_h
 #define azura_helper_h
 
-#include "import.h"
+#include "../helper/import.h"
 #include "tokens.h"
 
 typedef struct {

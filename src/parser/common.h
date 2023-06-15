@@ -1,5 +1,9 @@
-#ifndef azura_parser_common_h__
-#define azura_parser_common_h__
+#ifndef azura_common_h__
+#define azura_common_h__
+
+#include <stdint.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #define UINT8_COUNT (UINT8_MAX + 1)
 
