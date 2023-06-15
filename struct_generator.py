@@ -1,6 +1,6 @@
 import os
 
-print("|─ src/")
+print("├─ src/")
 def print_folder_structure(folder_path, indent=''):
     files = os.listdir(folder_path)
     # files.sort()  # Sort files alphabetically
