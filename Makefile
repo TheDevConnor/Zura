@@ -2,23 +2,23 @@ CXX := g++
 CXXFLAGS := -O2 -std=c++11 -Wall -Wextra
 
 BIN_PATH := bin
-OBJ_PATH := obj
-SRC_PATH := src/parser
+SRC_PATH := src
+SRC_PARSER_PATH := src/parser
+DEBUG_PATH := src/debug
 
-TARGET := $(BIN_PATH)/main
+TARGET := $(BIN_PATH)
 
 RM := rm
 
 ifeq ($(OS),Windows_NT)
 	TARGET := $(BIN_PATH)\azura.exe
-	RM := del /f
 endif
 
 PWD := $(shell echo %cd%)
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*)
+SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*)
+
+MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 
 all:
-	$(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
-clean:
-	$(RM) $(TARGET)
+	$(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)

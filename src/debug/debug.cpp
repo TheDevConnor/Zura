@@ -2,8 +2,8 @@
 #include <iomanip>
 
 #include "../parser/chunk.h"
+#include "../parser/value.h"
 #include "debug.h"
-#include "value.h"
 
 void disassemble_chunk(Chunk* chunk, const char* name) {
     std::cout << " == " << name << " ==" << std::endl;

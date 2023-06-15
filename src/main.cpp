@@ -2,8 +2,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "debug.h"
-#include "chunk.h"
+#include "debug/debug.h"
+#include "parser/chunk.h"
 
 int main() {
     Chunk chunk;
