@@ -1,7 +1,7 @@
 #ifndef AZUA_VALUE_H
 #define AZUA_VALUE_H
 
-#include "memory.h"
+#include "../memory/memory.h"
 
 typedef double Value;
 

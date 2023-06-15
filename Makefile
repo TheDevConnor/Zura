@@ -5,6 +5,7 @@ BIN_PATH := bin
 SRC_PATH := src
 SRC_PARSER_PATH := src/parser
 DEBUG_PATH := src/debug
+MEMORY_PATH := src/memory
 
 TARGET := $(BIN_PATH)
 
@@ -16,7 +17,7 @@ endif
 
 PWD := $(shell echo %cd%)
 
-SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*)
+SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 

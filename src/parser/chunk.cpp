@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "chunk.h"
-#include "memory.h"
+#include "../memory/memory.h"
 
 void init_chunk(Chunk* chunk) {
     chunk->lines = nullptr;
