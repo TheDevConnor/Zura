@@ -21,5 +21,4 @@ SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*
 MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 
 all:
-	# This was a bitch to fix
 	$(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
