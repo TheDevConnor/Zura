@@ -27,7 +27,6 @@ all: build_progress
 build_progress:
 	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
 
-.PHONY: clean
 clean:
 	@echo Cleaning...
 	@$(RM) $(BIN_PATH)\*.exe
