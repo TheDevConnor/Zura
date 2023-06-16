@@ -13,6 +13,7 @@ RM := rm
 
 ifeq ($(OS),Windows_NT)
 	TARGET := $(BIN_PATH)\azura.exe
+	RM := del /q
 endif
 
 PWD := $(shell echo %cd%)
@@ -21,5 +22,13 @@ SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*
 
 MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 
-all:
-	$(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+all: build_progress
+
+build_progress:
+	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+
+.PHONY: clean
+clean:
+	@echo Cleaning...
+	@$(RM) $(BIN_PATH)\*.exe
+	@echo Clean complete!
