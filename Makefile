@@ -16,8 +16,6 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q
 endif
 
-PWD := $(shell echo %cd%)
-
 SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
@@ -25,9 +23,8 @@ MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 all: build_progress
 
 build_progress:
-	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
-
-clean:
 	@echo Cleaning...
 	@$(RM) $(BIN_PATH)\*.exe
 	@echo Clean complete!
+
+	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)

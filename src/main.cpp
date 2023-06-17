@@ -1,11 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 #include "debug/debug.h"
 #include "parser/chunk.h"
+#include "flags.h"
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    flags(argc, argv);
+
     Chunk chunk;
     init_chunk(&chunk);
 

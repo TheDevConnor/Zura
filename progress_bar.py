@@ -15,7 +15,7 @@ def run_build_command(command):
 
 # Run the build command
 build_command = ' '.join(sys.argv[1:])  # Get build command from command line arguments
-print("Running build command:", build_command)
+print("Building with command: " + build_command)
 
 # Start a separate thread to run the build command
 build_thread = Thread(target=run_build_command, args=(build_command,))
@@ -25,12 +25,12 @@ build_thread.start()
 progress = 0
 while build_thread.is_alive():
     progress += 1
-    print_progress_bar(progress, 60, prefix='Progress:', suffix='Complete', length=30)
+    print_progress_bar(progress, 60, prefix='Progress:', suffix='Complete', length=50)
     time.sleep(1)
 
 # Wait for the build thread to complete
 build_thread.join()
 
 # Print final progress bar at 100%
-print_progress_bar(60, 60, prefix='Progress:', suffix='Complete', length=30)
+print_progress_bar(60, 60, prefix='Progress:', suffix='Complete', length=50)
 print("\nBuild complete!")
