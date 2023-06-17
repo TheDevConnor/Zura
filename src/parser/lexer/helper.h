@@ -1,5 +1,5 @@
-#ifndef azura_helper_h
-#define azura_helper_h
+#ifndef AZURA_LEXER_HELPER_H
+#define AZURA_LEXER_HELPER_H
 
 #include "../helper/import.h"
 #include "tokens.h"
@@ -152,4 +152,4 @@ static Token number() {
     return make_token(NUMBER);
 }
 
-#endif
+#endif // AZURA_LEXER_HELPER_H

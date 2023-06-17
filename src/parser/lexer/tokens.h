@@ -1,5 +1,5 @@
-#ifndef azura_tokens_h__
-#define azura_tokens_h__
+#ifndef AZURA_TOKENS_H
+#define AZURA_TOKENS_H
 
 typedef enum {
     // Single-character Tokens!
@@ -8,7 +8,7 @@ typedef enum {
     LEFT_BRACKET, RIGHT_BRACKET, // [ ]
     COMMA, DOT, MINUS, PLUS, // , . - +
     SEMICOLON, SLASH, STAR,  // ; / *
-    HASHTAG, COLON,          // # :
+    HASHTAG, COLON, MODULO,  // # : %
 
     // One or two character tokens!
     BANG, BANG_EQUAL,        // ! !=
@@ -41,4 +41,4 @@ void init_tokenizer(const char* source);
 const char* get_source_line_start(int line);
 Token scan_token();
 
-#endif
+#endif // AZURA_TOKENS_H

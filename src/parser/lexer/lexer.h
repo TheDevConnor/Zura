@@ -1,5 +1,5 @@
-#ifndef azua_lexer_h
-#define azua_lexer_h
+#ifndef AZURA_LEXER_H
+#define AZURA_LEXER_H
 
 #include "../helper/lexer_error.h"
 #include "../helper/import.h"
@@ -42,6 +42,7 @@ Token scan_token() {
         case '+': return make_token(PLUS);
         case '/': return make_token(SLASH);
         case '*': return make_token(STAR);
+        case '%': return make_token(MODULO);
         case '#': return make_token(HASHTAG);
         case '-': return make_token(match('>') ? INHERITANCE   : MINUS);
         case '!': return make_token(match('=') ? BANG_EQUAL    : BANG);
@@ -56,4 +57,4 @@ Token scan_token() {
     return make_token(ERROR_TOKEN);
 }
 
-#endif
+#endif // AZURA_LEXER_H

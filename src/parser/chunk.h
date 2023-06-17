@@ -6,6 +6,14 @@
 
 enum OpCode {
     OP_CONSTANT,
+    // Binary operations
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
+    OP_MODULO,
+    // Unary operations
+    OP_NEGATE,
     OP_RETURN,
 };
 
