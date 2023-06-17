@@ -59,12 +59,13 @@ static bool match(char expected) {
     return true;
 }
 
-static Token make_token(TokenKind kind) {
+static Token make_token(TokenKind kind, const std::string& lexeme = "") {
     Token token;
     token.kind = kind;
     token.line = scanner.line;
     token.start = scanner.start;
     token.column = scanner.column;
+    token.lexeme = lexeme;
     token.length = static_cast<int>(scanner.current - scanner.start);
     return token;
 }

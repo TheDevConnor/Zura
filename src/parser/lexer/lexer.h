@@ -7,15 +7,33 @@
 #include "helper.h"
 
 static Token string() {
-    while ((peek() != '"') && !is_at_end()) {
+    std::string lexeme = "";
+    TokenKind type = STRING;
+    for(;;) {
+        if (peek() == '"') break;
+        if (is_at_end()) error_function("Unterminated string.", RED, scanner.start);
         if (peek() == '\n') scanner.line++;
+        if (peek() == '$') {
+            if (peek_next() == '{') {
+                advance(); // advance past the '$'
+                advance(); // advance past the '{'
+
+                while (peek() != '}') {
+                    if (is_at_end()) error_function("Missing '}' at the end: ", RED, scanner.start);
+                    if (peek() == '\n') scanner.line++;
+                    lexeme += peek();
+                    advance();
+                }
+                advance(); // advance past the '}'
+                type = STRING_INTERPOLATION;
+            }
+            else error_function("missing a '{' after '$': ", RED, scanner.start);
+        }
+        lexeme += peek();
         advance();
     }
-
-    if (is_at_end()) 
-        error_function("Unterminated string.", RED, scanner.start);
-    advance(); // The closing ".
-    return make_token(STRING);
+    advance(); // advance past the closing '"'
+    return make_token(type, lexeme);
 }
 
 Token scan_token() {
@@ -44,7 +62,6 @@ Token scan_token() {
         case '*': return make_token(STAR);
         case '%': return make_token(MODULO);
         case '#': return make_token(HASHTAG);
-        case '$': return make_token(match('{') ? STRING_INTERPOLATION : DOLLAR);
         case '-': return make_token(match('>') ? INHERITANCE   : MINUS);
         case '!': return make_token(match('=') ? BANG_EQUAL    : BANG);
         case '=': return make_token(match('=') ? EQUAL_EQUAL   : EQUAL);

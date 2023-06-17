@@ -1,1 +1,2 @@
-info "Hello World Connor ! \\n ";
+have age := 20;
+info "Hello Connor age off: ${age}!";
