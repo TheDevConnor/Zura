@@ -1,4 +1,8 @@
 # Azura Lang
+<!-- Add in an image of the mascote -->
+<p align="center">
+  <img src="images/azura_mascote_trimmed.png" alt="Azura Lang Mascote" width="200" height="200">
+</p>
 
 Azura Lang is a high-level programming language designed to be expressive, versatile, and easy to use. It offers dynamic typing with strong type inference, allowing developers to write code without explicitly specifying types. Azura Lang supports multiple paradigms, including procedural and object-oriented programming.
 
