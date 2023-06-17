@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cstring>
 
 #include "debug/debug.h"
 #include "parser/chunk.h"

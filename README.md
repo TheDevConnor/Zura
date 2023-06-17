@@ -12,6 +12,7 @@ Here is the Discord server! [Azura Lang Discord](https://discord.gg/JvExQpGuXM)
 - **Dynamic Typing**: Variables in Azura Lang are dynamically typed, meaning their types are determined at runtime.
 - **Strong Type Inference**: Azura Lang employs strong type inference, automatically deducing the types of variables based on their assigned values.
 - **File Extension**: Azura Lang code files have the extension `.az`.
+- **Syntax Highlighting**: Here is the link for the syntax highlighting! [Azura Lang Syntax Highlighting](https://github.com/TheDevConnor/Azura-Syntax-Highlighting)
 
 ## Installation
 
