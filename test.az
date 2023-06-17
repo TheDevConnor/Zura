@@ -1,2 +1,0 @@
-have age := 20;
-info "Hello Connor age off: ${age}!";

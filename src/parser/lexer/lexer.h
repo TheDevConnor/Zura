@@ -1,6 +1,8 @@
 #ifndef AZURA_LEXER_H
 #define AZURA_LEXER_H
 
+#include <string>
+
 #include "../helper/lexer_error.h"
 #include "../helper/import.h"
 #include "tokens.h"

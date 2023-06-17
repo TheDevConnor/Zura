@@ -2,7 +2,7 @@
 #define azura_parser_error_h
 
 #include "../lexer/tokens.h"
-#include "parser_struct.h"
+#include "parser.h"
 #include "import.h"
 
 Parser parser;
@@ -33,10 +33,17 @@ const char* colorize(Color color) {
 }
 
 static void error_parser(Token* token, const char* message) {
-    // [line: 1, column: 1] Error: Unexpected character.
-    std::cout << "\n[" << colorize(YELLOW) <<"line: " << colorize(CYAN) << token->line
-              << "\033[0m] [" << colorize(YELLOW) <<"pos: "  << colorize(CYAN) << token->column - 1 
-              << "\033[0m] Parser Error!" << "\n";
+    parser.had_error = true;
+    if(parser.panic_mode) return;
+    parser.panic_mode = true;
+
+    std::printf("\n[%sline: %s%d%s, %spos: %s%d%s] Error: ", 
+        colorize(YELLOW), colorize(CYAN), token->line, colorize(YELLOW), 
+        colorize(YELLOW), colorize(CYAN), token->column - 1, colorize(YELLOW));
+
+    if (token->kind == EOF_TOKEN) std::printf("at end \n");
+    else if (token->kind == ERROR_TOKEN) {}
+    else std::printf("at '%.*s'\n", token->length, token->start);
 
     // iterator over the tokens in the current line
     const char* line_start = token->start;
@@ -55,6 +62,7 @@ static void error_parser(Token* token, const char* message) {
     std::cout << message;
 }
 
+static void error_at_current(const char* message) { error_parser(&parser.current, message); }
 static void error(const char* message) { error_parser(&parser.previous, message); }
 
 #endif
