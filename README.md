@@ -5,7 +5,7 @@
 </p>
 
 Azura Lang is a high-level programming language designed to be expressive, versatile, and easy to use. It offers dynamic typing with strong type inference, allowing developers to write code without explicitly specifying types. Azura Lang supports multiple paradigms, including procedural and object-oriented programming.
-[Azura Lang Discord](https://discord.gg/JvExQpGuXM)
+Here is the Discord server! [Azura Lang Discord](https://discord.gg/JvExQpGuXM)
 ## Features
 
 - **High-Level**: Azura Lang provides a high-level abstraction, allowing developers to write code that is closer to human-readable language.
