@@ -75,7 +75,7 @@ info fib_re(30);
 info clock() - start;
 ```
 
-## Variable Assignment and Inheritance
+### Variable Assignment and Inheritance
 ```
 have a := "a";
 have b := "b";
@@ -97,7 +97,7 @@ info math.add(10, 3); // expect: 13
 info math.subtract(10, 3); // expect: 7
 ```
 
-## Shape Classes and Inheritance
+### Shape Classes and Inheritance
 ```
 class Math {
     multiply(a, b) { return a * b; }
@@ -114,7 +114,7 @@ info "Circle area:";
 info circle.area(); // expect: 314.159
 ```
 
-## Loop Examples
+### Loop Examples
 
 For Loop
 ```
@@ -146,7 +146,7 @@ else info x;
 if (x > 3) info x; else info x;
 ```
 
-## Function Declarations
+### Function Declarations
 ```
 // Function that calculates the factorial of a number
 func factorial(n) {
