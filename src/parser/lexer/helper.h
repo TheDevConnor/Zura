@@ -65,7 +65,7 @@ static Token make_token(TokenKind kind) {
     token.line = scanner.line;
     token.start = scanner.start;
     token.column = scanner.column;
-    token.length = (int)(scanner.current - scanner.start);
+    token.length = static_cast<int>(scanner.current - scanner.start);
     return token;
 }
 
@@ -85,7 +85,13 @@ static void skip_whitespace() {
                 break;
             case '/':
                 if (peek_next() == '/') while (peek() != '\n' && !is_at_end()) advance();
-                else return;
+                else if (peek_next() == '*') {
+                    advance();
+                    advance();
+                    while (peek() != '*' && peek_next() != '/' && !is_at_end()) advance();
+                    advance();
+                    advance();
+                } else return;
                 break;
             default: return;
         }

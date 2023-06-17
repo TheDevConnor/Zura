@@ -10,35 +10,52 @@
 VM vm;
 
 void init_vm() {
-    vm.stack_top = vm.stack;
+    vm.stack = nullptr;
+    vm.stack_capacity = 0;
+    vm.stack_count = 0;
 }
 
 void free_vm() {}
 
 void push(Value value) {
-    *vm.stack_top++ = value;
+    if (vm.stack_capacity < vm.stack_count + 1) {
+        int old_capacity = vm.stack_capacity;
+        vm.stack_capacity = GROW_CAPACITY(old_capacity);
+        vm.stack = GROW_ARRAY(Value, vm.stack, old_capacity, vm.stack_capacity);
+    }
+
+    vm.stack[vm.stack_count] = value;
+    vm.stack_count++;
 }
 
 Value pop() {
-    return *--vm.stack_top;
+    vm.stack_count--;
+    return vm.stack[vm.stack_count];
 }
 
 static InterpretResult run() {
     #ifndef DEBUG_TRACE_EXECUTION
         auto print_stack = []() {
             std::cout << "          ";
-            for (Value* slot = vm.stack; slot < vm.stack_top; slot++) {
+            for (Value* slot = vm.stack; slot < vm.stack_count + vm.stack; slot++) {
                 std::cout << "[ " << *slot << " ]";
             }
             std::cout << "\n";
         };
     #endif
 
-    #define BINARY_OP(op) \
-        do { \
-            double b = pop(); \
-            double a = pop(); \
-            push(a op b); \
+    #define BINARY_OP(op)       \
+        do {                    \
+            Value b = pop();    \
+            Value a = pop();    \
+            push(a op b);       \
+        } while (false)
+
+    #define MODULO_OP(op)       \
+        do {                    \
+            Value b = pop();    \
+            Value a = pop();    \
+            push(fmod(a, b));   \
         } while (false)
 
     for (;;) {
@@ -54,7 +71,7 @@ static InterpretResult run() {
             case OP_SUBTRACT:   BINARY_OP(-); break;
             case OP_MULTIPLY:   BINARY_OP(*); break;
             case OP_DIVIDE:     BINARY_OP(/); break;
-            case OP_MODULO:     push(fmod(pop(), pop())); break;
+            case OP_MODULO:     MODULO_OP(%); break;
             case OP_NEGATE:     push(-pop()); break;
             case OP_RETURN: {
                 print_value(pop());
@@ -68,6 +85,7 @@ static InterpretResult run() {
         }
     }
     #undef BINARY_OP
+    #undef MODULO_OP
 }
 
 InterpretResult interpret(const char* source) {

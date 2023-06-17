@@ -44,6 +44,7 @@ Token scan_token() {
         case '*': return make_token(STAR);
         case '%': return make_token(MODULO);
         case '#': return make_token(HASHTAG);
+        case '$': return make_token(match('{') ? STRING_INTERPOLATION : DOLLAR);
         case '-': return make_token(match('>') ? INHERITANCE   : MINUS);
         case '!': return make_token(match('=') ? BANG_EQUAL    : BANG);
         case '=': return make_token(match('=') ? EQUAL_EQUAL   : EQUAL);

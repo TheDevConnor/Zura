@@ -16,44 +16,31 @@ void repl() {
 }
 
 static char* read_file(const char* path) {
-    FILE* file = fopen(path, "rb");
-
-    if (file == NULL) {
-        fprintf(stderr, "Could not open file \"%s\".\n", path);
+    std::ifstream file(path, std::ios::binary);
+    if (!file) {
+        std::cerr << "Could not open file \"" << path << "\"." << std::endl;
         exit(74);
     }
 
-    fseek(file, 0L, SEEK_END);
-    size_t file_size = ftell(file);
-    rewind(file);
+    file.seekg(0, std::ios::end);
+    size_t file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
 
-    char* buffer = (char*)malloc(file_size + 1);
+    char* buffer = new char[file_size + 1];
+    file.read(buffer, file_size);
+    file.close();
 
-    if (buffer == NULL) {
-        fprintf(stderr, "Not enough memory to read \"%s\".\n", path);
-        exit(74);
-    }
-
-    size_t bytes_read = fread(buffer, sizeof(char), file_size, file);
-
-    if (bytes_read < file_size) {
-        fprintf(stderr, "Could not read file \"%s\".\n", path);
-        exit(74);
-    }
-
-    buffer[bytes_read] = '\0';
-
-    fclose(file);
+    buffer[file_size] = '\0';
     return buffer;
 }
 
-static void run_file(const char* path) {
-    char* source = read_file(path);
-    InterpretResult result = interpret(source);
-    free(source);
+void run_file(const char* path) {
+    const char* source = read_file(path);
 
-    if (result == INTERPRET_COMPILE_ERROR) return exit(65);
-    if (result == INTERPRET_RUNTIME_ERROR) return exit(70);
+    InterpretResult result = interpret(source);
+
+    if (result == InterpretResult::INTERPRET_COMPILE_ERROR) exit(65);
+    else if (result == InterpretResult::INTERPRET_COMPILE_ERROR) exit(70);
 }
 
 void flags(int argc, char* argv[]) {
