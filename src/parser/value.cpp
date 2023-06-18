@@ -2,7 +2,23 @@
 #include "value.h"
 
 void print_value(Value value) {
-    std::cout << value << std::endl;
+    switch (value.type) {
+        case VAL_BOOL:
+            std::cout << (value.as.boolean ? "true" : "false");
+            break;
+        case VAL_NIL:    std::cout << "nil";           break;
+        case VAL_NUMBER: std::cout << value.as.number; break;
+    }
+}
+
+bool values_equal(Value a, Value b) {
+    if (a.type != b.type) return false;
+    switch (a.type) {
+        case VAL_BOOL:   return AS_BOOL(a) == AS_BOOL(b);
+        case VAL_NIL:    return true;
+        case VAL_NUMBER: return AS_NUMBER(a) == AS_NUMBER(b);
+        default:         return false; // Unreachable.
+    }
 }
 
 void init_value_array(ValueArray* array) {

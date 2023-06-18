@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <stdarg.h>
 #include <iostream>
 #include <cmath>
 
@@ -9,53 +10,76 @@
 
 VM vm;
 
-void init_vm() {
-    vm.stack = nullptr;
-    vm.stack_capacity = 0;
-    vm.stack_count = 0;
+void reset_stack() {
+    vm.stack_top = vm.stack;
 }
+
+void runtime_error(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fputs("\n", stderr);
+
+    size_t instruction = vm.ip - vm.chunk->code - 1;
+    int line = vm.chunk->lines[instruction];
+    fprintf(stderr, "[line %d] in script\n", line);
+    reset_stack();
+}
+
+void init_vm() { reset_stack(); }
 
 void free_vm() {}
 
 void push(Value value) {
-    if (vm.stack_capacity < vm.stack_count + 1) {
-        int old_capacity = vm.stack_capacity;
-        vm.stack_capacity = GROW_CAPACITY(old_capacity);
-        vm.stack = GROW_ARRAY(Value, vm.stack, old_capacity, vm.stack_capacity);
-    }
-
-    vm.stack[vm.stack_count] = value;
-    vm.stack_count++;
+    *vm.stack_top = value;
+    vm.stack_top++;
 }
 
 Value pop() {
-    vm.stack_count--;
-    return vm.stack[vm.stack_count];
+    vm.stack_top--;
+    return *vm.stack_top;
+}
+
+Value peek(int distance) { return vm.stack_top[-1 - distance]; }
+
+bool is_falsey(Value value) {
+    return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
 
 static InterpretResult run() {
     #ifndef DEBUG_TRACE_EXECUTION
         auto print_stack = []() {
             std::cout << "          ";
-            for (Value* slot = vm.stack; slot < vm.stack_count + vm.stack; slot++) {
-                std::cout << "[ " << *slot << " ]";
+            for (Value* slot = vm.stack; slot < vm.stack_top; slot++) {
+                std::printf("[ ");
+                print_value(*slot);
+                std::printf(" ]");
             }
             std::cout << "\n";
         };
     #endif
 
-    #define BINARY_OP(op)       \
-        do {                    \
-            Value b = pop();    \
-            Value a = pop();    \
-            push(a op b);       \
+    #define BINARY_OP(value_type, op)                           \
+        do {                                                    \
+            if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
+                std::cout << "Operands must be numbers\n";      \
+                return INTERPRET_RUNTIME_ERROR;                 \
+            }                                                   \
+            double b = AS_NUMBER(pop());                        \
+            double a = AS_NUMBER(pop());                        \
+            push(value_type(a op b));                           \
         } while (false)
 
-    #define MODULO_OP(op)       \
-        do {                    \
-            Value b = pop();    \
-            Value a = pop();    \
-            push(fmod(a, b));   \
+        #define MODULO_OP(value_type, op)                       \
+        do {                                                    \
+            if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
+                std::cout << "Operands must be numbers\n";      \
+                return INTERPRET_RUNTIME_ERROR;                 \
+            }                                                   \
+            double b = AS_NUMBER(pop());                        \
+            double a = AS_NUMBER(pop());                        \
+            push(value_type(fmod(a, b)));                       \
         } while (false)
 
     for (;;) {
@@ -67,12 +91,37 @@ static InterpretResult run() {
         uint8_t instruction = *vm.ip++;
         switch (instruction) {
             case OP_CONSTANT: push(vm.chunk->constants.values[*vm.ip++]); break;
-            case OP_ADD:        BINARY_OP(+); break;
-            case OP_SUBTRACT:   BINARY_OP(-); break;
-            case OP_MULTIPLY:   BINARY_OP(*); break;
-            case OP_DIVIDE:     BINARY_OP(/); break;
-            case OP_MODULO:     MODULO_OP(%); break;
-            case OP_NEGATE:     push(-pop()); break;
+            // Bool operation codes
+            case OP_TRUE:       push(BOOL_VAL(true)); break;
+            case OP_FALSE:      push(BOOL_VAL(false)); break;
+            case OP_NIL:        push(NIL_VAL); break;
+
+            // Comparison operation codes
+            case OP_EQUAL: {
+                Value b = pop();
+                Value a = pop();
+                push(BOOL_VAL(values_equal(a, b)));
+                break;
+            }
+            case OP_GREATER:    BINARY_OP(BOOL_VAL, >); break;
+            case OP_LESS:       BINARY_OP(BOOL_VAL, <); break;
+
+            // Math operation codes
+            case OP_ADD:        BINARY_OP(NUMBER_VAL, +); break;
+            case OP_SUBTRACT:   BINARY_OP(NUMBER_VAL, -); break;
+            case OP_MULTIPLY:   BINARY_OP(NUMBER_VAL, *); break;
+            case OP_DIVIDE:     BINARY_OP(NUMBER_VAL, /); break;
+            case OP_MODULO:     MODULO_OP(NUMBER_VAL, %); break;
+
+            case OP_NOT: push(BOOL_VAL(is_falsey(pop()))); break;
+            case OP_NEGATE: {
+                if(!IS_NUMBER(peek(0))) {
+                    std::cout << "Operand must be a number\n";
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                push(NUMBER_VAL(-AS_NUMBER(pop())));
+                break;
+            }
             case OP_RETURN: {
                 print_value(pop());
                 std::cout << "\n";

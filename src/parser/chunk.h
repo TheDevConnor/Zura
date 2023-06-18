@@ -12,7 +12,16 @@ enum OpCode {
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_MODULO,
+    // Bool operations
+    OP_NIL,
+    OP_TRUE,
+    OP_FALSE,
+    // Comparison operations
+    OP_EQUAL,
+    OP_GREATER,
+    OP_LESS,
     // Unary operations
+    OP_NOT,
     OP_NEGATE,
     OP_RETURN,
 };

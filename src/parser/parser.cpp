@@ -3,9 +3,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "lexer/lexer.h"
 #include "common.h"
 #include "parser.h"
-#include "lexer/lexer.h"
 
 class Parser {
 private:
@@ -42,7 +42,6 @@ public:
     Parser() : had_error(false), panic_mode(false) {}
 
     void error_parser(Token* token, const char* message) {
-        had_error = true;
         if(panic_mode) return;
         panic_mode = true;
 
@@ -69,18 +68,18 @@ public:
 
         // Print the error message
         std::cout << message;
+        had_error = true;
     }
 
     void error_at_current(const char* message) { error_parser(&current, message); }
     void error(const char* message) { error_parser(&previous, message); }
 
     void advance() {
-        previous = scan_token();
-        while (current.kind == ERROR_TOKEN) {
+        previous = current;
+        for(;;) {
             current = scan_token();
-            if (current.kind == ERROR_TOKEN) {
-                error_at_current(previous.start);
-            }
+            if(current.kind != ERROR_TOKEN) break;
+            error_at_current(current.start);
         }
     }
 
@@ -116,7 +115,6 @@ struct ParseRule {
     Precedence precedence;
 };
 
-
 Parser parser;
 Chunk* compiling_chunk;
 
@@ -149,8 +147,13 @@ void emit_constant(Value v) {
 
 void end_compiler() {
     emit_return();
+    #ifndef DEBUG_PRINT_CODE
+        #include "../debug/debug.h"
+        if (parser.had_error) disassemble_chunk(compiling_chunk, "code");
+    #endif
 }
 
+void expression();
 ParseRule* get_rule(TokenKind kind);
 void parse_precedence(Precedence precedence);
 
@@ -169,18 +172,38 @@ void binary() {
         case STAR:   emit_byte(OP_MULTIPLY); break;
         case SLASH:  emit_byte(OP_DIVIDE);   break;
         case MODULO: emit_byte(OP_MODULO);   break;
-        default: return;
+
+        // Comparison operators
+        case BANG_EQUAL:    emit_bytes(OP_EQUAL, OP_NOT);   break; // !=
+        case EQUAL_EQUAL:   emit_byte(OP_EQUAL);            break; // ==
+        case GREATER:       emit_byte(OP_GREATER);          break; // >
+        case GREATER_EQUAL: emit_bytes(OP_LESS, OP_NOT);    break; // >=
+        case LESS:          emit_byte(OP_LESS);             break; // <
+        case LESS_EQUAL:    emit_bytes(OP_GREATER, OP_NOT); break; // <=
+
+        default: return; // Unreachable
     }
 }
 
+void literal() {
+    switch (parser.previous.kind) {
+        case FALSE: emit_byte(OP_FALSE); break;
+        case TRUE:  emit_byte(OP_TRUE);  break;
+        case NIL:   emit_byte(OP_NIL);   break;
+        default: return; // Unreachable
+    }
+}
+
+void expression() { parse_precedence(PREC_ASSIGNMENT); }
+
 void grouping() {
-    parse_precedence(PREC_ASSIGNMENT);
+    expression();
     parser.consume(RIGHT_PAREN, "Expect ')' after expression.");
 }
 
 void _number() {
     double value = std::strtod(parser.previous.start, nullptr);
-    emit_constant(value);
+    emit_constant(NUMBER_VAL(value));
 }
 
 void unary() {
@@ -191,16 +214,15 @@ void unary() {
 
     // Emit the operator instruction
     switch (operator_type) {
-        case MINUS:
-            emit_byte(OP_NEGATE);
-            break;
+        case BANG:  emit_byte(OP_NOT);   break;
+        case MINUS: emit_byte(OP_NEGATE); break;
         default:
             return;
     }
 }
 
 std::unordered_map<TokenKind, ParseRule> rules = {
-    {LEFT_PAREN,    {grouping, nullptr,   PREC_NONE}},
+    {LEFT_PAREN,    {grouping,  nullptr,   PREC_NONE}},
     {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
     {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
     {RIGHT_BRACE,   {nullptr,   nullptr,   PREC_NONE}},
@@ -211,31 +233,32 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {SEMICOLON,     {nullptr,   nullptr,   PREC_NONE}},
     {SLASH,         {nullptr,   binary,     PREC_FACTOR}},
     {STAR,          {nullptr,   binary,     PREC_FACTOR}},
-    {BANG,          {nullptr,   nullptr,   PREC_NONE}},
-    {BANG_EQUAL,    {nullptr,   nullptr,   PREC_NONE}},
-    {EQUAL,         {nullptr,   nullptr,   PREC_NONE}},
-    {EQUAL_EQUAL,   {nullptr,   nullptr,   PREC_NONE}},
-    {GREATER,       {nullptr,   nullptr,   PREC_NONE}},
-    {GREATER_EQUAL, {nullptr,   nullptr,   PREC_NONE}},
-    {LESS,          {nullptr,   nullptr,   PREC_NONE}},
-    {LESS_EQUAL,    {nullptr,   nullptr,   PREC_NONE}},
+    {MODULO,        {nullptr,   binary,     PREC_FACTOR}},
+    {BANG,          {unary,     nullptr,   PREC_NONE}},
+    {BANG_EQUAL,    {nullptr,   binary,     PREC_EQUALITY}},
+    {EQUAL,         {nullptr,   binary,     PREC_COMPARISON}},
+    {EQUAL_EQUAL,   {nullptr,   binary,     PREC_COMPARISON}},
+    {GREATER,       {nullptr,   binary,     PREC_COMPARISON}},
+    {GREATER_EQUAL, {nullptr,   binary,     PREC_COMPARISON}},
+    {LESS,          {nullptr,   binary,     PREC_COMPARISON}},
+    {LESS_EQUAL,    {nullptr,   binary,     PREC_COMPARISON}},
     {IDENTIFIER,    {nullptr,   nullptr,   PREC_NONE}},
     {STRING,        {nullptr,   nullptr,   PREC_NONE}},
     {NUMBER,        {_number,    nullptr,   PREC_NONE}},
     {AND,           {nullptr,   nullptr,   PREC_NONE}},
     {CLASS,         {nullptr,   nullptr,   PREC_NONE}},
     {ELSE,          {nullptr,   nullptr,   PREC_NONE}},
-    {FALSE,         {nullptr,   nullptr,   PREC_NONE}},
+    {FALSE,         {literal,   nullptr,   PREC_NONE}},
     {FUNC,          {nullptr,   nullptr,   PREC_NONE}},
     {FOR,           {nullptr,   nullptr,   PREC_NONE}},
     {IF,            {nullptr,   nullptr,   PREC_NONE}},
-    {NIL,           {nullptr,   nullptr,   PREC_NONE}},
+    {NIL,           {literal,   nullptr,   PREC_NONE}},
     {OR,            {nullptr,   nullptr,   PREC_NONE}},
     {INFO,          {nullptr,   nullptr,   PREC_NONE}},
     {RETURN,        {nullptr,   nullptr,   PREC_NONE}},
     {SUPER,         {nullptr,   nullptr,   PREC_NONE}},
     {THIS,          {nullptr,   nullptr,   PREC_NONE}},
-    {TRUE,          {nullptr,   nullptr,   PREC_NONE}},
+    {TRUE,          {literal,   nullptr,   PREC_NONE}},
     {HAVE,          {nullptr,   nullptr,   PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,   PREC_NONE}},
     {ERROR_TOKEN,   {nullptr,   nullptr,   PREC_NONE}},
@@ -271,7 +294,7 @@ bool compile(const char* source, Chunk* chunk) {
     parser.panic_mode = false;
 
     parser.advance();
-    parse_precedence(PREC_ASSIGNMENT);
+    expression();
 
     parser.consume(EOF_TOKEN, "Expect end of expression.");
     end_compiler();

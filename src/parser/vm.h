@@ -10,9 +10,8 @@ struct VM {
     Chunk* chunk;
     uint8_t* ip;
 
-    Value* stack;
-    int stack_count;
-    int stack_capacity;
+    Value stack[STACK_MAX];
+    Value* stack_top;
 };
 
 enum InterpretResult {
