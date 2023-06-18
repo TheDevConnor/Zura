@@ -3,18 +3,6 @@
 #include <sstream>
 #include <cstring>
 
-void repl() {
-    std::string line;
-    while (true) {
-        std::cout << "> ";
-        std::getline(std::cin, line);
-        if (line == "exit") {
-            break;
-        }
-        interpret(line.c_str());
-    }
-}
-
 static char* read_file(const char* path) {
     std::ifstream file(path, std::ios::binary);
     if (!file) {
@@ -50,8 +38,12 @@ void flags(int argc, char* argv[]) {
     }
     
     if (argc == 2 && strcmp(argv[1], "--repl") == 0) {
-        repl();
-        exit(0);
+        char line[1024];
+        for(;;) {
+            std::cout << "> ";
+            if (!fgets(line, sizeof(line), stdin)) break;
+            interpret(line);
+        }
     }
 
     // Check if we have a --help flag
