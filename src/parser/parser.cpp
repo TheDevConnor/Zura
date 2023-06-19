@@ -45,8 +45,8 @@ public:
         if(panic_mode) return;
         panic_mode = true;
 
-        std::printf("\n[%sline: %s%d%s -- %spos: %s%d%s] Error: ", 
-            colorize(YELLOW), colorize(CYAN), token->line, colorize(YELLOW), 
+        std::printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
+        colorize(YELLOW), colorize(CYAN), token->line, colorize(RESET), 
             colorize(YELLOW), colorize(CYAN), token->column - 1, colorize(RESET));
 
         if (token->kind == EOF_TOKEN) std::printf("at end \n");
@@ -54,12 +54,12 @@ public:
         else std::printf("at %s'%.*s'%s\n", colorize(RED), token->length, token->start, colorize(RESET));
 
         // iterator over the tokens in the current line
-        const char* line_start = get_source_line_start(token->line);
+        const char* line_start = token->start;
         const char* line_end = line_start;
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        std::fprintf(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start);
+        std::cout << colorize(MAGENTA) << std::string(line_start, line_end - line_start) << "\n";
 
         // Print to the error
         int num_spaces = token->column - 1;
@@ -67,7 +67,7 @@ public:
         std::cout << colorize(RED) << "^" << colorize(RESET);
 
         // Print the error message
-        std::cout << message;
+        std::cout << message << "\n";
         had_error = true;
     }
 
