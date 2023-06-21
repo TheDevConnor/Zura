@@ -12,6 +12,7 @@ enum OpCode {
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_MODULO,
+    OP_POWER,
     // Bool operations
     OP_NIL,
     OP_TRUE,

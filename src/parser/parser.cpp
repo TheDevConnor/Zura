@@ -172,6 +172,7 @@ void binary() {
         case STAR:   emit_byte(OP_MULTIPLY); break;
         case SLASH:  emit_byte(OP_DIVIDE);   break;
         case MODULO: emit_byte(OP_MODULO);   break;
+        case POWER:   emit_byte(OP_POWER);   break;
 
         // Comparison operators
         case BANG_EQUAL:    emit_bytes(OP_EQUAL, OP_NOT);   break; // !=
@@ -206,6 +207,10 @@ void _number() {
     emit_constant(NUMBER_VAL(value));
 }
 
+void _string() {
+    emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
+}
+
 void unary() {
     TokenKind operator_type = parser.previous.kind;
 
@@ -234,6 +239,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {SLASH,         {nullptr,   binary,     PREC_FACTOR}},
     {STAR,          {nullptr,   binary,     PREC_FACTOR}},
     {MODULO,        {nullptr,   binary,     PREC_FACTOR}},
+    {POWER,         {nullptr,   binary,     PREC_FACTOR}},
     {BANG,          {unary,     nullptr,   PREC_NONE}},
     {BANG_EQUAL,    {nullptr,   binary,     PREC_EQUALITY}},
     {EQUAL,         {nullptr,   binary,     PREC_COMPARISON}},
@@ -243,7 +249,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {LESS,          {nullptr,   binary,     PREC_COMPARISON}},
     {LESS_EQUAL,    {nullptr,   binary,     PREC_COMPARISON}},
     {IDENTIFIER,    {nullptr,   nullptr,   PREC_NONE}},
-    {STRING,        {nullptr,   nullptr,   PREC_NONE}},
+    {STRING,        {_string,    nullptr,   PREC_NONE}},
     {NUMBER,        {_number,    nullptr,   PREC_NONE}},
     {AND,           {nullptr,   nullptr,   PREC_NONE}},
     {CLASS,         {nullptr,   nullptr,   PREC_NONE}},

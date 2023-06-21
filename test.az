@@ -1,1 +1,14 @@
-"Hello" + "3"
+// 2**9
+// this reads left to right,
+// So it reads 2 to the power of 9
+// 2*9 = 512 or 
+// 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 = 512
+
+// You can even do this
+// 2**(9-1)
+// Which is the same as saying 2**8
+// So if you had a function that took a number
+// and you wanted to get the next power of 2
+// you could do this
+
+"hello" + "world"
