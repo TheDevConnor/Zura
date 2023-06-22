@@ -12,6 +12,7 @@ struct VM {
 
     Value stack[STACK_MAX];
     Value* stack_top;
+    Obj* objects;
 };
 
 enum InterpretResult {
@@ -19,6 +20,8 @@ enum InterpretResult {
     INTERPRET_COMPILE_ERROR,
     INTERPRET_RUNTIME_ERROR
 };
+
+extern VM vm;
 
 void init_vm();
 void free_vm();

@@ -17,21 +17,19 @@ void reset_stack() {
 }
 
 void runtime_error(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fputs("\n", stderr);
-
     size_t instruction = vm.ip - vm.chunk->code - 1;
     int line = vm.chunk->lines[instruction];
     fprintf(stderr, "[line %d] in script\n", line);
+    fprintf(stderr, "%s\n", format);
     reset_stack();
 }
 
-void init_vm() { reset_stack(); }
+void init_vm() { 
+    reset_stack();
+    vm.objects = nullptr;
+}
 
-void free_vm() {}
+void free_vm() { free_objects(); }
 
 void push(Value value) {
     *vm.stack_top = value;
@@ -59,7 +57,7 @@ void concatenate() {
     memcpy(chars + a->length, b->chars, b->length);
     chars[length] = '\0';
 
-    ObjString* result = copy_string(chars, length);
+    ObjString* result = take_string(chars, length);
     push(OBJ_VAL(result));
 }
 
@@ -142,7 +140,7 @@ static InterpretResult run() {
                     double a = AS_NUMBER(pop());
                     push(NUMBER_VAL(a + b));
                 } else {
-                    std::cout << "Operands must be two numbers or two strings\n";
+                    runtime_error("Operands must be two numbers or two strings\n");
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 break;

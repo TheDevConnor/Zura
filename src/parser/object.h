@@ -17,6 +17,7 @@ enum ObjType {
 
 struct Obj {
     ObjType type;
+    struct Obj* next;
 };
 
 struct ObjString {
@@ -25,10 +26,12 @@ struct ObjString {
     char* chars;
 };
 
-ObjString* take_sting(char* chars, int length);
+ObjString* take_string(char* chars, int length);
 ObjString* copy_string(const char* chars, int length);
+
 void print_object(Value value);
-static bool is_obj_type(Value value, ObjType type) {
+
+static inline bool is_obj_type(Value value, ObjType type) {
     return IS_OBJECT(value) && AS_OBJ(value)->type == type;
 }
 

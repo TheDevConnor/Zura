@@ -1,5 +1,8 @@
-#include "memory.h"
 #include <stdlib.h>
+
+#include "../parser/object.h"
+#include "../parser/vm.h"
+#include "memory.h"
 
 void* reallocate(void* pointer, size_t old_size, size_t new_size) {
     if (new_size > old_size) {}
@@ -11,4 +14,13 @@ void* reallocate(void* pointer, size_t old_size, size_t new_size) {
     void* new_pointer = realloc(pointer, new_size);
     if (new_pointer == nullptr) exit(1);
     return new_pointer;
+}
+
+void free_objects() {
+    Obj* object = vm.objects;
+    while (object != nullptr) {
+        Obj* next = object->next;
+        free(object);
+        object = next;
+    }
 }

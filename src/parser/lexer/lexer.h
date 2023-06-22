@@ -9,33 +9,14 @@
 #include "helper.h"
 
 static Token string() {
-    std::string lexeme = "";
-    TokenKind type = STRING;
     for(;;) {
         if (peek() == '"') break;
         if (is_at_end()) error_function("Unterminated string.", RED, scanner.start);
         if (peek() == '\n') scanner.line++;
-        if (peek() == '$') {
-            if (peek_next() == '{') {
-                advance(); // advance past the '$'
-                advance(); // advance past the '{'
-
-                while (peek() != '}') {
-                    if (is_at_end()) error_function("Missing '}' at the end: ", RED, scanner.start);
-                    if (peek() == '\n') scanner.line++;
-                    lexeme += peek();
-                    advance();
-                }
-                advance(); // advance past the '}'
-                type = STRING_INTERPOLATION;
-            }
-            else error_function("missing a '{' after '$': ", RED, scanner.start);
-        }
-        lexeme += peek();
         advance();
     }
     advance(); // advance past the closing '"'
-    return make_token(type, lexeme);
+    return make_token(STRING);
 }
 
 Token scan_token() {

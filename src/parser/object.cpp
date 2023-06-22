@@ -2,7 +2,6 @@
 
 #include "../memory/memory.h"
 #include "object.h"
-#include "value.h"
 #include "vm.h"
 
 #define ALLOCATE_OBJ(type, object_type) \
@@ -11,17 +10,20 @@
 struct Obj* allocate_object(size_t size, ObjType type) {
     struct Obj* object = (struct Obj*)reallocate(NULL, 0, size);
     object->type = type;
+
+    object->next = vm.objects;
+    vm.objects = object;
     return object;
 }
 
 ObjString* allocate_string(char* chars, int length) {
-    ObjString* string = ALLOCATE(ObjString, 1);
+    ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
     string->length = length;
     string->chars = chars;
     return string;
 }
 
-ObjString* take_sting(char* chars, int length) {
+ObjString* take_string(char* chars, int length) {
     return allocate_string(chars, length);
 }
 
@@ -35,7 +37,7 @@ ObjString* copy_string(const char* chars, int length) {
 void print_object(Value value) {
     switch (OBJ_TYPE(value)) {
         case OBJ_STRING:
-            std::cout << AS_CSTRING(value);
+            printf("%s", AS_CSTRING(value));
             break;
     }
 }
