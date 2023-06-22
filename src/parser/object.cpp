@@ -19,19 +19,23 @@ struct Obj* allocate_object(size_t size, ObjType type) {
 ObjString* allocate_string(char* chars, int length) {
     ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
     string->length = length;
-    string->chars = chars;
     return string;
 }
 
-ObjString* take_string(char* chars, int length) {
-    return allocate_string(chars, length);
+ObjString* take_string(int length) {
+    ObjString* string = (ObjString*)allocate_object(
+        sizeof(ObjString) + length + 1, OBJ_STRING);
+    string->length = length;
+    return string;
 }
 
 ObjString* copy_string(const char* chars, int length) {
-    char* heap_chars = ALLOCATE(char, length + 1);
-    memcpy(heap_chars, chars, length);
-    heap_chars[length] = '\0';
-    return allocate_string(heap_chars, length);
+    ObjString* string = take_string(length);
+
+    memcpy(string->chars, chars, length);
+    string->chars[length] = '\0';
+
+    return string;
 }
 
 void print_object(Value value) {
