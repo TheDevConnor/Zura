@@ -16,7 +16,7 @@ struct Obj* allocate_object(size_t size, ObjType type) {
     return object;
 }
 
-ObjString* allocate_string(char* chars, int length) {
+ObjString* allocate_string(int length) {
     ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
     string->length = length;
     return string;
