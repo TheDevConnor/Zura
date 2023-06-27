@@ -27,9 +27,13 @@ void runtime_error(const char* format, ...) {
 void init_vm() { 
     reset_stack();
     vm.objects = nullptr;
+    init_table(&vm.strings);
 }
 
-void free_vm() { free_objects(); }
+void free_vm() { 
+    free_table(&vm.strings);
+    free_objects(); 
+}
 
 void push(Value value) {
     *vm.stack_top = value;
@@ -52,11 +56,12 @@ void concatenate() {
     ObjString* a = AS_STRING(pop());
 
     int length = a->length + b->length;
-    ObjString* result = take_string(length);
-    memcpy(result->chars, a->chars, a->length);
-    memcpy(result->chars + a->length, b->chars, b->length);
-    result->chars[length] = '\0';
+    char* chars = ALLOCATE(char, length + 1);
+    memcpy(chars, a->chars, a->length);
+    memcpy(chars + a->length, b->chars, b->length);
+    chars[length] = '\0';
     
+    ObjString* result = take_string(chars, length);
     push(OBJ_VAL(result));
 }
 

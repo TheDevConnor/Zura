@@ -2,6 +2,7 @@
 #define AZURA_VM_H
 
 #include "chunk.h"
+#include "table.h"
 #include "value.h"
 
 #define STACK_MAX 256
@@ -12,6 +13,7 @@ struct VM {
 
     Value stack[STACK_MAX];
     Value* stack_top;
+    Table strings;
     Obj* objects;
 };
 

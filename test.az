@@ -11,4 +11,4 @@
 // and you wanted to get the next power of 2
 // you could do this
 
-// "st" + "ri" + "ng"
+"st" + "ri" + "ng" == "strings"
