@@ -24,7 +24,7 @@ all: build_progress
 
 build_progress:
 	@echo Cleaning...
-	@$(RM) $(BIN_PATH)\*.exe
+	@$(RM) $(BIN_PATH) 
 	@echo Clean complete!
 
 	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)

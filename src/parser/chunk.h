@@ -25,6 +25,9 @@ enum OpCode {
     OP_NOT,
     OP_NEGATE,
     OP_RETURN,
+    // Statements
+    OP_INFO,
+    OP_POP,
 };
 
 struct Chunk {

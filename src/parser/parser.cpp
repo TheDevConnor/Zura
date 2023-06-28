@@ -33,6 +33,7 @@ private:
             default: return "\033[0m";
         }
     }
+
 public:
     Token current;
     Token previous;
@@ -74,6 +75,8 @@ public:
     void error_at_current(const char* message) { error_parser(&current, message); }
     void error(const char* message) { error_parser(&previous, message); }
 
+    bool check(TokenKind kind) { return current.kind == kind; }
+
     void advance() {
         previous = current;
         for(;;) {
@@ -90,6 +93,12 @@ public:
         }
 
         error_at_current(message);
+    }
+
+    bool match(TokenKind kind) {
+        if (!check(kind)) return false;
+        advance();
+        return true;
     }
 };
 
@@ -154,6 +163,8 @@ void end_compiler() {
 }
 
 void expression();
+void statement();
+void declaration();
 ParseRule* get_rule(TokenKind kind);
 void parse_precedence(Precedence precedence);
 
@@ -196,6 +207,29 @@ void literal() {
 }
 
 void expression() { parse_precedence(PREC_ASSIGNMENT); }
+
+void expression_statement() {
+    expression();
+    parser.consume(SEMICOLON, "Expect ';' after expression.");
+    emit_byte(OP_POP);
+}
+
+void info_statement() {
+    expression();
+    if (parser.match(COMMA)) expression();
+
+    parser.consume(SEMICOLON, "Expect ';' after value.");
+    emit_byte(OP_INFO);
+}
+
+void declaration() {
+    statement();
+}
+
+void statement() {
+    if (parser.match(INFO)) { info_statement(); }
+    else { expression_statement(); }
+}
 
 void grouping() {
     expression();
@@ -300,9 +334,11 @@ bool compile(const char* source, Chunk* chunk) {
     parser.panic_mode = false;
 
     parser.advance();
-    expression();
 
-    parser.consume(EOF_TOKEN, "Expect end of expression.");
+    while (!parser.match(EOF_TOKEN)) {
+        declaration();
+    }
+
     end_compiler();
     return !parser.had_error;
 }
