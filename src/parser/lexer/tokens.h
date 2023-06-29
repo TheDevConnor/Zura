@@ -23,7 +23,8 @@ typedef enum {
 
     // Keywords!
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,
-    INFO, RETURN, SUPER, THIS, TRUE, HAVE, WHILE,
+    INFO, RETURN, SUPER, THIS, TRUE, HAVE, WHILE, MODULE,
+    USING,
 
     ERROR_TOKEN,
     // End of file!

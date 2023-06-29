@@ -37,6 +37,11 @@ int disassemble_instruction(Chunk* chunk, int offset) {
     uint8_t instruction = chunk->code[offset];
     switch (instruction) {
         case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
+
+        case OP_SET_GLOBAL:    return constant_instruction("OP_SET_GLOBAL", chunk, offset);
+        case OP_GET_GLOBAL:    return constant_instruction("OP_GET_GLOBAL", chunk, offset);
+        case OP_DEFINE_GLOBAL: return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
+
         case OP_NIL:      return simple_instruction("OP_NIL", offset);
         case OP_TRUE:     return simple_instruction("OP_TRUE", offset);
         case OP_FALSE:    return simple_instruction("OP_FALSE", offset);

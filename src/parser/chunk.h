@@ -6,6 +6,10 @@
 
 enum OpCode {
     OP_CONSTANT,
+    // Global operations
+    OP_GET_GLOBAL,
+    OP_SET_GLOBAL,
+    OP_DEFINE_GLOBAL,
     // Binary operations
     OP_ADD,
     OP_SUBTRACT,

@@ -27,10 +27,13 @@ void runtime_error(const char* format, ...) {
 void init_vm() { 
     reset_stack();
     vm.objects = nullptr;
+
+    init_table(&vm.globals);
     init_table(&vm.strings);
 }
 
 void free_vm() { 
+    free_table(&vm.globals);
     free_table(&vm.strings);
     free_objects(); 
 }
@@ -120,6 +123,32 @@ static InterpretResult run() {
         uint8_t instruction = *vm.ip++;
         switch (instruction) {
             case OP_CONSTANT: push(vm.chunk->constants.values[*vm.ip++]); break;
+            // Global variable operation codes
+            case OP_SET_GLOBAL: {
+                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                if (table_set(&vm.globals, name, peek(0))) {
+                    table_delete(&vm.globals, name);
+                    runtime_error("Undefined variable '%s'.\n", name->chars);
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                break;
+            }
+            case OP_GET_GLOBAL: {
+                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                Value value;
+                if (!table_get(&vm.globals, name, &value)) {
+                    runtime_error("Undefined variable '%s'.\n", name->chars);
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                push(value);
+                break;
+            }
+            case OP_DEFINE_GLOBAL: {
+                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                table_set(&vm.globals, name, peek(0));
+                pop();
+                break;
+            }
             // Bool operation codes
             case OP_TRUE:       push(BOOL_VAL(true)); break;
             case OP_FALSE:      push(BOOL_VAL(false)); break;
@@ -167,7 +196,7 @@ static InterpretResult run() {
             }
             case OP_INFO: {
                 print_value(pop());
-                std::cout << " ";
+                std::cout << "\n";
                 break;
             }
             case OP_RETURN: {

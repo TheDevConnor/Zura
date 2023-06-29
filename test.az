@@ -1,1 +1,5 @@
-info 2**9, "2 to the 9th power is"; // 512
+have breakfast := "eggs and bacon";
+have beverage := "coffee";
+breakfast = "eggs and bacon with " + beverage;
+
+info breakfast;

@@ -102,7 +102,7 @@ public:
     }
 };
 
-typedef void (*parse_fn)();
+typedef void (*parse_fn)(bool can_assign);
 
 enum Precedence {
     PREC_NONE,
@@ -168,7 +168,20 @@ void declaration();
 ParseRule* get_rule(TokenKind kind);
 void parse_precedence(Precedence precedence);
 
-void binary() {
+uint8_t identifier_constant(Token* name) {
+    return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
+}
+
+uint8_t parser_variable(const char* error_msg) {
+    parser.consume(IDENTIFIER, error_msg);
+    return identifier_constant(&parser.previous);
+}
+
+void define_variable(uint8_t global) {
+    emit_bytes(OP_DEFINE_GLOBAL, global);
+}
+
+void binary(bool can_assign) {
     // Remember the operator
     TokenKind operator_type = parser.previous.kind;
 
@@ -197,7 +210,7 @@ void binary() {
     }
 }
 
-void literal() {
+void literal(bool can_assign) {
     switch (parser.previous.kind) {
         case FALSE: emit_byte(OP_FALSE); break;
         case TRUE:  emit_byte(OP_TRUE);  break;
@@ -208,6 +221,16 @@ void literal() {
 
 void expression() { parse_precedence(PREC_ASSIGNMENT); }
 
+void var_declaration() {
+    uint8_t global = parser_variable("Expect variable name.");
+
+    if (parser.match(WALRUS)) expression();
+    else emit_byte(OP_NIL);
+
+    parser.consume(SEMICOLON, "Expect ';' after variable declaration.");
+    define_variable(global);
+}
+
 void expression_statement() {
     expression();
     parser.consume(SEMICOLON, "Expect ';' after expression.");
@@ -216,14 +239,35 @@ void expression_statement() {
 
 void info_statement() {
     expression();
-    if (parser.match(COMMA)) expression();
-
     parser.consume(SEMICOLON, "Expect ';' after value.");
     emit_byte(OP_INFO);
 }
 
+const std::unordered_map<TokenKind, bool> return_context = {
+    {CLASS, true},
+    {FUNC, true},
+    {HAVE, true},
+    {FOR, true},
+    {IF, true},
+    {WHILE, true},
+    {INFO, true},
+    {RETURN, true}
+};
+
+void synchronize() {
+    parser.panic_mode = false;
+
+    while (parser.current.kind != EOF_TOKEN) {
+        if (parser.previous.kind == SEMICOLON) return;
+        if (return_context.find(parser.current.kind) != return_context.end()) return;
+        parser.advance();
+    }
+}
+
 void declaration() {
-    statement();
+    if (parser.match(HAVE)) { var_declaration(); }
+    else { statement(); }
+    if (parser.panic_mode) synchronize();
 }
 
 void statement() {
@@ -231,21 +275,36 @@ void statement() {
     else { expression_statement(); }
 }
 
-void grouping() {
+void grouping(bool can_assign) {
     expression();
     parser.consume(RIGHT_PAREN, "Expect ')' after expression.");
 }
 
-void _number() {
+void named_variable(Token name, bool can_assign) {
+    uint8_t arg = identifier_constant(&name);
+    
+    if (parser.match(EQUAL) && can_assign) {
+        expression();
+        emit_bytes(OP_SET_GLOBAL, arg);
+    } else {
+        emit_bytes(OP_GET_GLOBAL, arg);
+    }
+}
+
+void _number(bool can_assign) {
     double value = std::strtod(parser.previous.start, nullptr);
     emit_constant(NUMBER_VAL(value));
 }
 
-void _string() {
+void _string(bool can_assign) {
     emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
-void unary() {
+void _variable(bool can_assign) {
+    named_variable(parser.previous, can_assign);
+}
+
+void unary(bool can_assign) {
     TokenKind operator_type = parser.previous.kind;
 
     // Compile the operand
@@ -253,10 +312,9 @@ void unary() {
 
     // Emit the operator instruction
     switch (operator_type) {
-        case BANG:  emit_byte(OP_NOT);   break;
+        case BANG:  emit_byte(OP_NOT); break;
         case MINUS: emit_byte(OP_NEGATE); break;
-        default:
-            return;
+        default: return; // Unreachable
     }
 }
 
@@ -282,7 +340,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {GREATER_EQUAL, {nullptr,   binary,     PREC_COMPARISON}},
     {LESS,          {nullptr,   binary,     PREC_COMPARISON}},
     {LESS_EQUAL,    {nullptr,   binary,     PREC_COMPARISON}},
-    {IDENTIFIER,    {nullptr,   nullptr,   PREC_NONE}},
+    {IDENTIFIER,    {_variable,  nullptr,   PREC_NONE}},
     {STRING,        {_string,    nullptr,   PREC_NONE}},
     {NUMBER,        {_number,    nullptr,   PREC_NONE}},
     {AND,           {nullptr,   nullptr,   PREC_NONE}},
@@ -301,6 +359,8 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {TRUE,          {literal,   nullptr,   PREC_NONE}},
     {HAVE,          {nullptr,   nullptr,   PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,   PREC_NONE}},
+    {MODULE,        {nullptr,   nullptr,   PREC_NONE}},
+    {USING,         {nullptr,   nullptr,   PREC_NONE}},
     {ERROR_TOKEN,   {nullptr,   nullptr,   PREC_NONE}},
     {EOF_TOKEN,     {nullptr,   nullptr,   PREC_NONE}},
 };
@@ -313,12 +373,17 @@ void parse_precedence(Precedence prec) {
         return;
     }
 
-    prefix_rule();
+    bool can_assign = prec <= PREC_ASSIGNMENT;
+    prefix_rule(can_assign);
 
     while (prec <= get_rule(parser.current.kind)->precedence) {
         parser.advance();
         parse_fn infix_rule = get_rule(parser.previous.kind)->infix;
-        infix_rule();
+        infix_rule(can_assign);
+    }
+
+    if (can_assign && match(EQUAL)) {
+        parser.error("Invalid assignment target.");
     }
 }
 

@@ -69,6 +69,15 @@ static Token make_token(TokenKind kind) {
     return token;
 }
 
+static Token error_token(const char *message) {
+  Token token;
+  token.kind = ERROR_TOKEN;
+  token.start = message;
+  token.length = (int)strlen(message);
+  token.line = scanner.line;
+  return token;
+}
+
 static void skip_whitespace() {
     for(;;) {
         char c = peek();
@@ -132,6 +141,8 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "true")    == 0)    return TRUE;
     if (strcmp(keyword, "have")    == 0)    return HAVE;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
+    if (strcmp(keyword, "module")   == 0)   return MODULE;
+    if (strcmp(keyword, "using")   == 0)   return USING;
 
     return IDENTIFIER;
 }
