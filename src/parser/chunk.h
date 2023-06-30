@@ -10,6 +10,9 @@ enum OpCode {
     OP_GET_GLOBAL,
     OP_SET_GLOBAL,
     OP_DEFINE_GLOBAL,
+    // Local operations
+    OP_GET_LOCAL,
+    OP_SET_LOCAL,
     // Binary operations
     OP_ADD,
     OP_SUBTRACT,

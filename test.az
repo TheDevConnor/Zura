@@ -1,5 +1,1 @@
-have breakfast := "eggs and bacon";
-have beverage := "coffee";
-breakfast = "eggs and bacon with " + beverage;
-
-info breakfast;
+have x := 45;
