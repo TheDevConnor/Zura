@@ -132,4 +132,75 @@ struct Compiler {
     int scope_depth;
 };
 
+struct Parser parser;
+struct Compiler* current = nullptr;
+struct Chunk* compiling_chunk;
+
+
+void grouping(bool can_assign);
+void _number(bool can_assign);
+void _string(bool can_assign);
+void _variable(bool can_assign);
+void unary(bool can_assign);
+void binary(bool can_assign);
+void literal(bool can_assign);
+
+std::unordered_map<TokenKind, ParseRule> rules = {
+    {LEFT_PAREN,    {grouping,  nullptr,   PREC_NONE}},
+    {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
+    {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
+    {RIGHT_BRACE,   {nullptr,   nullptr,   PREC_NONE}},
+    {COMMA,         {nullptr,   nullptr,   PREC_NONE}},
+    {DOT,           {nullptr,   nullptr,   PREC_NONE}},
+    {MINUS,         {unary,     binary,     PREC_TERM}},
+    {PLUS,          {nullptr,   binary,     PREC_TERM}},
+    {SEMICOLON,     {nullptr,   nullptr,   PREC_NONE}},
+    {SLASH,         {nullptr,   binary,     PREC_FACTOR}},
+    {STAR,          {nullptr,   binary,     PREC_FACTOR}},
+    {MODULO,        {nullptr,   binary,     PREC_FACTOR}},
+    {POWER,         {nullptr,   binary,     PREC_FACTOR}},
+    {BANG,          {unary,     nullptr,   PREC_NONE}},
+    {BANG_EQUAL,    {nullptr,   binary,     PREC_EQUALITY}},
+    {EQUAL,         {nullptr,   binary,     PREC_COMPARISON}},
+    {EQUAL_EQUAL,   {nullptr,   binary,     PREC_COMPARISON}},
+    {GREATER,       {nullptr,   binary,     PREC_COMPARISON}},
+    {GREATER_EQUAL, {nullptr,   binary,     PREC_COMPARISON}},
+    {LESS,          {nullptr,   binary,     PREC_COMPARISON}},
+    {LESS_EQUAL,    {nullptr,   binary,     PREC_COMPARISON}},
+    {IDENTIFIER,    {_variable,  nullptr,   PREC_NONE}},
+    {STRING,        {_string,    nullptr,   PREC_NONE}},
+    {NUMBER,        {_number,    nullptr,   PREC_NONE}},
+    {AND,           {nullptr,   nullptr,   PREC_NONE}},
+    {CLASS,         {nullptr,   nullptr,   PREC_NONE}},
+    {ELSE,          {nullptr,   nullptr,   PREC_NONE}},
+    {FALSE,         {literal,   nullptr,   PREC_NONE}},
+    {FUNC,          {nullptr,   nullptr,   PREC_NONE}},
+    {FOR,           {nullptr,   nullptr,   PREC_NONE}},
+    {IF,            {nullptr,   nullptr,   PREC_NONE}},
+    {NIL,           {literal,   nullptr,   PREC_NONE}},
+    {OR,            {nullptr,   nullptr,   PREC_NONE}},
+    {INFO,          {nullptr,   nullptr,   PREC_NONE}},
+    {RETURN,        {nullptr,   nullptr,   PREC_NONE}},
+    {SUPER,         {nullptr,   nullptr,   PREC_NONE}},
+    {THIS,          {nullptr,   nullptr,   PREC_NONE}},
+    {TRUE,          {literal,   nullptr,   PREC_NONE}},
+    {HAVE,          {nullptr,   nullptr,   PREC_NONE}},
+    {WHILE,         {nullptr,   nullptr,   PREC_NONE}},
+    {MODULE,        {nullptr,   nullptr,   PREC_NONE}},
+    {USING,         {nullptr,   nullptr,   PREC_NONE}},
+    {ERROR_TOKEN,   {nullptr,   nullptr,   PREC_NONE}},
+    {EOF_TOKEN,     {nullptr,   nullptr,   PREC_NONE}},
+};
+
+const std::unordered_map<TokenKind, bool> return_context = {
+    {CLASS, true},
+    {FUNC, true},
+    {HAVE, true},
+    {FOR, true},
+    {IF, true},
+    {WHILE, true},
+    {INFO, true},
+    {RETURN, true}
+};
+
 #endif // PARSER_HELPER_H
