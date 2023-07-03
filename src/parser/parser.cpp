@@ -231,6 +231,52 @@ void expression_statement() {
     emit_byte(OP_POP);
 }
 
+void for_statement() {
+    begin_scope();
+    parser.consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+    if (parser.match(SEMICOLON)); // No initializer
+    else if (parser.match(HAVE)) var_declaration();
+    else expression_statement();
+
+    int loop_start = compiling_chunk->count;
+    int exit_jump = -1;
+
+    if (!parser.match(SEMICOLON)) {
+        expression();
+        parser.consume(SEMICOLON, "Expect ';' after loop condition.");
+
+        // Jump out of the loop if the condition is false
+        exit_jump = emit_jump(OP_JUMP_IF_FALSE);
+        emit_byte(OP_POP); // Condition
+    }
+
+    int body_jump = -1;
+    if(!parser.match(RIGHT_PAREN)) {
+        body_jump = emit_jump(OP_JUMP);
+
+        int increment_start = compiling_chunk->count;
+        expression();
+        emit_byte(OP_POP);
+        parser.consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+        emit_loop(loop_start);
+        loop_start = increment_start;
+        patch_jump(body_jump);
+    }
+
+    statement();
+    emit_loop(loop_start);
+
+    // Patch the exit jump
+    if (exit_jump != -1) {
+        patch_jump(exit_jump);
+        emit_byte(OP_POP); // Condition
+    }
+
+    end_scope();
+}
+
 void if_statement() {
     parser.consume(LEFT_PAREN, "Expect '(' after 'if'.");
     expression();
@@ -298,6 +344,7 @@ void statement() {
     if (parser.match(INFO))    info_statement();
     else if (parser.match(IF)) if_statement();
     else if (parser.match(WHILE)) while_statement();
+    else if (parser.match(FOR)) for_statement();
     else if (parser.match(USING)) using_statement();
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
     else { expression_statement(); }
