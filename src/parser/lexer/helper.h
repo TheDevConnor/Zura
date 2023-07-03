@@ -1,6 +1,8 @@
 #ifndef AZURA_LEXER_HELPER_H
 #define AZURA_LEXER_HELPER_H
 
+#include <unordered_map>
+
 #include "../helper/import.h"
 #include "tokens.h"
 
@@ -105,6 +107,16 @@ static void skip_whitespace() {
             default: return;
         }
     }
+}
+
+static Token string() {
+    while ((peek() != '"') && !is_at_end()) {
+        if (peek() == '\n') scanner.line++;
+        advance();
+    }
+    if (is_at_end()) error_token("Unterminated string.");
+    advance(); // advance past the closing '"'
+    return make_token(STRING);
 }
 
 struct Keyword {

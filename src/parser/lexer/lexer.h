@@ -2,20 +2,11 @@
 #define AZURA_LEXER_H
 
 #include <string>
+#include <unordered_map>
 
 #include "../helper/import.h"
 #include "tokens.h"
 #include "helper.h"
-
-static Token string() {
-    while ((peek() != '"') && !is_at_end()) {
-        if (peek() == '\n') scanner.line++;
-        advance();
-    }
-    if (is_at_end()) error_token("Unterminated string.");
-    advance(); // advance past the closing '"'
-    return make_token(STRING);
-}
 
 Token scan_token() {
     skip_whitespace();
