@@ -147,6 +147,9 @@ void unary(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
 
+int inner_most_loop_start = -1;
+int inner_most_loop_scope_depth = 0;
+
 std::unordered_map<TokenKind, ParseRule> rules = {
     {LEFT_PAREN,    {grouping,  nullptr,   PREC_NONE}},
     {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
@@ -178,6 +181,8 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {FALSE,         {literal,   nullptr,   PREC_NONE}},
     {FUNC,          {nullptr,   nullptr,   PREC_NONE}},
     {FOR,           {nullptr,   nullptr,   PREC_NONE}},
+    {CONTINUE,      {nullptr,   nullptr,   PREC_NONE}},
+    {BREAK,         {nullptr,   nullptr,   PREC_NONE}},
     {IF,            {nullptr,   nullptr,   PREC_NONE}},
     {NIL,           {literal,   nullptr,   PREC_NONE}},
     {OR,            {nullptr,        or_,   PREC_OR}},

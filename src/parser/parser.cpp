@@ -239,9 +239,12 @@ void for_statement() {
     else if (parser.match(HAVE)) var_declaration();
     else expression_statement();
 
-    int loop_start = compiling_chunk->count;
-    int exit_jump = -1;
+    int surrounding_loop_start = inner_most_loop_start;
+    int surrounding_loop_scope = inner_most_loop_scope_depth;
+    inner_most_loop_start = compiling_chunk->count;
+    inner_most_loop_scope_depth = current->scope_depth;
 
+    int exit_jump = -1;
     if (!parser.match(SEMICOLON)) {
         expression();
         parser.consume(SEMICOLON, "Expect ';' after loop condition.");
@@ -260,19 +263,22 @@ void for_statement() {
         emit_byte(OP_POP);
         parser.consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
-        emit_loop(loop_start);
-        loop_start = increment_start;
+        emit_loop(inner_most_loop_start);
+        inner_most_loop_start = increment_start;
         patch_jump(body_jump);
     }
 
     statement();
-    emit_loop(loop_start);
+    emit_loop(inner_most_loop_start);
 
     // Patch the exit jump
     if (exit_jump != -1) {
         patch_jump(exit_jump);
         emit_byte(OP_POP); // Condition
     }
+
+    inner_most_loop_start = surrounding_loop_start;
+    inner_most_loop_scope_depth = surrounding_loop_scope;
 
     end_scope();
 }
@@ -316,6 +322,32 @@ void while_statement() {
     emit_byte(OP_POP);
 }
 
+void continue_statement() {
+    if (inner_most_loop_start == -1) {
+        parser.error("Cannot use 'continue' outside of a loop.");
+        return;
+    }
+    // Discard any local variables created in the loop
+    for (int i = current->local_count - 1; i >= 0 && current->locals[i].depth > inner_most_loop_scope_depth; i--) {
+        emit_byte(OP_POP);
+    }
+    emit_loop(inner_most_loop_start);
+    parser.consume(SEMICOLON, "Expect ';' after 'continue'.");
+}
+
+void break_statement() {
+    if (inner_most_loop_start == -1) {
+        parser.error("Cannot use 'break' outside of a loop.");
+        return;
+    }
+    // Discard any local variables created in the loop
+    for (int i = current->local_count - 1; i >= 0 && current->locals[i].depth > inner_most_loop_scope_depth; i--) {
+        emit_byte(OP_POP);
+    }
+    emit_byte(OP_BREAK);
+    parser.consume(SEMICOLON, "Expect ';' after 'break'.");
+}
+
 void using_statement() {
     parser.consume(STRING, "Expect string after 'using'.");
     ObjString* moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
@@ -341,11 +373,18 @@ void declaration() {
 }
 
 void statement() {
+    // Control statements
     if (parser.match(INFO))    info_statement();
+    // Conditional statements
     else if (parser.match(IF)) if_statement();
+    // Loop statements
+    else if (parser.match(CONTINUE)) continue_statement();
+    else if (parser.match(BREAK)) break_statement();
     else if (parser.match(WHILE)) while_statement();
     else if (parser.match(FOR)) for_statement();
+    // Import statements
     else if (parser.match(USING)) using_statement();
+    // Block statements
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
     else { expression_statement(); }
 }

@@ -59,7 +59,9 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_SET_LOCAL:  return byte_instruction("OP_SET_LOCAL", chunk, offset);
 
         case OP_JUMP_IF_FALSE: return jump_instruction("OP_JUMP_IF_FALSE", 1, chunk, offset);
+        case OP_LOOP:          return jump_instruction("OP_LOOP", -1, chunk, offset);
         case OP_JUMP:          return jump_instruction("OP_JUMP", 1, chunk, offset);
+        case OP_BREAK:         return jump_instruction("OP_BREAK", 1, chunk, offset);
 
         case OP_NIL:      return simple_instruction("OP_NIL", offset);
         case OP_TRUE:     return simple_instruction("OP_TRUE", offset);
