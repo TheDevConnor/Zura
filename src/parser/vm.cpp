@@ -149,6 +149,17 @@ static InterpretResult run() {
                 pop();
                 break;
             }
+            // Local variable operation codes
+            case OP_GET_LOCAL: {
+                uint8_t slot = *vm.ip++;
+                push(vm.stack[slot]);
+                break;
+            }
+            case OP_SET_LOCAL: {
+                uint8_t slot = *vm.ip++;
+                vm.stack[slot] = peek(0);
+                break;
+            }
 
             // Bool operation codes
             case OP_TRUE:       push(BOOL_VAL(true)); break;

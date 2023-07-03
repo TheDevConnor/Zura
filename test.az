@@ -1,2 +1,6 @@
-have x := 45;
+{
+    have x := 45**2;
+    info x;
+}
+have x := 45**3;
 info x;
