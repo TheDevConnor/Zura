@@ -13,6 +13,16 @@ void emit_bytes(uint8_t byte1, uint8_t byte2) {
     emit_byte(byte2);
 }
 
+void emit_loop(int loop_start) {
+    emit_byte(OP_LOOP);
+
+    int offset = compiling_chunk->count - loop_start + 2;
+    if (offset > UINT16_MAX) parser.error("Loop body too large.");
+
+    emit_byte((offset >> 8) & 0xff);
+    emit_byte(offset & 0xff);
+}
+
 int emit_jump(uint8_t instruction) {
     emit_byte(instruction);
     emit_byte(0xff);
@@ -245,6 +255,21 @@ void info_statement() {
     emit_byte(OP_INFO);
 }
 
+void while_statement() {
+    int loop_start = compiling_chunk->count;
+    parser.consume(LEFT_PAREN, "Expect '(' after 'while'.");
+    expression();
+    parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
+
+    int exit_jump = emit_jump(OP_JUMP_IF_FALSE);
+    emit_byte(OP_POP);
+    statement();
+    emit_loop(loop_start);
+
+    patch_jump(exit_jump);
+    emit_byte(OP_POP);
+}
+
 void using_statement() {
     parser.consume(STRING, "Expect string after 'using'.");
     ObjString* moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
@@ -272,6 +297,7 @@ void declaration() {
 void statement() {
     if (parser.match(INFO))    info_statement();
     else if (parser.match(IF)) if_statement();
+    else if (parser.match(WHILE)) while_statement();
     else if (parser.match(USING)) using_statement();
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
     else { expression_statement(); }

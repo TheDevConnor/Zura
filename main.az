@@ -1,4 +1,10 @@
 using "testing_imports/varuable";
 
-if (x <= y) info "x is less or equal than y"; 
-else info "x is greater than or equal to y";
+// if (x <= y) info "x is less or equal than y"; 
+// else info "x is greater than or equal to y";
+
+// while (true) info "hello world";
+while (x < 4) {
+    info x;
+    x = x + 1;
+}

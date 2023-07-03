@@ -35,6 +35,7 @@ enum OpCode {
     // Jump operations (for if statements, loops, etc.)
     OP_JUMP_IF_FALSE,
     OP_JUMP,
+    OP_LOOP,
     // Statements
     OP_IMPORT,
     OP_INFO,

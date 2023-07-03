@@ -285,6 +285,11 @@ static InterpretResult run() {
                 if (is_falsey(peek(0))) vm.ip += offset;
                 break;
             }
+            case OP_LOOP: {
+                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
+                vm.ip -= offset;
+                break;
+            }
             // Statement operation codes
             case OP_IMPORT: {
                 ObjString* module_name = AS_STRING(pop());
