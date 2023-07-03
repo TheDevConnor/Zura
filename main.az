@@ -1,4 +1,4 @@
 using "testing_imports/varuable";
 
-info y = x**z;
-// 8**(2**8) = 8**256 = 1.3407807929942597e+154 or infinty
+if (x <= y) info "x is less or equal than y"; 
+else info "x is greater than or equal to y";

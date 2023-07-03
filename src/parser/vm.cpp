@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "helper/terminal_color.h"
 #include "../memory/memory.h"
 #include "../debug/debug.h"
 #include "parser.h"
@@ -21,8 +22,9 @@ void reset_stack() {
 void runtime_error(const char* format, ...) {
     size_t instruction = vm.ip - vm.chunk->code - 1;
     int line = vm.chunk->lines[instruction];
-    fprintf(stderr, "[line %d] in script\n", line);
-    fprintf(stderr, "%s\n", format);
+    std::cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
+              << set_color(RED) << line << set_color(RESET) << "] in script" << std::endl;
+    std::cout << format << "\n" << std::endl;
     reset_stack();
 }
 
@@ -86,6 +88,7 @@ ObjModule* load_module(ObjString* name) {
 
     if (!compile(source.c_str(), &chunk)) {
         free_chunk(&chunk);
+        file.close();
         return nullptr;
     }
 
@@ -106,23 +109,22 @@ ObjModule* load_module(ObjString* name) {
     vm.chunk = previousChunk;
     vm.ip = previousIp;
 
-    free_chunk(&chunk);
 
-    if (result == INTERPRET_OK) {
-        return module;
-    } else return nullptr;
+    free_chunk(&chunk);
+    file.close();
+    return result == INTERPRET_OK ? module : nullptr;
 }
 
 ObjModule* import_module(ObjString* name) {
     ObjModule* module = load_module(name);
     if (!module) {
-        runtime_error("Could not load module '%s'", name->chars);
+        std::string message = "Could not load module -> ";
+        message += set_color(RED);
+        message += std::string(name->chars, name->length);
+        runtime_error(message.c_str());
+        message = set_color(RESET);
         return nullptr;
     }
-    // Handle the imported module as needed
-    // For example, you can push the module onto the stack or
-    // add it to a module registry for later access
-    push(OBJ_VAL(module));
     return module;
 }
 
@@ -186,7 +188,11 @@ static InterpretResult run() {
                 ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
                 if (table_set(&vm.globals, name, peek(0))) {
                     table_delete(&vm.globals, name);
-                    runtime_error("Undefined variable '%s'.\n", name->chars);
+                    std::string message = "Undefined variable -> ";
+                    message += set_color(RED);
+                    message += std::string(name->chars, name->length);
+                    message += set_color(RESET);
+                    runtime_error(message.c_str());
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 break;
@@ -195,7 +201,11 @@ static InterpretResult run() {
                 ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
                 Value value;
                 if (!table_get(&vm.globals, name, &value)) {
-                    runtime_error("Undefined variable '%s'.\n", name->chars);
+                    std::string message = "Undefined variable -> ";
+                    message += set_color(RED);
+                    message += std::string(name->chars, name->length);
+                    message += set_color(RESET);
+                    runtime_error(message.c_str());
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 push(value);
@@ -279,11 +289,7 @@ static InterpretResult run() {
             case OP_IMPORT: {
                 ObjString* module_name = AS_STRING(pop());
                 ObjModule* module = import_module(module_name);
-                if (module == nullptr) {
-                    runtime_error("Could not import module '%s'\n", module_name->chars);
-                    return INTERPRET_RUNTIME_ERROR;
-                }
-                push(OBJ_VAL(module));
+                table_set(&vm.modules, module_name, OBJ_VAL(module));
                 break;
             }
             case OP_INFO: {

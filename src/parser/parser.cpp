@@ -247,9 +247,7 @@ void info_statement() {
 
 void using_statement() {
     parser.consume(STRING, "Expect string after 'using'.");
-
     ObjString* moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
-
     parser.consume(SEMICOLON, "Expect ';' after value.");
     emit_constant(OBJ_VAL(moduleName));
     emit_byte(OP_IMPORT);

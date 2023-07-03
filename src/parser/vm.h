@@ -15,6 +15,7 @@ struct VM {
     Value* stack_top;
     Table globals;
     Table strings;
+    Table modules;
     Obj* objects;
 };
 
