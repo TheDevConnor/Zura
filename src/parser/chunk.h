@@ -36,6 +36,7 @@ enum OpCode {
     OP_JUMP_IF_FALSE,
     OP_JUMP,
     // Statements
+    OP_IMPORT,
     OP_INFO,
     OP_POP,
 };

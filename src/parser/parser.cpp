@@ -245,6 +245,16 @@ void info_statement() {
     emit_byte(OP_INFO);
 }
 
+void using_statement() {
+    parser.consume(STRING, "Expect string after 'using'.");
+
+    ObjString* moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
+
+    parser.consume(SEMICOLON, "Expect ';' after value.");
+    emit_constant(OBJ_VAL(moduleName));
+    emit_byte(OP_IMPORT);
+}
+
 void synchronize() {
     parser.panic_mode = false;
 
@@ -264,6 +274,7 @@ void declaration() {
 void statement() {
     if (parser.match(INFO))    info_statement();
     else if (parser.match(IF)) if_statement();
+    else if (parser.match(USING)) using_statement();
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
     else { expression_statement(); }
 }

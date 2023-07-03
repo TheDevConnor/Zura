@@ -2,6 +2,7 @@
 #define AZURA_OBJECT_H
 
 #include "common.h"
+#include "table.h"
 #include "value.h"
 
 #define OBJ_TYPE(value)   (AS_OBJ(value)->type)
@@ -25,6 +26,12 @@ struct ObjString {
     int length;
     char* chars;
     uint32_t hash;
+};
+
+struct ObjModule {
+    Obj obj;
+    ObjString* name;
+    Table variables;
 };
 
 ObjString* take_string(char* chars, int length);

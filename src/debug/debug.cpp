@@ -80,6 +80,8 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_NOT:      return simple_instruction("OP_NOT", offset);
         case OP_NEGATE:   return simple_instruction("OP_NEGATE", offset);
 
+        case OP_IMPORT:   return simple_instruction("OP_IMPORT", offset);
+
         case OP_INFO:     return simple_instruction("OP_INFO", offset);
 
         case OP_RETURN:   return simple_instruction("OP_RETURN", offset);

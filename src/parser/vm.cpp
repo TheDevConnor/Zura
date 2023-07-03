@@ -1,5 +1,7 @@
 #include <unordered_map>
 #include <stdarg.h>
+#include <cstring>
+#include <fstream>
 #include <iostream>
 #include <cmath>
 
@@ -66,6 +68,62 @@ void concatenate() {
     
     ObjString* result = take_string(chars, length);
     push(OBJ_VAL(result));
+}
+
+static InterpretResult run();
+
+ObjModule* load_module(ObjString* name) {
+    std::string moduleFileName = std::string(name->chars, name->length) + ".az";
+
+    std::ifstream file(moduleFileName);
+    if (!file.is_open()) {
+        return nullptr;
+    }
+
+    std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    Chunk chunk;
+    init_chunk(&chunk);
+
+    if (!compile(source.c_str(), &chunk)) {
+        free_chunk(&chunk);
+        return nullptr;
+    }
+
+    ObjModule* module = new ObjModule();
+    module->name = name;
+    init_table(&module->variables);
+
+    push(OBJ_VAL(module));
+
+    Chunk* previousChunk = vm.chunk;
+    uint8_t* previousIp = vm.ip;
+
+    vm.chunk = &chunk;
+    vm.ip = vm.chunk->code;
+
+    InterpretResult result = run();
+
+    vm.chunk = previousChunk;
+    vm.ip = previousIp;
+
+    free_chunk(&chunk);
+
+    if (result == INTERPRET_OK) {
+        return module;
+    } else return nullptr;
+}
+
+ObjModule* import_module(ObjString* name) {
+    ObjModule* module = load_module(name);
+    if (!module) {
+        runtime_error("Could not load module '%s'", name->chars);
+        return nullptr;
+    }
+    // Handle the imported module as needed
+    // For example, you can push the module onto the stack or
+    // add it to a module registry for later access
+    push(OBJ_VAL(module));
+    return module;
 }
 
 static InterpretResult run() {
@@ -218,6 +276,16 @@ static InterpretResult run() {
                 break;
             }
             // Statement operation codes
+            case OP_IMPORT: {
+                ObjString* module_name = AS_STRING(pop());
+                ObjModule* module = import_module(module_name);
+                if (module == nullptr) {
+                    runtime_error("Could not import module '%s'\n", module_name->chars);
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                push(OBJ_VAL(module));
+                break;
+            }
             case OP_INFO: {
                 print_value(pop());
                 std::cout << "\n";
