@@ -206,6 +206,18 @@ static InterpretResult run() {
                 push(NUMBER_VAL(-AS_NUMBER(pop())));
                 break;
             }
+            // Jump operation codes for loops and if statements
+            case OP_JUMP: {
+                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
+                vm.ip += offset;
+                break;
+            }
+            case OP_JUMP_IF_FALSE: {
+                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
+                if (is_falsey(peek(0))) vm.ip += offset;
+                break;
+            }
+            // Statement operation codes
             case OP_INFO: {
                 print_value(pop());
                 std::cout << "\n";

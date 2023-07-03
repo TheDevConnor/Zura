@@ -1,6 +1,7 @@
-{
-    have x := 45**2;
-    info x;
+have x := 1;
+
+if (x > 5 and x < 10) {
+    info "x is greater than 5 and less than 10";
+} else {
+    info "x is not greater than 5 and less than 10";
 }
-have x := 45**3;
-info x;

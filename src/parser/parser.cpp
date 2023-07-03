@@ -13,6 +13,13 @@ void emit_bytes(uint8_t byte1, uint8_t byte2) {
     emit_byte(byte2);
 }
 
+int emit_jump(uint8_t instruction) {
+    emit_byte(instruction);
+    emit_byte(0xff);
+    emit_byte(0xff);
+    return compiling_chunk->count - 2;
+}
+
 uint8_t make_constant(Value value) {
     int constant = add_constant(compiling_chunk, value);
     if (constant > UINT8_MAX) {
@@ -29,6 +36,18 @@ void emit_return() {
 
 void emit_constant(Value v) {
     emit_bytes(OP_CONSTANT, make_constant(v));
+}
+
+void patch_jump(int offset) {
+    // -2 to adjust for the bytecode for the jump offset itself.
+    int jump = compiling_chunk->count - offset - 2;
+
+    if (jump > UINT16_MAX) {
+        parser.error("Too much code to jump over.");
+    }
+
+    compiling_chunk->code[offset] = (jump >> 8) & 0xff;
+    compiling_chunk->code[offset + 1] = jump & 0xff;
 }
 
 void init_compiler(Compiler* compiler) {
@@ -130,6 +149,15 @@ void define_variable(uint8_t global) {
     emit_bytes(OP_DEFINE_GLOBAL, global);
 }
 
+void and_(bool can_assign) {
+    int end_jump = emit_jump(OP_JUMP_IF_FALSE);
+
+    emit_byte(OP_POP);
+    parse_precedence(PREC_AND);
+
+    patch_jump(end_jump);
+}
+
 void binary(bool can_assign) {
     // Remember the operator
     TokenKind operator_type = parser.previous.kind;
@@ -193,6 +221,24 @@ void expression_statement() {
     emit_byte(OP_POP);
 }
 
+void if_statement() {
+    parser.consume(LEFT_PAREN, "Expect '(' after 'if'.");
+    expression();
+    parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
+
+    int then_jump = emit_jump(OP_JUMP_IF_FALSE); 
+    emit_byte(OP_POP);
+    statement();
+
+    int else_jump = emit_jump(OP_JUMP);
+
+    patch_jump(then_jump);
+    emit_byte(OP_POP);
+
+    if (parser.match(ELSE)) statement();
+    patch_jump(else_jump);
+}
+
 void info_statement() {
     expression();
     parser.consume(SEMICOLON, "Expect ';' after value.");
@@ -216,7 +262,8 @@ void declaration() {
 }
 
 void statement() {
-    if (parser.match(INFO)) { info_statement(); }
+    if (parser.match(INFO))    info_statement();
+    else if (parser.match(IF)) if_statement();
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
     else { expression_statement(); }
 }
@@ -249,6 +296,17 @@ void named_variable(Token name, bool can_assign) {
 void _number(bool can_assign) {
     double value = std::strtod(parser.previous.start, nullptr);
     emit_constant(NUMBER_VAL(value));
+}
+
+void or_(bool can_assign) {
+    int else_jump = emit_jump(OP_JUMP_IF_FALSE);
+    int end_jump = emit_jump(OP_JUMP);
+
+    patch_jump(else_jump);
+    emit_byte(OP_POP);
+
+    parse_precedence(PREC_OR);
+    patch_jump(end_jump);
 }
 
 void _string(bool can_assign) {

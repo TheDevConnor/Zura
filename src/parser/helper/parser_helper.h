@@ -141,6 +141,8 @@ void grouping(bool can_assign);
 void _number(bool can_assign);
 void _string(bool can_assign);
 void _variable(bool can_assign);
+void and_(bool can_assign);
+void or_(bool can_assign);
 void unary(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
@@ -170,7 +172,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {IDENTIFIER,    {_variable,  nullptr,   PREC_NONE}},
     {STRING,        {_string,    nullptr,   PREC_NONE}},
     {NUMBER,        {_number,    nullptr,   PREC_NONE}},
-    {AND,           {nullptr,   nullptr,   PREC_NONE}},
+    {AND,           {nullptr,       and_,   PREC_AND}},
     {CLASS,         {nullptr,   nullptr,   PREC_NONE}},
     {ELSE,          {nullptr,   nullptr,   PREC_NONE}},
     {FALSE,         {literal,   nullptr,   PREC_NONE}},
@@ -178,7 +180,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {FOR,           {nullptr,   nullptr,   PREC_NONE}},
     {IF,            {nullptr,   nullptr,   PREC_NONE}},
     {NIL,           {literal,   nullptr,   PREC_NONE}},
-    {OR,            {nullptr,   nullptr,   PREC_NONE}},
+    {OR,            {nullptr,        or_,   PREC_OR}},
     {INFO,          {nullptr,   nullptr,   PREC_NONE}},
     {RETURN,        {nullptr,   nullptr,   PREC_NONE}},
     {SUPER,         {nullptr,   nullptr,   PREC_NONE}},
