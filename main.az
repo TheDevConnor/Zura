@@ -3,4 +3,3 @@ using "testing_imports/varuable";
 have start := clock();
 info fib(35);
 info clock() - start;
-info "";

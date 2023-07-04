@@ -141,6 +141,11 @@ ObjModule* load_module(ObjString* name) {
 
     std::ifstream file(moduleFileName);
     if (!file.is_open()) {
+        std::string message = "Could not open file -> ";
+        message += set_color(RED);
+        message += moduleFileName;
+        message += set_color(RESET);
+        runtime_error(message.c_str());
         return nullptr;
     }
 
@@ -153,14 +158,6 @@ ObjModule* load_module(ObjString* name) {
 
 ObjModule* import_module(ObjString* name) {
     ObjModule* module = load_module(name);
-    if (!module) {
-        std::string message = "Could not load module -> ";
-        message += set_color(RED);
-        message += std::string(name->chars, name->length);
-        runtime_error(message.c_str());
-        message = set_color(RESET);
-        return nullptr;
-    }
     table_set(&vm.modules, name, OBJ_VAL(module));
     return module;
 }
@@ -190,7 +187,7 @@ static InterpretResult run() {
     #define BINARY_OP(value_type, op)                           \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                std::cout << "Operands must be numbers\n";      \
+                runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -201,7 +198,7 @@ static InterpretResult run() {
         #define MODULO_OP(value_type, op)                       \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                std::cout << "Operands must be numbers\n";      \
+                runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -212,7 +209,7 @@ static InterpretResult run() {
         #define POW_OP(value_type, op)                          \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                std::cout << "Operands must be numbers\n";      \
+                runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -313,7 +310,7 @@ static InterpretResult run() {
             case OP_NOT: push(BOOL_VAL(is_falsey(pop()))); break;
             case OP_NEGATE: {
                 if(!IS_NUMBER(peek(0))) {
-                    std::cout << "Operand must be a number\n";
+                    runtime_error("Operands must be numbers\n");
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 push(NUMBER_VAL(-AS_NUMBER(pop())));
