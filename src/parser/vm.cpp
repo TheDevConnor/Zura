@@ -7,6 +7,7 @@
 
 #include "helper/terminal_color.h"
 #include "../memory/memory.h"
+#include "native_fn/native.h"
 #include "../debug/debug.h"
 #include "parser.h"
 #include "common.h"
@@ -39,7 +40,6 @@ void runtime_error(const char* format, ...) {
             std::cout << set_color(RED) << function->name->chars << set_color(RESET) << std::endl;
         }
     }
-
     reset_stack();
 }
 
@@ -49,6 +49,8 @@ void init_vm() {
 
     init_table(&vm.globals);
     init_table(&vm.strings);
+
+    define_all_natives();
 }
 
 void free_vm() { 
@@ -99,6 +101,14 @@ bool call_value(Value callee, int arg_count) {
     if(IS_OBJECT(callee)) {
         switch (OBJ_TYPE(callee)) {
             case OBJ_FUNCTION: return call(AS_FUNCTION(callee), arg_count);
+            case OBJ_NATIVE: {
+                NativeFn native = AS_NATIVE(callee);
+                Value result = native(arg_count, vm.stack_top - arg_count);
+                vm.stack_top -= arg_count + 1;
+                push(result);
+                return true;
+            }
+            default: break; // Non-callable object type.
         }
     }
     runtime_error("Can only call functions and classes!");
@@ -137,7 +147,6 @@ ObjModule* load_module(ObjString* name) {
     std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     InterpretResult result = interpret(source.c_str());
     if (result != INTERPRET_OK) return nullptr;
-    table_add_all(&vm.globals, &vm.modules);
     file.close();
     return AS_MODULE(pop());
 }
@@ -152,6 +161,7 @@ ObjModule* import_module(ObjString* name) {
         message = set_color(RESET);
         return nullptr;
     }
+    table_set(&vm.modules, name, OBJ_VAL(module));
     return module;
 }
 
@@ -353,11 +363,11 @@ static InterpretResult run() {
                 Value result = pop();
                 vm.frame_count--;
                 if (vm.frame_count == 0) {
-                    pop();
                     return INTERPRET_OK;
                 }
                 vm.stack_top = frame->slots;
                 push(result);
+                
                 frame = &vm.frames[vm.frame_count - 1];
                 break;
             }

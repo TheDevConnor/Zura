@@ -25,6 +25,10 @@ static void free_obj(Obj* object) {
             FREE(ObjFunction, object);
             break;
         }
+        case OBJ_NATIVE: {
+            FREE(ObjNative, object);
+            break;
+        }
         case OBJ_STRING: {
             ObjString* string = reinterpret_cast<ObjString*>(object);
             reallocate(string, sizeof(ObjString) + string->length + 1, 0);

@@ -1,3 +1,6 @@
 using "testing_imports/varuable";
 
-info add(1, 2);
+have start := clock();
+info fib(35);
+info clock() - start;
+info "";
