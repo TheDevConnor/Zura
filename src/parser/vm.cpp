@@ -103,10 +103,13 @@ bool call_value(Value callee, int arg_count) {
             case OBJ_FUNCTION: return call(AS_FUNCTION(callee), arg_count);
             case OBJ_NATIVE: {
                 NativeFn native = AS_NATIVE(callee);
-                Value result = native(arg_count, vm.stack_top - arg_count);
-                vm.stack_top -= arg_count + 1;
-                push(result);
-                return true;
+                if (native(arg_count, vm.stack_top - arg_count)) {
+                    vm.stack_top -= arg_count;
+                    return true;
+                } else {
+                    runtime_error(AS_STRING(vm.stack_top[-arg_count - 1])->chars);
+                    return false;
+                }
             }
             default: break; // Non-callable object type.
         }

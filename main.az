@@ -1,5 +1,5 @@
 using "testing_imports/varuable";
 
 have start := clock();
-info fib(35);
+info fib(30);
 info clock() - start;

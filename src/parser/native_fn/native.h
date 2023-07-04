@@ -16,10 +16,10 @@ void define_native(const char* name, NativeFn function) {
     pop();
 }
 
-Value clock_native(int arg_count, Value* args) {
-    (void)args;
+bool clock_native(int arg_count, Value* args) {
     (void)arg_count;
-    return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+    args[-1] = NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+    return true;
 }
 
 void define_all_natives() {
