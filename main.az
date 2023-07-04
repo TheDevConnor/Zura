@@ -1,5 +1,5 @@
-using "testing_imports/varuable";
+using "testing_imports/varuable.az";
 
 have start := clock();
-info fib(30);
+info fib(1);
 info clock() - start;

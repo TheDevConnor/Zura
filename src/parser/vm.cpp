@@ -136,11 +136,8 @@ void concatenate() {
     push(OBJ_VAL(result));
 }
 
-static InterpretResult run();
-
 ObjModule* load_module(ObjString* name) {
     const char* moduleFileName = name->chars;
-    moduleFileName = strcat((char*)moduleFileName, ".az");
 
     std::ifstream file(moduleFileName);
     if (!file.is_open()) {
@@ -153,15 +150,18 @@ ObjModule* load_module(ObjString* name) {
     }
 
     std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    InterpretResult result = interpret(source.c_str());
-    if (result != INTERPRET_OK) return nullptr;
+    ObjFunction* function = compile(source.c_str());
     file.close();
-    return AS_MODULE(pop());
+
+    // Create an ObjModule and assign the compiled function to it
+    ObjModule* module = new ObjModule();
+    module->function = function;
+    return module;
 }
 
 ObjModule* import_module(ObjString* name) {
     ObjModule* module = load_module(name);
-    table_set(&vm.modules, name, OBJ_VAL(module));
+    push(OBJ_VAL(module));
     return module;
 }
 
@@ -351,7 +351,7 @@ static InterpretResult run() {
             case OP_IMPORT: {
                 ObjString* module_name = AS_STRING(pop());
                 ObjModule* module = import_module(module_name);
-                table_set(&vm.modules, module_name, OBJ_VAL(module));
+                push(OBJ_VAL(module));
                 break;
             }
             case OP_INFO: {

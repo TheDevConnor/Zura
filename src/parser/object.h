@@ -54,6 +54,7 @@ struct ObjModule {
     Obj obj;
     ObjString* name;
     Table variables;
+    ObjFunction* function;
 };
 
 ObjFunction* new_function();
