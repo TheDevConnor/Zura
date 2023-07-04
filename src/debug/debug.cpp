@@ -51,8 +51,8 @@ int disassemble_instruction(Chunk* chunk, int offset) {
     switch (instruction) {
         case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
 
-        case OP_SET_GLOBAL:    return constant_instruction("OP_SET_GLOBAL", chunk, offset);
         case OP_GET_GLOBAL:    return constant_instruction("OP_GET_GLOBAL", chunk, offset);
+        case OP_SET_GLOBAL:    return constant_instruction("OP_SET_GLOBAL", chunk, offset);
         case OP_DEFINE_GLOBAL: return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
 
         case OP_GET_LOCAL:  return byte_instruction("OP_GET_LOCAL", chunk, offset);
@@ -81,6 +81,8 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         
         case OP_NOT:      return simple_instruction("OP_NOT", offset);
         case OP_NEGATE:   return simple_instruction("OP_NEGATE", offset);
+
+        case OP_CALL:     return byte_instruction("OP_CALL", chunk, offset);
 
         case OP_IMPORT:   return simple_instruction("OP_IMPORT", offset);
 

@@ -17,14 +17,29 @@ VM vm;
 
 void reset_stack() {
     vm.stack_top = vm.stack;
+    vm.frame_count = 0;
 }
 
 void runtime_error(const char* format, ...) {
-    size_t instruction = vm.ip - vm.chunk->code - 1;
-    int line = vm.chunk->lines[instruction];
-    std::cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
-              << set_color(RED) << line << set_color(RESET) << "] in script" << std::endl;
-    std::cout << format << "\n" << std::endl;
+    va_list args;
+    va_start(args, format);
+    std::vprintf(format, args);
+    va_end(args);
+    std::cout << std::endl;
+
+    for (int i = vm.frame_count - 1; i >= 0; i--) {
+        CallFrame* frame = &vm.frames[i];
+        ObjFunction* function = frame->function;
+        size_t instruction = frame->ip - function->chunk.code - 1;
+        std::cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
+                  << set_color(RED) << function->chunk.lines[instruction] << set_color(RESET) << "] in ";
+        if(function->name == nullptr) {
+            std::cout << set_color(RED) << "script" << set_color(RESET) << std::endl;
+        } else {
+            std::cout << set_color(RED) << function->name->chars << set_color(RESET) << std::endl;
+        }
+    }
+
     reset_stack();
 }
 
@@ -54,6 +69,42 @@ Value pop() {
 
 Value peek(int distance) { return vm.stack_top[-1 - distance]; }
 
+bool call(ObjFunction* function, int arg_count) {
+    if(arg_count != function->arity) {
+        std::string message = "Expected -> ";
+        message += set_color(RED);
+        message += std::to_string(function->arity);
+        message += set_color(RESET);
+        message += " arguments but got -> ";
+        message += set_color(RED);
+        message += std::to_string(arg_count);
+        message += set_color(RESET);
+        runtime_error(message.c_str());
+        return false;
+    }
+
+    if(vm.frame_count == FRAMES_MAX) {
+        runtime_error("Stack overflow!");
+        return false;
+    }
+
+    CallFrame* frame = &vm.frames[vm.frame_count++];
+    frame->function = function;
+    frame->ip = function->chunk.code;
+    frame->slots = vm.stack_top - arg_count - 1;
+    return true;
+}
+
+bool call_value(Value callee, int arg_count) {
+    if(IS_OBJECT(callee)) {
+        switch (OBJ_TYPE(callee)) {
+            case OBJ_FUNCTION: return call(AS_FUNCTION(callee), arg_count);
+        }
+    }
+    runtime_error("Can only call functions and classes!");
+    return false;
+}
+
 bool is_falsey(Value value) {
     return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
@@ -75,7 +126,8 @@ void concatenate() {
 static InterpretResult run();
 
 ObjModule* load_module(ObjString* name) {
-    std::string moduleFileName = std::string(name->chars, name->length) + ".az";
+    const char* moduleFileName = name->chars;
+    moduleFileName = strcat((char*)moduleFileName, ".az");
 
     std::ifstream file(moduleFileName);
     if (!file.is_open()) {
@@ -83,36 +135,11 @@ ObjModule* load_module(ObjString* name) {
     }
 
     std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    Chunk chunk;
-    init_chunk(&chunk);
-
-    if (!compile(source.c_str(), &chunk)) {
-        free_chunk(&chunk);
-        file.close();
-        return nullptr;
-    }
-
-    ObjModule* module = new ObjModule();
-    module->name = name;
-    init_table(&module->variables);
-
-    push(OBJ_VAL(module));
-
-    Chunk* previousChunk = vm.chunk;
-    uint8_t* previousIp = vm.ip;
-
-    vm.chunk = &chunk;
-    vm.ip = vm.chunk->code;
-
-    InterpretResult result = run();
-
-    vm.chunk = previousChunk;
-    vm.ip = previousIp;
-
-
-    free_chunk(&chunk);
+    InterpretResult result = interpret(source.c_str());
+    if (result != INTERPRET_OK) return nullptr;
+    table_add_all(&vm.globals, &vm.modules);
     file.close();
-    return result == INTERPRET_OK ? module : nullptr;
+    return AS_MODULE(pop());
 }
 
 ObjModule* import_module(ObjString* name) {
@@ -141,6 +168,15 @@ static InterpretResult run() {
         };
     #endif
 
+    CallFrame* frame = &vm.frames[vm.frame_count - 1];
+
+    #define read_byte() (*frame->ip++)
+    #define read_short()                                        \
+        (frame->ip += 2,                                        \
+        (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
+    #define read_constant()                                     \
+        (frame->function->chunk.constants.values[read_byte()])
+    
     #define BINARY_OP(value_type, op)                           \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
@@ -177,15 +213,15 @@ static InterpretResult run() {
     for (;;) {
         #ifndef DEBUG_TRACE_EXECUTION
             print_stack();
-            disassemble_instruction(vm.chunk, static_cast<int>(vm.ip - vm.chunk->code));
+            disassemble_instruction(&frame->function->chunk, (int)(frame->ip - frame->function->chunk.code));
         #endif
 
-        uint8_t instruction = *vm.ip++;
-        switch (instruction) {
-            case OP_CONSTANT: push(vm.chunk->constants.values[*vm.ip++]); break;
+        uint8_t instruction;
+        switch (instruction = read_byte()) {
+            case OP_CONSTANT: push(read_constant()); break;
             // Global variable operation codes
             case OP_SET_GLOBAL: {
-                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                ObjString* name = AS_STRING(read_constant());
                 if (table_set(&vm.globals, name, peek(0))) {
                     table_delete(&vm.globals, name);
                     std::string message = "Undefined variable -> ";
@@ -198,7 +234,7 @@ static InterpretResult run() {
                 break;
             }
             case OP_GET_GLOBAL: {
-                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                ObjString* name = AS_STRING(read_constant());
                 Value value;
                 if (!table_get(&vm.globals, name, &value)) {
                     std::string message = "Undefined variable -> ";
@@ -212,23 +248,22 @@ static InterpretResult run() {
                 break;
             }
             case OP_DEFINE_GLOBAL: {
-                ObjString* name = AS_STRING(vm.chunk->constants.values[*vm.ip++]);
+                ObjString* name = AS_STRING(read_constant());
                 table_set(&vm.globals, name, peek(0));
                 pop();
                 break;
             }
             // Local variable operation codes
             case OP_GET_LOCAL: {
-                uint8_t slot = *vm.ip++;
-                push(vm.stack[slot]);
+                uint8_t slot = read_byte();
+                push(frame->slots[slot]);
                 break;
             }
             case OP_SET_LOCAL: {
-                uint8_t slot = *vm.ip++;
-                vm.stack[slot] = peek(0);
+                uint8_t slot = read_byte();
+                frame->slots[slot] = peek(0);
                 break;
             }
-
             // Bool operation codes
             case OP_TRUE:       push(BOOL_VAL(true)); break;
             case OP_FALSE:      push(BOOL_VAL(false)); break;
@@ -276,23 +311,30 @@ static InterpretResult run() {
             }
             // Jump operation codes for loops and if statements
             case OP_JUMP: {
-                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
-                vm.ip += offset;
+                uint16_t offset = read_short();
+                frame->ip += offset;
                 break;
             }
             case OP_JUMP_IF_FALSE: {
-                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
-                if (is_falsey(peek(0))) vm.ip += offset;
+                uint16_t offset = read_short();
+                if (is_falsey(peek(0))) frame->ip += offset;
                 break;
             }
             case OP_LOOP: {
-                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
-                vm.ip -= offset;
+                uint16_t offset = read_short();
+                frame->ip -= offset;
                 break;
             }
             case OP_BREAK: {
-                uint16_t offset = (vm.ip += 2, (uint16_t)((vm.ip[-2] << 8) | vm.ip[-1]));
-                vm.ip += offset;
+                uint16_t offset = read_short();
+                frame->ip += offset;
+                break;
+            }
+            // Call operation codes
+            case OP_CALL: {
+                int arg_count = read_byte();
+                if(!call_value(peek(arg_count), arg_count)) return INTERPRET_RUNTIME_ERROR;
+                frame = &vm.frames[vm.frame_count - 1];
                 break;
             }
             // Statement operation codes
@@ -308,9 +350,16 @@ static InterpretResult run() {
                 break;
             }
             case OP_RETURN: {
-                print_value(pop());
-                std::cout << "\n";
-                return INTERPRET_OK;
+                Value result = pop();
+                vm.frame_count--;
+                if (vm.frame_count == 0) {
+                    pop();
+                    return INTERPRET_OK;
+                }
+                vm.stack_top = frame->slots;
+                push(result);
+                frame = &vm.frames[vm.frame_count - 1];
+                break;
             }
             default: {
                 std::cout << "Unknown opcode " << instruction;
@@ -323,19 +372,11 @@ static InterpretResult run() {
 }
 
 InterpretResult interpret(const char* source) {
-    Chunk chunk;
-    init_chunk(&chunk);
+    ObjFunction* function = compile(source);
+    if (function == nullptr) return INTERPRET_COMPILE_ERROR;
 
-    if (!compile(source, &chunk)) {
-        free_chunk(&chunk);
-        return INTERPRET_COMPILE_ERROR;
-    }
+    push(OBJ_VAL(function));
+    call(function, 0);
 
-    vm.chunk = &chunk;
-    vm.ip = vm.chunk->code;
-
-    InterpretResult result = run();
-
-    free_chunk(&chunk);
-    return result;
+    return run();
 }

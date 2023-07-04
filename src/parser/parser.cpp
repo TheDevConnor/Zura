@@ -5,7 +5,7 @@
 #include "parser.h"
 
 void emit_byte(uint8_t byte) {
-    write_chunk(compiling_chunk, byte, parser.previous.line);
+    write_chunk(compiling_chunk(), byte, parser.previous.line);
 }
 
 void emit_bytes(uint8_t byte1, uint8_t byte2) {
@@ -16,7 +16,7 @@ void emit_bytes(uint8_t byte1, uint8_t byte2) {
 void emit_loop(int loop_start) {
     emit_byte(OP_LOOP);
 
-    int offset = compiling_chunk->count - loop_start + 2;
+    int offset = compiling_chunk()->count - loop_start + 2;
     if (offset > UINT16_MAX) parser.error("Loop body too large.");
 
     emit_byte((offset >> 8) & 0xff);
@@ -27,11 +27,11 @@ int emit_jump(uint8_t instruction) {
     emit_byte(instruction);
     emit_byte(0xff);
     emit_byte(0xff);
-    return compiling_chunk->count - 2;
+    return compiling_chunk()->count - 2;
 }
 
 uint8_t make_constant(Value value) {
-    int constant = add_constant(compiling_chunk, value);
+    int constant = add_constant(compiling_chunk(), value);
     if (constant > UINT8_MAX) {
         parser.error("Too many constants in one chunk.");
         return 0;
@@ -41,6 +41,7 @@ uint8_t make_constant(Value value) {
 }
 
 void emit_return() {
+    emit_byte(OP_NIL);
     emit_byte(OP_RETURN);
 }
 
@@ -50,28 +51,44 @@ void emit_constant(Value v) {
 
 void patch_jump(int offset) {
     // -2 to adjust for the bytecode for the jump offset itself.
-    int jump = compiling_chunk->count - offset - 2;
+    int jump = compiling_chunk()->count - offset - 2;
 
     if (jump > UINT16_MAX) {
         parser.error("Too much code to jump over.");
     }
 
-    compiling_chunk->code[offset] = (jump >> 8) & 0xff;
-    compiling_chunk->code[offset + 1] = jump & 0xff;
+    compiling_chunk()->code[offset] = (jump >> 8) & 0xff;
+    compiling_chunk()->code[offset + 1] = jump & 0xff;
 }
 
-void init_compiler(Compiler* compiler) {
+void init_compiler(Compiler* compiler, FunctionType type) {
+    compiler->enclosing = current;
+    compiler->function = nullptr;
+    compiler->type = type;
     compiler->local_count = 0;
     compiler->scope_depth = 0;
+    compiler->function = new_function();
     current = compiler;
+
+    if(type != TYPE_SCRIPT) current->function->name = copy_string(parser.previous.start, parser.previous.length);
+
+    Local* local = &current->locals[current->local_count++];
+    local->depth = 0;
+    local->name.start = "";
+    local->name.length = 0;
 }
 
-void end_compiler() {
+ObjFunction* end_compiler() {
     emit_return();
+    ObjFunction* function = current->function;
     #ifndef DEBUG_PRINT_CODE
         #include "../debug/debug.h"
-        if (parser.had_error) disassemble_chunk(compiling_chunk, "code");
-    #endif
+        if (!parser.had_error) disassemble_chunk(compiling_chunk(), 
+            function->name != nullptr ? function->name->chars : "<script>");
+    #endif 
+
+    current = current->enclosing;
+    return function;
 }
 
 void begin_scope() { current->scope_depth++; }
@@ -159,6 +176,19 @@ void define_variable(uint8_t global) {
     emit_bytes(OP_DEFINE_GLOBAL, global);
 }
 
+uint8_t argument_list() {
+    uint8_t arg_count = 0;
+    if(!parser.check(RIGHT_PAREN)) {
+        do {
+            expression();
+            if(arg_count == 255) parser.error("Can't have more than 255 arguments");
+            arg_count++;
+        } while(parser.match(COMMA));
+    }
+    parser.consume(RIGHT_PAREN, "Expected a ')' after arguments");
+    return arg_count;
+}
+
 void and_(bool can_assign) {
     int end_jump = emit_jump(OP_JUMP_IF_FALSE);
 
@@ -215,6 +245,35 @@ void block() {
     parser.consume(RIGHT_BRACE, "Expect '}' after block.");
 }
 
+void function(FunctionType type) {
+    Compiler compiler;
+    init_compiler(&compiler, type);
+    begin_scope();
+
+    parser.consume(LEFT_PAREN, "Expected a '(' after a function name!");
+    if (!parser.check(RIGHT_PAREN)) {
+        do {
+            current->function->arity++;
+            if(current->function->arity > 255) parser.error_at_current("Can't have more than 255 parameters!");
+            uint8_t constant = parser_variable("Expected paramerter name!");
+            define_variable(constant);
+        } while (parser.match(COMMA));
+    }
+    parser.consume(RIGHT_PAREN, "Expected a ')' after parameters!");
+    parser.consume(LEFT_BRACE, "Expected a '{' after a function body!");
+    block();
+
+    ObjFunction* function = end_compiler();
+    emit_bytes(OP_CONSTANT, make_constant(OBJ_VAL(function)));
+}
+
+void func_declaration() {
+    uint8_t global = parser_variable("Expected a function name!");
+    mark_initialized();
+    function(TYPE_FUNCTION);
+    define_variable(global);
+}
+
 void var_declaration() {
     uint8_t global = parser_variable("Expect variable name.");
 
@@ -241,7 +300,7 @@ void for_statement() {
 
     int surrounding_loop_start = inner_most_loop_start;
     int surrounding_loop_scope = inner_most_loop_scope_depth;
-    inner_most_loop_start = compiling_chunk->count;
+    inner_most_loop_start = compiling_chunk()->count;
     inner_most_loop_scope_depth = current->scope_depth;
 
     int exit_jump = -1;
@@ -258,7 +317,7 @@ void for_statement() {
     if(!parser.match(RIGHT_PAREN)) {
         body_jump = emit_jump(OP_JUMP);
 
-        int increment_start = compiling_chunk->count;
+        int increment_start = compiling_chunk()->count;
         expression();
         emit_byte(OP_POP);
         parser.consume(RIGHT_PAREN, "Expect ')' after for clauses.");
@@ -307,8 +366,18 @@ void info_statement() {
     emit_byte(OP_INFO);
 }
 
+void return_statement() {
+    if (current->type == TYPE_SCRIPT) parser.error("Can't return from top-level code!");
+    if (parser.match(SEMICOLON)) emit_return();
+    else {
+        expression();
+        parser.consume(SEMICOLON, "Expected ';' after the return value");
+        emit_byte(OP_RETURN);
+    }
+}
+
 void while_statement() {
-    int loop_start = compiling_chunk->count;
+    int loop_start = compiling_chunk()->count;
     parser.consume(LEFT_PAREN, "Expect '(' after 'while'.");
     expression();
     parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
@@ -368,6 +437,7 @@ void synchronize() {
 
 void declaration() {
     if (parser.panic_mode) synchronize();
+    else if (parser.match(FUNC)) { func_declaration();}
     else if (parser.match(HAVE)) { var_declaration(); }
     else { statement(); }
 }
@@ -375,6 +445,7 @@ void declaration() {
 void statement() {
     // Control statements
     if (parser.match(INFO))    info_statement();
+    else if (parser.match(RETURN)) return_statement();
     // Conditional statements
     else if (parser.match(IF)) if_statement();
     // Loop statements
@@ -386,6 +457,7 @@ void statement() {
     else if (parser.match(USING)) using_statement();
     // Block statements
     else if (parser.match(LEFT_BRACE)) { begin_scope(); block(); end_scope(); }
+    // Other Statements
     else { expression_statement(); }
 }
 
@@ -452,6 +524,11 @@ void unary(bool can_assign) {
     }
 }
 
+void call(bool can_assign) {
+    uint8_t arg_count = argument_list();
+    emit_bytes(OP_CALL, arg_count);
+}
+
 void parse_precedence(Precedence prec) {
     parser.advance(); // Consume the operator
     parse_fn prefix_rule = get_rule(parser.previous.kind)->prefix;
@@ -478,11 +555,10 @@ ParseRule* get_rule(TokenKind kind) {
     return &rules[kind];
 }
 
-bool compile(const char* source, Chunk* chunk) {
+ObjFunction* compile(const char* source) {
     init_tokenizer(source);
     Compiler compiler;
-    init_compiler(&compiler); 
-    compiling_chunk = chunk;
+    init_compiler(&compiler, TYPE_SCRIPT);
 
     parser.had_error = false;
     parser.panic_mode = false;
@@ -493,6 +569,6 @@ bool compile(const char* source, Chunk* chunk) {
         declaration();
     }
 
-    end_compiler();
-    return !parser.had_error;
+    ObjFunction* function = end_compiler();
+    return parser.had_error ? nullptr : function;
 }

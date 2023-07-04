@@ -2,23 +2,35 @@
 #define AZURA_OBJECT_H
 
 #include "common.h"
+#include "chunk.h"
 #include "table.h"
 #include "value.h"
 
-#define OBJ_TYPE(value)   (AS_OBJ(value)->type)
+#define OBJ_TYPE(value)     (AS_OBJ(value)->type)
 
-#define IS_STRING(value)  is_obj_type(value, OBJ_STRING)
+#define IS_FUNCTION(value)  is_obj_type(value, OBJ_FUNCTION)
+#define IS_STRING(value)    is_obj_type(value, OBJ_STRING)
 
-#define AS_STRING(value)  ((ObjString*)AS_OBJ(value))
-#define AS_CSTRING(value) (((ObjString*)AS_OBJ(value))->chars)
+#define AS_FUNCTION(value)  ((ObjFunction*)AS_OBJ(value))
+#define AS_STRING(value)    ((ObjString*)AS_OBJ(value))
+#define AS_CSTRING(value)   (((ObjString*)AS_OBJ(value))->chars)
+#define AS_MODULE(value)    ((ObjModule*)AS_OBJ(value))
 
 enum ObjType {
+    OBJ_FUNCTION,
     OBJ_STRING,
 };
 
 struct Obj {
     ObjType type;
     struct Obj* next;
+};
+
+struct ObjFunction {
+    Obj obj;
+    int arity;
+    Chunk chunk;
+    ObjString* name;
 };
 
 struct ObjString {
@@ -34,6 +46,7 @@ struct ObjModule {
     Table variables;
 };
 
+ObjFunction* new_function();
 ObjString* take_string(char* chars, int length);
 ObjString* copy_string(const char* chars, int length);
 

@@ -1,20 +1,3 @@
 using "testing_imports/varuable";
 
-// if (x <= y) info "x is less or equal than y"; 
-// else info "x is greater than or equal to y";
-
-// while (true) info "hello world";
-// while (x < 4) {
-//     info x;
-//     x = x + 1;
-// }
-
-// for (have i := 0; i < 10; i = i + 1) {
-//     info i;
-// }
-
-for (have i := 0; i <= 10; i = i + 1) {
-    if (i == 5) continue;
-    if (i == 9) break;
-    info i;
-}
+info add(1, 2);

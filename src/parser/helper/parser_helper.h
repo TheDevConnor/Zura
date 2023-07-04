@@ -2,6 +2,7 @@
 #define PARSER_HELPER_H
 
 #include "../lexer/lexer.h"
+#include "../object.h"
 #include "../common.h"
 
 class Parser {
@@ -126,7 +127,16 @@ struct Local {
     int depth;
 };
 
+enum FunctionType {
+    TYPE_FUNCTION,
+    TYPE_SCRIPT,
+};
+
 struct Compiler {
+    struct Compiler* enclosing;
+    ObjFunction* function;
+    FunctionType type;
+
     Local locals[UINT8_COUNT];
     int local_count;
     int scope_depth;
@@ -134,8 +144,8 @@ struct Compiler {
 
 struct Parser parser;
 struct Compiler* current = nullptr;
-struct Chunk* compiling_chunk;
 
+Chunk* compiling_chunk() { return &current->function->chunk; }
 
 void grouping(bool can_assign);
 void _number(bool can_assign);
@@ -144,6 +154,7 @@ void _variable(bool can_assign);
 void and_(bool can_assign);
 void or_(bool can_assign);
 void unary(bool can_assign);
+void call(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
 
@@ -151,7 +162,7 @@ int inner_most_loop_start = -1;
 int inner_most_loop_scope_depth = 0;
 
 std::unordered_map<TokenKind, ParseRule> rules = {
-    {LEFT_PAREN,    {grouping,  nullptr,   PREC_NONE}},
+    {LEFT_PAREN,    {grouping,  call,       PREC_CALL}},
     {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
     {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
     {RIGHT_BRACE,   {nullptr,   nullptr,   PREC_NONE}},

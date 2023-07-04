@@ -19,6 +19,12 @@ void* reallocate(void* pointer, size_t old_size, size_t new_size) {
 
 static void free_obj(Obj* object) {
     switch (object->type) {
+        case OBJ_FUNCTION: {
+            ObjFunction* function = (ObjFunction*) object;
+            free_chunk(&function->chunk);
+            FREE(ObjFunction, object);
+            break;
+        }
         case OBJ_STRING: {
             ObjString* string = reinterpret_cast<ObjString*>(object);
             reallocate(string, sizeof(ObjString) + string->length + 1, 0);

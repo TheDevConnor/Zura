@@ -142,7 +142,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "else")    == 0)    return ELSE;
     if (strcmp(keyword, "false")   == 0)   return FALSE;
     if (strcmp(keyword, "for")     == 0)     return FOR;
-    if (strcmp(keyword, "fun")     == 0)     return FUNC;
+    if (strcmp(keyword, "func")     == 0)     return FUNC;
     if (strcmp(keyword, "if")      == 0)      return IF;
     if (strcmp(keyword, "info")    == 0)    return INFO;
     if (strcmp(keyword, "nil")     == 0)     return NIL;

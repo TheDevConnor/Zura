@@ -37,6 +37,8 @@ enum OpCode {
     OP_JUMP,
     OP_LOOP,
     OP_BREAK,
+    // Call operation
+    OP_CALL,
     // Statements
     OP_IMPORT,
     OP_INFO,
