@@ -1,6 +1,8 @@
 CXX := g++
 CXXFLAGS := -O2 -std=c++11 -Wall -Wextra
 
+VALGRIND := valgrind
+
 BIN_PATH := bin
 SRC_PATH := src
 SRC_PARSER_PATH := src/parser
@@ -16,19 +18,25 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q 
 endif
 
-SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
-
-MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 workflow:
-	@python progress_bar.py $(CXX) -o azura $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+	@python progress_bar.py $(CXX) -o azura $(SOURCE_FILES) $(CXXFLAGS)
 
 linux:
-	@python progress_bar.py $(CXX) -o ./bin/azura $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+	@echo Cleaning...
+	@$(RM) $(BIN_PATH)/*
+	@echo Cleaned
+
+	@python progress_bar.py $(CXX) -o $(TARGET)/azura $(SOURCE_FILES) $(CXXFLAGS)
 
 windows:
 	@echo Cleaning...
-	@$(RM) $(BIN_PATH) 
-	@echo Clean complete!
+	@$(RM) $(BIN_PATH)/*
+	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+	@python progress_bar.py $(CXX) -o $(TARGET)/azura $(SOURCE_FILES) $(CXXFLAGS)
+
+valgrind:
+	@echo Checking for memory leaks
+	$(VALGRIND) ./azura
