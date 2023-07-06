@@ -1,28 +1,16 @@
-name: "pre-release"
+name: C/C++ CI
 
-on:
-  push:
-    branches:
-      - "master"
+on: [push]
 
 jobs:
-  pre-release:
-    name: "Pre Release"
-    runs-on: "ubuntu-latest"
-
+  ubuntu-build:
+    runs-on: ubuntu-latest
     steps:
-      # ...
-      - name: "Build & test"
-        run: |
-          echo "done!"
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            src/*.cpp
-            bin/*
-            
+    - name: Checkout
+      uses: actions/checkout@v2.0.0
+    - name: Build project
+      uses: nicledomaS/cmake_build_action@v1.4
+      with:
+        submodule_update: ON
+        run_tests: ON
+        unit_test_build: -Dtest=ON
