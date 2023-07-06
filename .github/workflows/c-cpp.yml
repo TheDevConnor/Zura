@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: "actions/checkout@v3"
     - name: "Build"
-      run: make linux
+      run: make workflow
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -23,5 +23,3 @@ jobs:
         files: |
           ./bin/*
           ./README.md
-          ./src/*
-          

@@ -20,6 +20,9 @@ SOURCE_FILES := $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*
 
 MAIN_FILE := $(wildcard $(SRC_PATH)/main.cpp)
 
+workflow:
+	@python progress_bar.py $(CXX) -o azura $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
+
 linux:
 	@python progress_bar.py $(CXX) -o ./bin/azura $(SOURCE_FILES) $(MAIN_FILE) $(CXXFLAGS)
 
