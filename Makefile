@@ -25,7 +25,7 @@ workflow:
 
 linux:
 	@echo Cleaning...
-	@$(RM) $(BIN_PATH)/*
+	@$(RM) -f $(wildcard $(BIN_PATH)/*)
 	@echo Cleaned
 
 	@python progress_bar.py $(CXX) -o $(TARGET)/azura $(SOURCE_FILES) $(CXXFLAGS)
