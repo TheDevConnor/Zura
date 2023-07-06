@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: "Build & test"
-        run: make linux
+        run: make
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
