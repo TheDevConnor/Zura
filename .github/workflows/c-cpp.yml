@@ -8,12 +8,26 @@ on:
 
 jobs:
   build:
-
+    name: "Pre Release"
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: make
+    - name: "Build"
       run: make linux
-    - name: test
-      run: ./main
+    - name: "Create Release"
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: true
+        title: Release ${{ github.ref }}
+        body: |
+          first release
+        files: |
+          ./bin/*
+          ./README.md
+          ./src/*
