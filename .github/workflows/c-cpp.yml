@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: "actions/checkout@v3"
     - name: "Build"
       run: make linux
 
-    - uses: marvinpinto/action-automatic-releases@latest
-      env:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_releases_tag: "v0.0.1"
         prerelease: true
         title: "Development Release"
