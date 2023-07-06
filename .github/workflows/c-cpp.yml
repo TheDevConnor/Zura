@@ -13,9 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: configure
-      run: ./configure
     - name: make
-      run: g++ -o main src/parser/*.cpp src/debug/*.cpp src/memory/*.cpp src/main.cpp -O2 -std=c++11 -Wall -Wextra
+      run: make linux
     - name: test
       run: ./main
