@@ -190,6 +190,7 @@ uint8_t argument_list() {
 }
 
 void and_(bool can_assign) {
+    (void)can_assign;
     int end_jump = emit_jump(OP_JUMP_IF_FALSE);
 
     emit_byte(OP_POP);
@@ -199,6 +200,7 @@ void and_(bool can_assign) {
 }
 
 void binary(bool can_assign) {
+    (void)can_assign;
     // Remember the operator
     TokenKind operator_type = parser.previous.kind;
 
@@ -228,6 +230,7 @@ void binary(bool can_assign) {
 }
 
 void literal(bool can_assign) {
+    (void)can_assign;
     switch (parser.previous.kind) {
         case FALSE: emit_byte(OP_FALSE); break;
         case TRUE:  emit_byte(OP_TRUE);  break;
@@ -264,7 +267,7 @@ void function(FunctionType type) {
     block();
 
     ObjFunction* function = end_compiler();
-    emit_bytes(OP_CONSTANT, make_constant(OBJ_VAL(function)));
+    emit_bytes(OP_CLOSURE, make_constant(OBJ_VAL(function)));
 }
 
 void func_declaration() {
@@ -462,6 +465,7 @@ void statement() {
 }
 
 void grouping(bool can_assign) {
+    (void)can_assign;
     expression();
     parser.consume(RIGHT_PAREN, "Expect ')' after expression.");
 }
@@ -487,11 +491,13 @@ void named_variable(Token name, bool can_assign) {
 }
 
 void _number(bool can_assign) {
+    (void)can_assign;
     double value = std::strtod(parser.previous.start, nullptr);
     emit_constant(NUMBER_VAL(value));
 }
 
 void or_(bool can_assign) {
+    (void)can_assign;
     int else_jump = emit_jump(OP_JUMP_IF_FALSE);
     int end_jump = emit_jump(OP_JUMP);
 
@@ -503,14 +509,17 @@ void or_(bool can_assign) {
 }
 
 void _string(bool can_assign) {
+    (void)can_assign;
     emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
 void _variable(bool can_assign) {
+    (void)can_assign;
     named_variable(parser.previous, can_assign);
 }
 
 void unary(bool can_assign) {
+    (void)can_assign;
     TokenKind operator_type = parser.previous.kind;
 
     // Compile the operand
@@ -525,6 +534,7 @@ void unary(bool can_assign) {
 }
 
 void call(bool can_assign) {
+    (void)can_assign;
     uint8_t arg_count = argument_list();
     emit_bytes(OP_CALL, arg_count);
 }

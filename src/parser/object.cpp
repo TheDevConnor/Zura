@@ -86,6 +86,9 @@ void print_function(ObjFunction* function) {
 
 void print_object(Value value) {
     switch (OBJ_TYPE(value)) {
+        case OBJ_CLOSURE:
+            print_function(AS_CLOSURE(value)->function);
+            break;
         case OBJ_FUNCTION:
             print_function(AS_FUNCTION(value));
             break;

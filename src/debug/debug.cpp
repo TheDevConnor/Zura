@@ -82,6 +82,15 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_NOT:      return simple_instruction("OP_NOT", offset);
         case OP_NEGATE:   return simple_instruction("OP_NEGATE", offset);
 
+        case OP_CLOSURE: {
+            offset++;
+            uint8_t constant = chunk->code[offset++];
+            std::cout << constant << " OP_CLOSURE";
+            print_value(chunk->constants.values[constant]);
+            std::cout << "\n";
+            return offset;
+        }
+
         case OP_CALL:     return byte_instruction("OP_CALL", chunk, offset);
 
         case OP_IMPORT:   return simple_instruction("OP_IMPORT", offset);
