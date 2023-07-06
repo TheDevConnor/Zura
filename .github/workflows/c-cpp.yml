@@ -24,3 +24,4 @@ jobs:
           ./bin/*
           ./README.md
           ./src/*
+          
