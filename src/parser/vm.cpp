@@ -319,6 +319,13 @@ static InterpretResult run() {
                 push(NUMBER_VAL(-AS_NUMBER(pop())));
                 break;
             }
+            // Closure operation codes
+            case OP_CLOSURE: {
+                ObjFunction* function = AS_FUNCTION(read_constant());
+                ObjClosure* closure = new_closure(function);
+                push(OBJ_VAL(closure));
+                break;
+            }
             // Jump operation codes for loops and if statements
             case OP_JUMP: {
                 uint16_t offset = read_short();
