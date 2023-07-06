@@ -25,3 +25,4 @@ jobs:
           files: |
             src/*.cpp
             bin/*
+            
