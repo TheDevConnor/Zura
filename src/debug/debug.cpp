@@ -100,11 +100,12 @@ int disassemble_instruction(Chunk* chunk, int offset) {
             }
             return offset;
         }
-        case OP_CALL:     return byte_instruction("OP_CALL", chunk, offset);
-        case OP_IMPORT:   return simple_instruction("OP_IMPORT", offset);
-        case OP_INFO:     return simple_instruction("OP_INFO", offset);
+        case OP_CLOSE_UPVALUE: return simple_instruction("OP_CLOSE_UPVALUE", offset);
+        case OP_CALL:          return byte_instruction("OP_CALL", chunk, offset);
+        case OP_IMPORT:        return simple_instruction("OP_IMPORT", offset);
+        case OP_INFO:          return simple_instruction("OP_INFO", offset);
 
-        case OP_RETURN:   return simple_instruction("OP_RETURN", offset);
+        case OP_RETURN:        return simple_instruction("OP_RETURN", offset);
         default:
             std::cout << "Unknown opcode " << static_cast<int>(instruction) << std::endl;
             return offset + 1;

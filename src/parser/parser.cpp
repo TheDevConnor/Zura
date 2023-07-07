@@ -74,6 +74,7 @@ void init_compiler(Compiler* compiler, FunctionType type) {
 
     Local* local = &current->locals[current->local_count++];
     local->depth = 0;
+    local->is_captured = false;
     local->name.start = "";
     local->name.length = 0;
 }
@@ -97,6 +98,8 @@ void end_scope()   {
 
     while(current->local_count > 0 && current->locals[current->local_count - 1].depth > current->scope_depth) {
         emit_byte(OP_POP);
+        if(current->locals[current->local_count - 1].is_captured) emit_byte(OP_CLOSE_UPVALUE);
+        else emit_byte(OP_POP);
         current->local_count--;
     }
 }
@@ -149,7 +152,10 @@ int resolve_upvalue(Compiler* compiler, Token* name) {
     if (compiler->enclosing == nullptr) return -1;
 
     int local = resolve_local(compiler->enclosing, name);
-    if (local != -1) return add_upvalue(compiler, static_cast<uint8_t>(local), true);
+    if (local != -1) {
+        compiler->enclosing->locals[local].is_captured = true;
+        return add_upvalue(compiler, static_cast<uint8_t>(local), true);
+    }
 
     int upvalue = resolve_upvalue(compiler->enclosing, name);
     if (upvalue != -1) return add_upvalue(compiler, static_cast<uint8_t>(upvalue), false);
@@ -165,6 +171,7 @@ void add_local(Token name) {
     Local* local = &current->locals[current->local_count++];
     local->name = name;
     local->depth = -1;
+    local->is_captured = false;
 }
 
 void declare_variable() {
@@ -297,11 +304,17 @@ void function(FunctionType type) {
     block();
 
     ObjFunction* function = end_compiler();
-    emit_bytes(OP_CLOSURE, make_constant(OBJ_VAL(function)));
-
-    for (int i = 0; i < function->upvalue_count; i++) {
-        emit_byte(compiler.upvalues[i].is_local ? 1 : 0);
-        emit_byte(compiler.upvalues[i].index);
+    uint8_t function_constant = make_constant(OBJ_VAL(function));
+    if(function->upvalue_count > 0) {
+        emit_bytes(OP_CLOSURE, function_constant);
+        // Emit upvalues for each upvalue to know whether it's local or captured
+        for(int i = 0; i < function->upvalue_count; i++) {
+            emit_byte(compiler.upvalues[i].is_local ? 1 : 0);
+            emit_byte(compiler.upvalues[i].index);
+        }
+    } else {
+        // No need to create a closure
+        emit_bytes(OP_CONSTANT, function_constant);
     }
 }
 

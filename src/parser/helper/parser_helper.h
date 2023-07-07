@@ -125,6 +125,7 @@ struct ParseRule {
 struct Local {
     Token name;
     int depth;
+    bool is_captured;
 };
 
 enum FunctionType {

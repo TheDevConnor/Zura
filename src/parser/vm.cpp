@@ -19,6 +19,12 @@ VM vm;
 void reset_stack() {
     vm.stack_top = vm.stack;
     vm.frame_count = 0;
+    vm.open_upvalues = nullptr;
+}
+
+inline ObjFunction* get_frame_function(CallFrame* frame) {
+    if(frame->function->type == OBJ_CLOSURE) return (ObjFunction*)frame->function;
+    else return ((ObjClosure*)frame->function)->function;
 }
 
 void runtime_error(const char* format, ...) {
@@ -30,7 +36,7 @@ void runtime_error(const char* format, ...) {
 
     for (int i = vm.frame_count - 1; i >= 0; i--) {
         CallFrame* frame = &vm.frames[i];
-        ObjFunction* function = frame->closure->function;
+        ObjFunction* function = get_frame_function(frame);
         size_t instruction = frame->ip - function->chunk.code - 1;
         std::cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
                   << set_color(RED) << function->chunk.lines[instruction] << set_color(RESET) << "] in ";
@@ -71,11 +77,11 @@ Value pop() {
 
 Value peek(int distance) { return vm.stack_top[-1 - distance]; }
 
-bool call(ObjClosure* closure, int arg_count) {
-    if(arg_count != closure->function->arity) {
+bool call(Obj* callee, ObjFunction* function, int arg_count) {
+    if(arg_count != function->arity) {
         std::string message = "Expected -> ";
         message += set_color(RED);
-        message += std::to_string(closure->function->arity);
+        message += std::to_string(function->arity);
         message += set_color(RESET);
         message += " arguments but got -> ";
         message += set_color(RED);
@@ -91,16 +97,26 @@ bool call(ObjClosure* closure, int arg_count) {
     }
 
     CallFrame* frame = &vm.frames[vm.frame_count++];
-    frame->closure = closure;
-    frame->ip = closure->function->chunk.code;
+    frame->closure = (ObjClosure*)callee;
+    frame->ip = function->chunk.code;
+
     frame->slots = vm.stack_top - arg_count - 1;
     return true;
+}
+
+bool call_closure(ObjClosure* closure, int arg_count) {
+    return call((Obj*)closure, closure->function, arg_count);
+}
+
+bool call_function(ObjFunction* function, int arg_count) {
+    return call((Obj*)function, function, arg_count);
 }
 
 bool call_value(Value callee, int arg_count) {
     if(IS_OBJECT(callee)) {
         switch (OBJ_TYPE(callee)) {
-            case OBJ_CLOSURE:  return call(AS_CLOSURE(callee), arg_count);
+            case OBJ_CLOSURE:  return call_closure(AS_CLOSURE(callee), arg_count);
+            case OBJ_FUNCTION: return call_function(AS_FUNCTION(callee), arg_count);
             case OBJ_NATIVE: {
                 NativeFn native = AS_NATIVE(callee);
                 if (native(arg_count, vm.stack_top - arg_count)) {
@@ -119,8 +135,30 @@ bool call_value(Value callee, int arg_count) {
 }
 
 ObjUpvalue* capture_upvalue(Value* local) {
+    ObjUpvalue* prev_upvalue = nullptr;
+    ObjUpvalue* upvalue = vm.open_upvalues;
+    while(upvalue != nullptr && upvalue->location > local) {
+        prev_upvalue = upvalue;
+        upvalue = upvalue->next;
+    }
+
+    if(upvalue != nullptr && upvalue->location == local) return upvalue;
+
     ObjUpvalue* created_upvalue = new_upvalue(local);
+
+    if(prev_upvalue == nullptr) vm.open_upvalues = created_upvalue;
+    else prev_upvalue->next = created_upvalue;
+
     return created_upvalue;
+}
+
+void close_upvalues(Value* last) {
+    while(vm.open_upvalues != nullptr && vm.open_upvalues->location >= last) {
+        ObjUpvalue* upvalue = vm.open_upvalues;
+        upvalue->closed = *upvalue->location;
+        upvalue->location = &upvalue->closed;
+        vm.open_upvalues = upvalue->next;
+    }
 }
 
 bool is_falsey(Value value) {
@@ -349,6 +387,10 @@ static InterpretResult run() {
                 }
                 break;
             }
+            case OP_CLOSE_UPVALUE:
+                close_upvalues(vm.stack_top - 1);
+                pop();
+                break;
             // Jump operation codes for loops and if statements
             case OP_JUMP: {
                 uint16_t offset = read_short();
@@ -391,6 +433,7 @@ static InterpretResult run() {
             }
             case OP_RETURN: {
                 Value result = pop();
+                close_upvalues(frame->slots);
                 vm.frame_count--;
                 if (vm.frame_count == 0) {
                     return INTERPRET_OK;
@@ -419,7 +462,7 @@ InterpretResult interpret(const char* source) {
     ObjClosure* closure = new_closure(function);
     pop();
     push(OBJ_VAL(closure));
-    call(closure, 0);
+    call_value(OBJ_VAL(closure), 0);
 
     return run();
 }

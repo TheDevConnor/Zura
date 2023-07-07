@@ -57,9 +57,9 @@ struct ObjString {
 
 struct ObjUpvalue {
     Obj obj;
-    Value* location;
     Value closed;
-    ObjUpvalue* next;
+    Value* location;
+    struct ObjUpvalue* next;
 };
 
 struct ObjClosure {

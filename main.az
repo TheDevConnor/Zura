@@ -1,8 +1,14 @@
-func outer() {
-    have x := "outside";
-    func inner() {
-        info x;
-    }
-    inner();
+{
+    have a := 1;
+    func f() { info a; }
+
+    have b := 2;
+    func g() { info b; }
+
+    have c := 3;
+    func h() { info c; }
+
+    f();
+    g();
+    h();
 }
-outer();

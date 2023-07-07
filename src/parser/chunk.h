@@ -37,6 +37,7 @@ enum OpCode {
     OP_RETURN,
     // Closures
     OP_CLOSURE,
+    OP_CLOSE_UPVALUE,
     // Jump operations (for if statements, loops, etc.)
     OP_JUMP_IF_FALSE,
     OP_JUMP,
