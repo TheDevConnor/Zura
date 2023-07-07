@@ -89,23 +89,19 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_CLOSURE: {
             offset++;
             uint8_t constant = chunk->code[offset++];
-            std::cout << constant << " OP_CLOSURE";
+            std::printf("%-16s %4d ", "OP_CLOSURE", constant);
             print_value(chunk->constants.values[constant]);
             std::cout << "\n";
             ObjFunction* function = AS_FUNCTION(chunk->constants.values[constant]);
             for (int j = 0; j < function->upvalue_count; j++) {
                 int is_local = chunk->code[offset++];
                 int index = chunk->code[offset++];
-                std::cout << std::setw(4) << std::setfill('0') << offset - 2 << "      | ";
-                std::cout << (is_local ? "local" : "upvalue") << " " << index << "\n";
+                std::printf("%04d      |                     %s %d\n", offset - 2, is_local ? "local" : "upvalue", index);
             }
             return offset;
         }
-
         case OP_CALL:     return byte_instruction("OP_CALL", chunk, offset);
-
         case OP_IMPORT:   return simple_instruction("OP_IMPORT", offset);
-
         case OP_INFO:     return simple_instruction("OP_INFO", offset);
 
         case OP_RETURN:   return simple_instruction("OP_RETURN", offset);

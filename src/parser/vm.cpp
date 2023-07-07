@@ -344,11 +344,8 @@ static InterpretResult run() {
                 for (int i = 0; i < closure->upvalue_count; i++) {
                     uint8_t is_local = read_byte();
                     uint8_t index = read_byte();
-                    if (is_local) {
-                        closure->upvalues[i] = capture_upvalue(frame->slots + index);
-                    } else {
-                        closure->upvalues[i] = frame->closure->upvalues[index];
-                    }
+                    if (is_local) closure->upvalues[i] = capture_upvalue(frame->slots + index);
+                    else closure->upvalues[i] = frame->closure->upvalues[index];
                 }
                 break;
             }

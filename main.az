@@ -1,6 +1,6 @@
 func outer() {
     have x := "outside";
-    func inner () {
+    func inner() {
         info x;
     }
     inner();
