@@ -32,10 +32,10 @@ linux:
 
 windows:
 	@echo Cleaning...
-	@$(RM) $(BIN_PATH)/*
+	@$(RM) $(BIN_PATH)
 	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET)/azura $(SOURCE_FILES) $(CXXFLAGS)
+	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
 
 valgrind:
 	@echo Checking for memory leaks
