@@ -3,6 +3,7 @@
 
 #include "../parser/chunk.h"
 #include "../parser/value.h"
+#include "../parser/object.h"
 #include "debug.h"
 
 void disassemble_chunk(Chunk* chunk, const char* name) {
@@ -58,6 +59,9 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_GET_LOCAL:  return byte_instruction("OP_GET_LOCAL", chunk, offset);
         case OP_SET_LOCAL:  return byte_instruction("OP_SET_LOCAL", chunk, offset);
 
+        case OP_GET_UPVALUE: return byte_instruction("OP_GET_UPVALUE", chunk, offset);
+        case OP_SET_UPVALUE: return byte_instruction("OP_SET_UPVALUE", chunk, offset);
+
         case OP_JUMP_IF_FALSE: return jump_instruction("OP_JUMP_IF_FALSE", 1, chunk, offset);
         case OP_LOOP:          return jump_instruction("OP_LOOP", -1, chunk, offset);
         case OP_JUMP:          return jump_instruction("OP_JUMP", 1, chunk, offset);
@@ -88,6 +92,13 @@ int disassemble_instruction(Chunk* chunk, int offset) {
             std::cout << constant << " OP_CLOSURE";
             print_value(chunk->constants.values[constant]);
             std::cout << "\n";
+            ObjFunction* function = AS_FUNCTION(chunk->constants.values[constant]);
+            for (int j = 0; j < function->upvalue_count; j++) {
+                int is_local = chunk->code[offset++];
+                int index = chunk->code[offset++];
+                std::cout << std::setw(4) << std::setfill('0') << offset - 2 << "      | ";
+                std::cout << (is_local ? "local" : "upvalue") << " " << index << "\n";
+            }
             return offset;
         }
 

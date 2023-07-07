@@ -13,6 +13,9 @@ enum OpCode {
     // Local operations
     OP_GET_LOCAL,
     OP_SET_LOCAL,
+    // Upvalue operations
+    OP_GET_UPVALUE,
+    OP_SET_UPVALUE,
     // Binary operations
     OP_ADD,
     OP_SUBTRACT,

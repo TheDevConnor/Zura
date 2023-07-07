@@ -127,6 +127,36 @@ int resolve_local(Compiler* compiler, Token* name) {
     return -1;
 }
 
+int add_upvalue(Compiler* compiler, uint8_t index, bool is_local) {
+    int up_value_count = compiler->function->upvalue_count;
+
+    for (int i = 0; i < up_value_count; i++) {
+        Upvalue* up_value = &compiler->upvalues[i];
+        if (up_value->index == index && up_value->is_local == is_local) return i;
+    }
+
+    if (up_value_count == UINT8_COUNT) {
+        parser.error("Too many closure variables in function."); 
+        return 0;
+    }
+
+    compiler->upvalues[up_value_count].is_local = is_local;
+    compiler->upvalues[up_value_count].index = index;
+    return compiler->function->upvalue_count++;
+}
+
+int resolve_upvalue(Compiler* compiler, Token* name) {
+    if (compiler->enclosing == nullptr) return -1;
+
+    int local = resolve_local(compiler->enclosing, name);
+    if (local != -1) return add_upvalue(compiler, static_cast<uint8_t>(local), true);
+
+    int upvalue = resolve_upvalue(compiler->enclosing, name);
+    if (upvalue != -1) return add_upvalue(compiler, static_cast<uint8_t>(upvalue), false);
+
+    return -1;
+}
+
 void add_local(Token name) {
     if (current->local_count == UINT8_COUNT) {
         parser.error("Too many local variables in function.");
@@ -268,6 +298,11 @@ void function(FunctionType type) {
 
     ObjFunction* function = end_compiler();
     emit_bytes(OP_CLOSURE, make_constant(OBJ_VAL(function)));
+
+    for (int i = 0; i < function->upvalue_count; i++) {
+        emit_byte(compiler.upvalues[i].is_local ? 1 : 0);
+        emit_byte(compiler.upvalues[i].index);
+    }
 }
 
 void func_declaration() {
@@ -476,10 +511,18 @@ void named_variable(Token name, bool can_assign) {
     if (arg != -1) {
         get_op = OP_GET_LOCAL;
         set_op = OP_SET_LOCAL;
-    } else {
-        arg = identifier_constant(&name);
+    } else if ((arg = resolve_upvalue(current, &name)) != -1) {
+        get_op = OP_GET_UPVALUE;
+        set_op = OP_SET_UPVALUE;
+    } else if ((arg = identifier_constant(&name)) != -1) {
         get_op = OP_GET_GLOBAL;
         set_op = OP_SET_GLOBAL;
+    } else {
+        std::string message = "Undefined variable name '";
+        message += name.start;
+        message += "'.";
+        parser.error(message.c_str());
+        return;
     }
     
     if (parser.match(EQUAL) && can_assign) {

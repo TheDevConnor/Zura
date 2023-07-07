@@ -132,6 +132,11 @@ enum FunctionType {
     TYPE_SCRIPT,
 };
 
+struct Upvalue {
+    uint8_t index;
+    bool is_local;
+};
+
 struct Compiler {
     struct Compiler* enclosing;
     ObjFunction* function;
@@ -139,8 +144,10 @@ struct Compiler {
 
     Local locals[UINT8_COUNT];
     int local_count;
+    Upvalue upvalues[UINT8_COUNT];
     int scope_depth;
 };
+
 
 struct Parser parser;
 struct Compiler* current = nullptr;

@@ -1,1 +1,8 @@
-info 6;
+func outer() {
+    have x := "outside";
+    func inner () {
+        info x;
+    }
+    inner();
+}
+outer();

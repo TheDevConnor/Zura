@@ -17,8 +17,20 @@ struct Obj* allocate_object(size_t size, ObjType type) {
     return object;
 }
 
+ObjClosure* new_closure(ObjFunction* function) {
+    ObjUpvalue** upvalues = ALLOCATE(ObjUpvalue*, function->upvalue_count);
+    for (int i = 0; i < function->upvalue_count; i++) upvalues[i] = nullptr;
+
+    ObjClosure* closure = ALLOCATE_OBJ(ObjClosure, OBJ_CLOSURE);
+    closure->function = function;
+    closure->upvalues = upvalues;
+    closure->upvalue_count = function->upvalue_count;
+    return closure;
+}
+
 ObjFunction* new_function() {
     ObjFunction* function = ALLOCATE_OBJ(ObjFunction, OBJ_FUNCTION);
+    function->upvalue_count = 0;
     function->arity = 0;
     function->name = nullptr;
     init_chunk(&function->chunk);
@@ -76,6 +88,14 @@ ObjString* copy_string(const char* chars, int length) {
     return allocate_string(heap_chars, length, hash);
 }
 
+ObjUpvalue* new_upvalue(Value* slot) {
+    ObjUpvalue* upvalue = ALLOCATE_OBJ(ObjUpvalue, OBJ_UPVALUE);
+    upvalue->location = slot;
+    upvalue->closed = NIL_VAL;
+    upvalue->next = nullptr;
+    return upvalue;
+}
+
 void print_function(ObjFunction* function) {
     if (function->name == nullptr) {
         std::cout << "<script>";
@@ -97,6 +117,9 @@ void print_object(Value value) {
             break;
         case OBJ_STRING:
             printf("%s", AS_CSTRING(value));
+            break;
+        case OBJ_UPVALUE:
+            std::cout << "upvalue";
             break;
     }
 }

@@ -25,6 +25,7 @@ enum ObjType {
     OBJ_FUNCTION,
     OBJ_NATIVE,
     OBJ_STRING,
+    OBJ_UPVALUE,
 };
 
 struct Obj {
@@ -35,6 +36,7 @@ struct Obj {
 struct ObjFunction {
     Obj obj;
     int arity;
+    int upvalue_count;
     Chunk chunk;
     ObjString* name;
 };
@@ -53,9 +55,18 @@ struct ObjString {
     uint32_t hash;
 };
 
+struct ObjUpvalue {
+    Obj obj;
+    Value* location;
+    Value closed;
+    ObjUpvalue* next;
+};
+
 struct ObjClosure {
     Obj obj;
     ObjFunction* function;
+    ObjUpvalue** upvalues;
+    int upvalue_count;
 };
 
 
@@ -67,10 +78,14 @@ struct ObjModule {
 };
 
 ObjClosure* new_closure(ObjFunction* function);
+
 ObjFunction* new_function();
+
 ObjNative* new_native(NativeFn function);
 ObjString* take_string(char* chars, int length);
 ObjString* copy_string(const char* chars, int length);
+
+ObjUpvalue* new_upvalue(Value* slot);
 
 void print_object(Value value);
 
