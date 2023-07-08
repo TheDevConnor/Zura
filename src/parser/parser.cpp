@@ -343,10 +343,18 @@ void expression_statement() {
 
 void for_statement() {
     begin_scope();
-    parser.consume(LEFT_PAREN, "Expect '(' after 'for'.");
 
-    if (parser.match(SEMICOLON)); // No initializer
-    else if (parser.match(HAVE)) var_declaration();
+    int loop_variable = -1;
+    Token loop_variable_name;
+    loop_variable_name.start = nullptr;
+
+    parser.consume(LEFT_PAREN, "Expect '(' after 'for'.");
+    if (parser.match(HAVE)) {
+        loop_variable_name = parser.current;
+        var_declaration();
+        loop_variable = current->local_count - 1;
+    }
+    else if (parser.match(SEMICOLON)); // No initializer
     else expression_statement();
 
     int surrounding_loop_start = inner_most_loop_start;
@@ -378,7 +386,23 @@ void for_statement() {
         patch_jump(body_jump);
     }
 
+    int inner_varuable = -1;
+    if(loop_variable != -1) {
+        begin_scope();
+        emit_bytes(OP_GET_LOCAL, (uint8_t)loop_variable);
+        add_local(loop_variable_name);
+        mark_initialized();
+        inner_varuable = current->local_count - 1;
+    }
+
     statement();
+
+    if(loop_variable != -1) {
+        emit_bytes(OP_GET_LOCAL, (uint8_t)inner_varuable);
+        emit_bytes(OP_SET_LOCAL, (uint8_t)loop_variable);
+        emit_byte(OP_POP);
+    }
+
     emit_loop(inner_most_loop_start);
 
     // Patch the exit jump
