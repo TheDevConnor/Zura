@@ -14,21 +14,21 @@ TARGET := $(BIN_PATH)
 RM := rm
 
 ifeq ($(OS),Windows_NT)
-	TARGET := $(BIN_PATH)\azura.exe
+	TARGET := $(BIN_PATH)\zura.exe
 	RM := del /q 
 endif
 
 SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 workflow:
-	@python progress_bar.py $(CXX) -o azura $(SOURCE_FILES) $(CXXFLAGS)
+	@python progress_bar.py $(CXX) -o zura $(SOURCE_FILES) $(CXXFLAGS)
 
 linux:
 	@echo Cleaning...
 	@$(RM) -f $(wildcard $(BIN_PATH)/*)
 	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET)/azura $(SOURCE_FILES) $(CXXFLAGS)
+	@python progress_bar.py $(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
 
 windows:
 	@echo Cleaning...
@@ -39,4 +39,4 @@ windows:
 
 valgrind:
 	@echo Checking for memory leaks
-	$(VALGRIND) ./azura
+	$(VALGRIND) ./zura

@@ -1,55 +1,66 @@
-# Azura Lang
+# zura Lang
 <!-- Add in an image of the mascote -->
 <p align="center">
-  <img src="images/azura_mascote_trimmed.png" alt="Azura Lang Mascote" width="200" height="200">
+  <img src="images/zura.png" alt="zura Lang Mascote" width="200" height="200">
 </p>
 
-Azura Lang is a high-level programming language designed to be expressive, versatile, and easy to use. It offers dynamic typing with strong type inference, allowing developers to write code without explicitly specifying types. Azura Lang supports multiple paradigms, including procedural and object-oriented programming.
-Here is the Discord server! [Azura Lang Discord](https://discord.gg/JvExQpGuXM)
-Here is our website for Azura Lang! [Azura Lang Website](https://azura-lang.thedevconnor.repl.co/)
+zura Lang is a high-level programming language designed to be expressive, versatile, and easy to use. It offers dynamic typing with strong type inference, allowing developers to write code without explicitly specifying types. zura Lang supports multiple paradigms, including procedural and object-oriented programming.
+Here is the Discord server! [zura Lang Discord](https://discord.gg/JvExQpGuXM)
+Here is our website for zura Lang! [zura Lang Website](https://zura-lang.thedevconnor.repl.co/)
 ## Features
 
-- **High-Level**: Azura Lang provides a high-level abstraction, allowing developers to write code that is closer to human-readable language.
-- **Dynamic Typing**: Variables in Azura Lang are dynamically typed, meaning their types are determined at runtime.
-- **Strong Type Inference**: Azura Lang employs strong type inference, automatically deducing the types of variables based on their assigned values.
-- **File Extension**: Azura Lang code files have the extension `.az`.
-- **Syntax Highlighting**: Here is the link for the syntax highlighting! [Azura Lang Syntax Highlighting](https://github.com/TheDevConnor/Azura-Syntax-Highlighting)
+- **High-Level**: zura Lang provides a high-level abstraction, allowing developers to write code that is closer to human-readable language.
+- **Dynamic Typing**: Variables in zura Lang are dynamically typed, meaning their types are determined at runtime.
+- **Strong Type Inference**: zura Lang employs strong type inference, automatically deducing the types of variables based on their assigned values.
+- **File Extension**: zura Lang code files have the extension `.zu`.
+- **Syntax Highlighting**: Here is the link for the syntax highlighting! [Zura Lang Syntax Highlighting](https://github.com/TheDevConnor/Aura-Syntax-Highlighting)
 
 ## Installation
+To start using zura Lang, follow the installation instructions below:
 
-To start using Azura Lang, follow the installation instructions below:
-
-1. Download the latest version of the Azura Lang interpreter from the official Azura Lang website.
-2. Install the interpreter according to the instructions provided for your operating system.
-3. Verify the installation by opening a terminal or command prompt and running the following command:
-
+If you are on windows and you want to isntall it using the make command do this:
 ```
-azura.exe --version
+git clone https://github.com/TheDevConnor/Zura-v2
+cd Zura-v2
+make windows
+```
+
+If you are on windows and you want to isntall it using the make command do this:
+```
+git clone https://github.com/TheDevConnor/Zura-v2
+cd Zura-v2
+make linux
+```
+
+Now add the zura.exe to your path and you are done! It will be located in the bin folder.
+Use you add it run this command to check if it is installed correctly:
+```
+zura.exe --version
 ```
 
 If the command prints the version information, the installation was successful.
 
 ## Usage
 
-To run Azura Lang code, follow the steps below:
+To run zura Lang code, follow the steps below:
 
 1. Create a new file with the `.az` extension (e.g., `example.az`).
-2. Write your Azura code in the file using a text editor of your choice.
-3. Open a terminal or command prompt and navigate to the directory where the Azura code file is located.
-4. Run the Azura code using the following command:
+2. Write your zura code in the file using a text editor of your choice.
+3. Open a terminal or command prompt and navigate to the directory where the zura code file is located.
+4. Run the zura code using the following command:
 
 ```
-azura.exe your_file_name.az
+zura.exe your_file_name.az
 ```
 For a list of all available commands and options, you can run the following command:
 
 ```
-azura.exe --help
+zura.exe --help
 ```
 
 ## Examples
 
-Here are some examples showcasing the features and syntax of Azura Lang:
+Here are some examples showcasing the features and syntax of zura Lang:
 
 ### Fibonacci Sequence
 
@@ -194,12 +205,12 @@ For assining a variable use the operation of ':='.
 For example 'have add := 45.2 + 2;'
 ```
 ## Contributing
-Contributions to Azura Lang are welcome! If you find any bugs, have suggestions for improvements, or want to contribute new features, please submit a pull request.
+Contributions to zura Lang are welcome! If you find any bugs, have suggestions for improvements, or want to contribute new features, please submit a pull request.
 
 ## License
-Azura Lang is licensed under the MIT License. Feel free to use, modify, and distribute the language for personal or commercial projects.
+zura Lang is licensed under the MIT License. Feel free to use, modify, and distribute the language for personal or commercial projects.
 
-We hope you find Azura Lang useful and enjoyable to work with. If you have any questions or need further assistance, please don't hesitate to reach out.
+We hope you find zura Lang useful and enjoyable to work with. If you have any questions or need further assistance, please don't hesitate to reach out.
 
 Happy coding!
 
