@@ -44,13 +44,13 @@ If the command prints the version information, the installation was successful.
 
 To run zura Lang code, follow the steps below:
 
-1. Create a new file with the `.az` extension (e.g., `example.az`).
+1. Create a new file with the `.zu` extension (e.g., `example.zu`).
 2. Write your zura code in the file using a text editor of your choice.
 3. Open a terminal or command prompt and navigate to the directory where the zura code file is located.
 4. Run the zura code using the following command:
 
 ```
-zura.exe your_file_name.az
+zura.exe your_file_name.zu
 ```
 For a list of all available commands and options, you can run the following command:
 
