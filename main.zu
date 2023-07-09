@@ -1,6 +1,15 @@
 class Pair {}
 
+have start := clock();
+
 have pair := Pair();
 pair.first = 1;
 pair.second = 2;
+
 info pair.first + pair.second; // 3
+
+pair.delete_field("first");
+info pair.first; // null
+
+info clock() - start; // 0.000000
+
