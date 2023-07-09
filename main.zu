@@ -1,15 +1,8 @@
-class Pair {}
+func fib(n) {
+    if (n < 2) return n;
+    return fib(n - 2) + fib(n - 1);
+}
 
 have start := clock();
-
-have pair := Pair();
-pair.first = 1;
-pair.second = 2;
-
-info pair.first + pair.second; // 3
-
-pair.delete_field("first");
-info pair.first; // null
-
-info clock() - start; // 0.000000
-
+info fib(30);
+info clock() - start;

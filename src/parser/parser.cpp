@@ -305,18 +305,7 @@ void function(FunctionType type) {
     block();
 
     ObjFunction* function = end_compiler();
-    uint8_t function_constant = make_constant(OBJ_VAL(function));
-    if(function->upvalue_count > 0) {
-        emit_bytes(OP_CLOSURE, function_constant);
-        // Emit upvalues for each upvalue to know whether it's local or captured
-        for(int i = 0; i < function->upvalue_count; i++) {
-            emit_byte(compiler.upvalues[i].is_local ? 1 : 0);
-            emit_byte(compiler.upvalues[i].index);
-        }
-    } else {
-        // No need to create a closure
-        emit_bytes(OP_CONSTANT, function_constant);
-    }
+    emit_bytes(OP_CLOSURE, make_constant(OBJ_VAL(function)));
 }
 
 void class_declaration() {
