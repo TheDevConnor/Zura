@@ -21,5 +21,4 @@ jobs:
         prerelease: true
         title: "Development Release"
         files: |
-          ./bin/*
           ./README.md
