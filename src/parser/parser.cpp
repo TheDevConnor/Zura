@@ -319,6 +319,18 @@ void function(FunctionType type) {
     }
 }
 
+void class_declaration() {
+    parser.consume(IDENTIFIER, "Expect class name!");
+    uint8_t name_constant = identifier_constant(&parser.previous);
+    declare_variable();
+
+    emit_bytes(OP_CLASS, name_constant);
+    define_variable(name_constant);
+
+    parser.consume(LEFT_BRACE, "Expected '{' before class body");
+    parser.consume(RIGHT_BRACE, "Expected '}' after class body");
+}
+
 void func_declaration() {
     uint8_t global = parser_variable("Expected a function name!");
     mark_initialized();
@@ -513,8 +525,9 @@ void synchronize() {
 
 void declaration() {
     if (parser.panic_mode) synchronize();
-    else if (parser.match(FUNC)) { func_declaration();}
-    else if (parser.match(HAVE)) { var_declaration(); }
+    else if (parser.match(CLASS)) { class_declaration();}
+    else if (parser.match(FUNC))  { func_declaration(); }
+    else if (parser.match(HAVE))  { var_declaration();  }
     else { statement(); }
 }
 
@@ -618,6 +631,17 @@ void call(bool can_assign) {
     (void)can_assign;
     uint8_t arg_count = argument_list();
     emit_bytes(OP_CALL, arg_count);
+}
+
+void dot(bool can_assign) {
+    parser.consume(IDENTIFIER, "Exactly property name after '.'");
+    uint8_t name = identifier_constant(&parser.previous);
+
+    if(can_assign && parser.match(EQUAL)) {
+        expression();
+        emit_bytes(OP_SET_PROPERTY, name);
+    }
+    else emit_bytes(OP_GET_PROPERTY, name);
 }
 
 void parse_precedence(Precedence prec) {

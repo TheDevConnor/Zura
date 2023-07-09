@@ -165,6 +165,7 @@ void and_(bool can_assign);
 void or_(bool can_assign);
 void unary(bool can_assign);
 void call(bool can_assign);
+void dot(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
 
@@ -177,7 +178,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
     {RIGHT_BRACE,   {nullptr,   nullptr,   PREC_NONE}},
     {COMMA,         {nullptr,   nullptr,   PREC_NONE}},
-    {DOT,           {nullptr,   nullptr,   PREC_NONE}},
+    {DOT,           {nullptr,   dot,        PREC_CALL}},
     {MINUS,         {unary,     binary,     PREC_TERM}},
     {PLUS,          {nullptr,   binary,     PREC_TERM}},
     {SEMICOLON,     {nullptr,   nullptr,   PREC_NONE}},

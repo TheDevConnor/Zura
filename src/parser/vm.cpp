@@ -124,6 +124,11 @@ bool call_function(ObjFunction* function, int arg_count) {
 bool call_value(Value callee, int arg_count) {
     if(IS_OBJECT(callee)) {
         switch (OBJ_TYPE(callee)) {
+            case OBJ_CLASS: {
+                ObjClass* klass = AS_CLASS(callee);
+                vm.stack_top[-arg_count - 1] = OBJ_VAL(new_instance(klass));
+                return true;
+            }
             case OBJ_CLOSURE:  return call_closure(AS_CLOSURE(callee), arg_count);
             case OBJ_FUNCTION: return call_function(AS_FUNCTION(callee), arg_count);
             case OBJ_NATIVE: {
@@ -340,6 +345,39 @@ static InterpretResult run() {
                 *frame->closure->upvalues[slot]->location = peek(0);
                 break;
             }
+            // Property operations codes
+            case OP_GET_PROPERTY: {
+                if (!IS_INSTANCE(peek(0))) {
+                    runtime_error("Only instance have properties");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                ObjInstance* instance = AS_INSTANCE(peek(0));
+                ObjString* name = AS_STRING(read_constant());
+
+                Value value;
+                if (table_get(&instance->fields, name, &value)) {
+                    pop(); // Instance
+                    push(value);
+                    break;
+                }
+
+                string message = "Undefiened property ";
+                message += name->chars;
+                runtime_error(message.c_str());
+                return INTERPRET_RUNTIME_ERROR;
+            }
+            case OP_SET_PROPERTY: {
+                if(!IS_INSTANCE(peek(1))) {
+                    runtime_error("Only instances have fields");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                ObjInstance* instance = AS_INSTANCE(peek(1));
+                table_set(&instance->fields, AS_STRING(read_constant()), peek(0));
+                Value value = pop();
+                pop();
+                push(value);
+                break;
+            }
             // Bool operation codes
             case OP_TRUE:       push(BOOL_VAL(true)); break;
             case OP_FALSE:      push(BOOL_VAL(false)); break;
@@ -440,6 +478,10 @@ static InterpretResult run() {
             case OP_INFO: {
                 print_value(pop());
                 cout << "\n";
+                break;
+            }
+            case OP_CLASS: {
+                push(OBJ_VAL(new_class(AS_STRING(read_constant()))));
                 break;
             }
             case OP_RETURN: {

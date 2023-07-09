@@ -1,3 +1,6 @@
-func add(a, b) { return a + b; }
-have sum := add(1, 2);
-info sum;
+class Pair {}
+
+have pair := Pair();
+pair.first = 1;
+pair.second = 2;
+info pair.first + pair.second; // 3

@@ -16,6 +16,9 @@ enum OpCode {
     // Upvalue operations
     OP_GET_UPVALUE,
     OP_SET_UPVALUE,
+    // Property operations
+    OP_GET_PROPERTY,
+    OP_SET_PROPERTY,
     // Binary operations
     OP_ADD,
     OP_SUBTRACT,
@@ -47,6 +50,7 @@ enum OpCode {
     OP_CALL,
     // Statements
     OP_IMPORT,
+    OP_CLASS,
     OP_INFO,
     OP_POP,
 };

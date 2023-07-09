@@ -32,6 +32,10 @@ static void free_obj(Obj* object) {
     #endif
 
     switch (object->type) {
+        case OBJ_CLASS: {
+            FREE(ObjClass, object);
+            break;
+        }
         case OBJ_CLOSURE: {
             ObjClosure* closure = (ObjClosure*) object;
             FREE_ARRAY(ObjUpvalue*, closure->upvalues, closure->upvalue_count);
@@ -42,6 +46,12 @@ static void free_obj(Obj* object) {
             ObjFunction* function = (ObjFunction*) object;
             free_chunk(&function->chunk);
             FREE(ObjFunction, object);
+            break;
+        }
+        case OBJ_INSTANCE: {
+            ObjInstance* instance = (ObjInstance*)object;
+            free_table(&instance->fields);
+            FREE(ObjInstance, object);
             break;
         }
         case OBJ_NATIVE: {
