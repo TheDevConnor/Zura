@@ -18,14 +18,14 @@ Here is our website for zura Lang! [zura Lang Website](https://zura-lang.thedevc
 ## Installation
 To start using zura Lang, follow the installation instructions below:
 
-If you are on windows and you want to isntall it using the make command do this:
+If you are on windows and you want to install it using the make command do this:
 ```
 git clone https://github.com/TheDevConnor/Zura-v2
 cd Zura-v2
 make windows
 ```
 
-If you are on windows and you want to isntall it using the make command do this:
+If you are on linux and you want to install it using the make command do this:
 ```
 git clone https://github.com/TheDevConnor/Zura-v2
 cd Zura-v2
@@ -39,6 +39,8 @@ zura.exe --version
 ```
 
 If the command prints the version information, the installation was successful.
+
+Or you could also install the executable from the releases page, and add it to your path.
 
 ## Usage
 
