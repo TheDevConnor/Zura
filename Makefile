@@ -22,7 +22,10 @@ endif
 SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 workflow:
+# --> Linux 
 	@$(CXX) -o zura $(SOURCE_FILES) $(CXXFLAGS)
+# --> Windows
+	@$(CXX) -o zura.exe $(SOURCE_FILES) $(CXXFLAGS)
 
 linux:
 	@echo Cleaning...
