@@ -22,4 +22,5 @@ jobs:
         title: "Development Release"
         files: |
           ./zura
+          ./zura.exe
           ./README.md
