@@ -5,6 +5,7 @@ VALGRIND := valgrind
 
 BIN_PATH := bin
 SRC_PATH := src
+GC_PATH := src/garbage_collector
 SRC_PARSER_PATH := src/parser
 DEBUG_PATH := src/debug
 MEMORY_PATH := src/memory
@@ -18,7 +19,7 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q 
 endif
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
 
 workflow:
 	@$(CXX) -o zura $(SOURCE_FILES) $(CXXFLAGS)

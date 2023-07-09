@@ -4,13 +4,15 @@
 #include "object.h"
 #include "value.h"
 
+using namespace std;
+
 void print_value(Value value) {
     switch (value.type) {
         case VAL_BOOL:
-            std::cout << (value.as.boolean ? "true" : "false");
+            cout << (value.as.boolean ? "true" : "false");
             break;
-        case VAL_NIL:    std::cout << "nil";           break;
-        case VAL_NUMBER: std::cout << value.as.number; break;
+        case VAL_NIL:    cout << "nil";           break;
+        case VAL_NUMBER: cout << value.as.number; break;
         case VAL_OBJ:    print_object(value);          break;
     }
 }

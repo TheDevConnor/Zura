@@ -14,6 +14,8 @@
 #include "object.h"
 #include "vm.h"
 
+using namespace std;
+
 VM vm;
 
 void reset_stack() {
@@ -27,23 +29,23 @@ inline ObjFunction* get_frame_function(CallFrame* frame) {
     else return ((ObjClosure*)frame->function)->function;
 }
 
-void runtime_error(const char* format, ...) {
+void _runtime_error(const char* format, ...) {
     va_list args;
     va_start(args, format);
-    std::vprintf(format, args);
+    vprintf(format, args);
     va_end(args);
-    std::cout << std::endl;
+    cout << endl;
 
     for (int i = vm.frame_count - 1; i >= 0; i--) {
         CallFrame* frame = &vm.frames[i];
         ObjFunction* function = get_frame_function(frame);
         size_t instruction = frame->ip - function->chunk.code - 1;
-        std::cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
+        cout << set_color(RESET) << "["<< set_color(YELLOW) <<"line " << set_color(RESET) << "-> " 
                   << set_color(RED) << function->chunk.lines[instruction] << set_color(RESET) << "] in ";
         if(function->name == nullptr) {
-            std::cout << set_color(RED) << "script" << set_color(RESET) << std::endl;
+            cout << set_color(RED) << "script" << set_color(RESET) << endl;
         } else {
-            std::cout << set_color(RED) << function->name->chars << set_color(RESET) << std::endl;
+            cout << set_color(RED) << function->name->chars << set_color(RESET) << endl;
         }
     }
     reset_stack();
@@ -52,6 +54,13 @@ void runtime_error(const char* format, ...) {
 void init_vm() { 
     reset_stack();
     vm.objects = nullptr;
+
+    vm.bytes_allocated = 0;
+    vm.next_gc = 1024 * 1024;
+
+    vm.gray_count = 0;
+    vm.gray_capacity = 0;
+    vm.gray_stack = nullptr;
 
     init_table(&vm.globals);
     init_table(&vm.strings);
@@ -79,20 +88,20 @@ Value peek(int distance) { return vm.stack_top[-1 - distance]; }
 
 bool call(Obj* callee, ObjFunction* function, int arg_count) {
     if(arg_count != function->arity) {
-        std::string message = "Expected -> ";
+        string message = "Expected -> ";
         message += set_color(RED);
-        message += std::to_string(function->arity);
+        message += to_string(function->arity);
         message += set_color(RESET);
         message += " arguments but got -> ";
         message += set_color(RED);
-        message += std::to_string(arg_count);
+        message += to_string(arg_count);
         message += set_color(RESET);
-        runtime_error(message.c_str());
+        _runtime_error(message.c_str());
         return false;
     }
 
     if(vm.frame_count == FRAMES_MAX) {
-        runtime_error("Stack overflow!");
+        _runtime_error("Stack overflow!");
         return false;
     }
 
@@ -123,14 +132,14 @@ bool call_value(Value callee, int arg_count) {
                     vm.stack_top -= arg_count;
                     return true;
                 } else {
-                    runtime_error(AS_STRING(vm.stack_top[-arg_count - 1])->chars);
+                    _runtime_error(AS_STRING(vm.stack_top[-arg_count - 1])->chars);
                     return false;
                 }
             }
             default: break; // Non-callable object type.
         }
     }
-    runtime_error("Can only call functions and classes!");
+    _runtime_error("Can only call functions and classes!");
     return false;
 }
 
@@ -166,8 +175,8 @@ bool is_falsey(Value value) {
 }
 
 void concatenate() {
-    ObjString* b = AS_STRING(pop());
-    ObjString* a = AS_STRING(pop());
+    ObjString* b = AS_STRING(peek(0));
+    ObjString* a = AS_STRING(peek(1));
 
     int length = a->length + b->length;
     char* chars = ALLOCATE(char, length + 1);
@@ -176,23 +185,25 @@ void concatenate() {
     chars[length] = '\0';
     
     ObjString* result = take_string(chars, length);
+    pop();
+    pop();
     push(OBJ_VAL(result));
 }
 
 ObjModule* load_module(ObjString* name) {
     const char* moduleFileName = name->chars;
 
-    std::ifstream file(moduleFileName);
+    ifstream file(moduleFileName);
     if (!file.is_open()) {
-        std::string message = "Could not open file -> ";
+        string message = "Could not open file -> ";
         message += set_color(RED);
         message += moduleFileName;
         message += set_color(RESET);
-        runtime_error(message.c_str());
+        _runtime_error(message.c_str());
         return nullptr;
     }
 
-    std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    string source((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
     ObjFunction* function = compile(source.c_str());
     file.close();
 
@@ -211,13 +222,13 @@ ObjModule* import_module(ObjString* name) {
 static InterpretResult run() {
     #ifndef DEBUG_TRACE_EXECUTION
         auto print_stack = []() {
-            std::cout << "          ";
+            cout << "          ";
             for (Value* slot = vm.stack; slot < vm.stack_top; slot++) {
-                std::printf("[ ");
+                printf("[ ");
                 print_value(*slot);
-                std::printf(" ]");
+                printf(" ]");
             }
-            std::cout << "\n";
+            cout << "\n";
         };
     #endif
 
@@ -233,7 +244,7 @@ static InterpretResult run() {
     #define BINARY_OP(value_type, op)                           \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                runtime_error("Operands must be numbers\n");    \
+                _runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -244,7 +255,7 @@ static InterpretResult run() {
         #define MODULO_OP(value_type, op)                       \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                runtime_error("Operands must be numbers\n");    \
+                _runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -255,7 +266,7 @@ static InterpretResult run() {
         #define POW_OP(value_type, op)                          \
         do {                                                    \
             if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {   \
-                runtime_error("Operands must be numbers\n");    \
+                _runtime_error("Operands must be numbers\n");    \
                 return INTERPRET_RUNTIME_ERROR;                 \
             }                                                   \
             double b = AS_NUMBER(pop());                        \
@@ -278,11 +289,11 @@ static InterpretResult run() {
                 ObjString* name = AS_STRING(read_constant());
                 if (table_set(&vm.globals, name, peek(0))) {
                     table_delete(&vm.globals, name);
-                    std::string message = "Undefined variable -> ";
+                    string message = "Undefined variable -> ";
                     message += set_color(RED);
-                    message += std::string(name->chars, name->length);
+                    message += string(name->chars, name->length);
                     message += set_color(RESET);
-                    runtime_error(message.c_str());
+                    _runtime_error(message.c_str());
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 break;
@@ -291,11 +302,11 @@ static InterpretResult run() {
                 ObjString* name = AS_STRING(read_constant());
                 Value value;
                 if (!table_get(&vm.globals, name, &value)) {
-                    std::string message = "Undefined variable -> ";
+                    string message = "Undefined variable -> ";
                     message += set_color(RED);
-                    message += std::string(name->chars, name->length);
+                    message += string(name->chars, name->length);
                     message += set_color(RESET);
-                    runtime_error(message.c_str());
+                    _runtime_error(message.c_str());
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 push(value);
@@ -354,7 +365,7 @@ static InterpretResult run() {
                     double a = AS_NUMBER(pop());
                     push(NUMBER_VAL(a + b));
                 } else {
-                    runtime_error("Operands must be two numbers or two strings\n");
+                    _runtime_error("Operands must be two numbers or two strings\n");
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 break;
@@ -368,7 +379,7 @@ static InterpretResult run() {
             case OP_NOT: push(BOOL_VAL(is_falsey(pop()))); break;
             case OP_NEGATE: {
                 if(!IS_NUMBER(peek(0))) {
-                    runtime_error("Operands must be numbers\n");
+                    _runtime_error("Operands must be numbers\n");
                     return INTERPRET_RUNTIME_ERROR;
                 }
                 push(NUMBER_VAL(-AS_NUMBER(pop())));
@@ -428,7 +439,7 @@ static InterpretResult run() {
             }
             case OP_INFO: {
                 print_value(pop());
-                std::cout << "\n";
+                cout << "\n";
                 break;
             }
             case OP_RETURN: {
@@ -445,7 +456,7 @@ static InterpretResult run() {
                 break;
             }
             default: {
-                std::cout << "Unknown opcode " << instruction;
+                cout << "Unknown opcode " << instruction;
                 return INTERPRET_RUNTIME_ERROR;
             }
         }

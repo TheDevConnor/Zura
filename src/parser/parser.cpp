@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "../garbage_collector/gc.h"
 #include "helper/parser_helper.h"
 #include "parser.h"
 
@@ -115,7 +116,7 @@ uint8_t identifier_constant(Token* name) {
 }
 
 bool identifiers_equal(Token* a, Token* b) {
-    return (a->length == b->length) && (std::memcmp(a->start, b->start, a->length) == 0);
+    return (a->length == b->length) && (memcmp(a->start, b->start, a->length) == 0);
 }
 
 
@@ -555,7 +556,7 @@ void named_variable(Token name, bool can_assign) {
         get_op = OP_GET_GLOBAL;
         set_op = OP_SET_GLOBAL;
     } else {
-        std::string message = "Undefined variable name '";
+        string message = "Undefined variable name '";
         message += name.start;
         message += "'.";
         parser.error(message.c_str());
@@ -572,7 +573,7 @@ void named_variable(Token name, bool can_assign) {
 
 void _number(bool can_assign) {
     (void)can_assign;
-    double value = std::strtod(parser.previous.start, nullptr);
+    double value = strtod(parser.previous.start, nullptr);
     emit_constant(NUMBER_VAL(value));
 }
 
@@ -661,4 +662,12 @@ ObjFunction* compile(const char* source) {
 
     ObjFunction* function = end_compiler();
     return parser.had_error ? nullptr : function;
+}
+
+void mark_compiler_roots() {
+    Compiler* compiler = current;
+    while(compiler != nullptr) {
+        mark_object((Obj*)compiler->function);
+        compiler = compiler->enclosing;
+    }
 }

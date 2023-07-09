@@ -1,0 +1,3 @@
+func add(a, b) { return a + b; }
+have sum := add(1, 2);
+info sum;

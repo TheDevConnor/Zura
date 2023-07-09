@@ -1,5 +1,6 @@
 #include <cstring>
 
+#include "../garbage_collector/gc.h"
 #include "../memory/memory.h"
 #include "object.h"
 #include "table.h"
@@ -121,11 +122,26 @@ ObjString* table_find_string(Table* table, const char* chars, int length, uint32
             return nullptr;
         }
 
-        if(entry->key != nullptr && entry->key->length == length && entry->key->hash == hash && std::memcmp(entry->key->chars, chars, length) == 0) {
+        if(entry->key != nullptr && entry->key->length == length && entry->key->hash == hash && memcmp(entry->key->chars, chars, length) == 0) {
             // We found it.
             return entry->key;
         }
 
         index = (index + 1) % table->capacity;
+    }
+}
+
+void table_remove_white(Table* table) {
+    for (int i = 0; i < table->capacity; i++) {
+        Entry* entry = &table->entries[i];
+        if (entry->key != nullptr && !entry->key->obj.is_marked) table_delete(table, entry->key); 
+    }
+}
+
+void mark_table(Table* table) {
+    for (int i = 0; i < table->capacity; i++) {
+        Entry* entry = &table->entries[i];
+        mark_object((Obj*)entry->key);
+        mark_value(entry->value);
     }
 }

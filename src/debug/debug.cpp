@@ -6,8 +6,10 @@
 #include "../parser/object.h"
 #include "debug.h"
 
+using namespace std;
+
 void disassemble_chunk(Chunk* chunk, const char* name) {
-    std::cout << " == " << name << " ==" << std::endl;
+    cout << " == " << name << " ==" << endl;
 
     for (int offset = 0; offset < chunk->count;) {
         offset = disassemble_instruction(chunk, offset);
@@ -15,20 +17,20 @@ void disassemble_chunk(Chunk* chunk, const char* name) {
 }
 
 static int simple_instruction(const char* name, int offset) {
-    std::cout << name << std::endl;
+    cout << name << endl;
     return offset + 1;
 }
 
 static int byte_instruction(const char* name, Chunk* chunk, int offset) {
     uint8_t slot = chunk->code[offset + 1];
-    std::printf("%-16s %4d\n", name, slot);
+    printf("%-16s %4d\n", name, slot);
     return offset + 2;
 }
 
 static int jump_instruction(const char* name, int sign, Chunk* chunk, int offset) {
     uint16_t jump = (uint16_t)(chunk->code[offset + 1] << 8);
     jump |= chunk->code[offset + 2];
-    std::printf("%-16s %4d -> %d\n", name, offset, offset + 3 + sign * jump);
+    printf("%-16s %4d -> %d\n", name, offset, offset + 3 + sign * jump);
     return offset + 3;
 }
 
@@ -40,10 +42,10 @@ static int constant_instruction(const char* name, Chunk* chunk, int offset) {
 }
 
 int disassemble_instruction(Chunk* chunk, int offset) {
-    std::cout << std::setw(4) << std::setfill('0') << offset << ' ';
+    cout << setw(4) << setfill('0') << offset << ' ';
 
     if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
-        std::cout << "    | ";
+        cout << "    | ";
     } else {
         printf("%4d ", chunk->lines[offset]);
     }
@@ -89,14 +91,14 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         case OP_CLOSURE: {
             offset++;
             uint8_t constant = chunk->code[offset++];
-            std::printf("%-16s %4d ", "OP_CLOSURE", constant);
+            printf("%-16s %4d ", "OP_CLOSURE", constant);
             print_value(chunk->constants.values[constant]);
-            std::cout << "\n";
+            cout << "\n";
             ObjFunction* function = AS_FUNCTION(chunk->constants.values[constant]);
             for (int j = 0; j < function->upvalue_count; j++) {
                 int is_local = chunk->code[offset++];
                 int index = chunk->code[offset++];
-                std::printf("%04d      |                     %s %d\n", offset - 2, is_local ? "local" : "upvalue", index);
+                printf("%04d      |                     %s %d\n", offset - 2, is_local ? "local" : "upvalue", index);
             }
             return offset;
         }
@@ -107,7 +109,7 @@ int disassemble_instruction(Chunk* chunk, int offset) {
 
         case OP_RETURN:        return simple_instruction("OP_RETURN", offset);
         default:
-            std::cout << "Unknown opcode " << static_cast<int>(instruction) << std::endl;
+            cout << "Unknown opcode " << static_cast<int>(instruction) << endl;
             return offset + 1;
     }
 }

@@ -3,16 +3,18 @@
 #include <sstream>
 #include <cstring>
 
+using namespace std;
+
 static char* read_file(const char* path) {
-    std::ifstream file(path, std::ios::binary);
+    ifstream file(path, ios::binary);
     if (!file) {
-        std::cerr << "Could not open file \"" << path << "\"." << std::endl;
+        cerr << "Could not open file \"" << path << "\"." << endl;
         exit(74);
     }
 
-    file.seekg(0, std::ios::end);
+    file.seekg(0, ios::end);
     size_t file_size = file.tellg();
-    file.seekg(0, std::ios::beg);
+    file.seekg(0, ios::beg);
 
     char* buffer = new char[file_size + 1];
     file.read(buffer, file_size);
@@ -33,14 +35,14 @@ void run_file(const char* path) {
 
 void flags(int argc, char* argv[]) {
     if (argc == 2 && strcmp(argv[1], "--version") == 0) {
-        std::cout << "v0.0.1" << std::endl;
+        cout << "v0.0.1" << endl;
         exit(0);
     }
     
     if (argc == 2 && strcmp(argv[1], "--repl") == 0) {
         char line[1024];
         for(;;) {
-            std::cout << "> ";
+            cout << "> ";
             if (!fgets(line, sizeof(line), stdin)) break;
             interpret(line);
         }
@@ -48,11 +50,11 @@ void flags(int argc, char* argv[]) {
 
     // Check if we have a --help flag
     if (argc == 2 && strcmp(argv[1], "--help") == 0) {
-        std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
-        std::cout << "Options:" << std::endl;
-        std::cout << "  --repl\t\t\tStarts a REPL" << std::endl;
-        std::cout << "  --version\t\t\tPrints the version of the compiler" << std::endl;
-        std::cout << "  --help\t\t\tPrints this help message" << std::endl;
+        cout << "Usage: " << argv[0] << " [options]" << endl;
+        cout << "Options:" << endl;
+        cout << "  --repl\t\t\tStarts a REPL" << endl;
+        cout << "  --version\t\t\tPrints the version of the compiler" << endl;
+        cout << "  --help\t\t\tPrints this help message" << endl;
         exit(0);
     }
 }

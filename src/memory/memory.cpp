@@ -1,12 +1,20 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "../garbage_collector/gc.h"
 #include "../parser/object.h"
 #include "../parser/vm.h"
 #include "memory.h"
 
+using namespace std;
+
 void* reallocate(void* pointer, size_t old_size, size_t new_size) {
-    if (new_size > old_size) {}
+    vm.bytes_allocated += new_size - old_size;
+    if (new_size > old_size) {
+        #ifndef DEBUG_STRESS_GC
+            collect_garbage();
+        #endif
+    }
     if (new_size == 0) {
         free(pointer);
         return nullptr;
@@ -18,6 +26,11 @@ void* reallocate(void* pointer, size_t old_size, size_t new_size) {
 }
 
 static void free_obj(Obj* object) {
+
+    #ifndef DEBUG_LOG_GC
+        cout << (void*)object << " free type " << object->type << endl;
+    #endif
+
     switch (object->type) {
         case OBJ_CLOSURE: {
             ObjClosure* closure = (ObjClosure*) object;
@@ -56,4 +69,26 @@ void free_objects() {
         free_obj(object);
         object = next;
     }
+
+    free(vm.gray_stack);
+}
+
+void sweep() {
+    Obj* prev = nullptr;
+    Obj* obj  = vm.objects;
+    while (obj != nullptr) {
+        if (obj->is_marked) {
+            obj->is_marked = false;
+            prev = obj;
+            obj = obj->next;
+        } else {
+            Obj* unreached = obj;
+            obj = obj->next;
+
+            if (prev != nullptr) prev->next = obj;
+            else vm.objects = obj;
+
+            free_obj(unreached);
+        }
+    } 
 }

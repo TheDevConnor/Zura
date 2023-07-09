@@ -5,6 +5,8 @@
 #include "../object.h"
 #include "../../common.h"
 
+using namespace std;
+
 class Parser {
 private:
     typedef enum {
@@ -44,13 +46,13 @@ public:
         if(panic_mode) return;
         panic_mode = true;
 
-        std::printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
+        printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
         colorize(YELLOW), colorize(CYAN), token->line, colorize(RESET), 
             colorize(YELLOW), colorize(CYAN), token->column - 1, colorize(RESET));
 
-        if (token->kind == EOF_TOKEN) std::printf("at end \n");
+        if (token->kind == EOF_TOKEN) printf("at end \n");
         else if (token->kind == ERROR_TOKEN) {}
-        else std::printf("at %s'%.*s'%s\n", colorize(RED), token->length, token->start, colorize(RESET));
+        else printf("at %s'%.*s'%s\n", colorize(RED), token->length, token->start, colorize(RESET));
 
         // iterator over the tokens in the current line
         const char* line_start = token->start;
@@ -58,15 +60,15 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        std::cout << colorize(MAGENTA) << std::string(line_start, line_end - line_start) << "\n";
+        cout << colorize(MAGENTA) << std::string(line_start, line_end - line_start) << "\n";
 
         // Print to the error
         int num_spaces = token->column - 1;
-        for (int i = 0; i < num_spaces; i++) std::cout << " ";
-        std::cout << colorize(RED) << "^" << colorize(RESET);
+        for (int i = 0; i < num_spaces; i++) cout << " ";
+        cout << colorize(RED) << "^" << colorize(RESET);
 
         // Print the error message
-        std::cout << message << "\n";
+        cout << message << "\n";
         had_error = true;
     }
 
@@ -169,7 +171,7 @@ void literal(bool can_assign);
 int inner_most_loop_start = -1;
 int inner_most_loop_scope_depth = 0;
 
-std::unordered_map<TokenKind, ParseRule> rules = {
+unordered_map<TokenKind, ParseRule> rules = {
     {LEFT_PAREN,    {grouping,  call,       PREC_CALL}},
     {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
     {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
@@ -218,7 +220,7 @@ std::unordered_map<TokenKind, ParseRule> rules = {
     {EOF_TOKEN,     {nullptr,   nullptr,   PREC_NONE}},
 };
 
-const std::unordered_map<TokenKind, bool> return_context = {
+const unordered_map<TokenKind, bool> return_context = {
     {CLASS, true},
     {FUNC, true},
     {HAVE, true},

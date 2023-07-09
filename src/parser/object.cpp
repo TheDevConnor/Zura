@@ -5,6 +5,8 @@
 #include "table.h"
 #include "vm.h"
 
+using namespace std;
+
 #define ALLOCATE_OBJ(type, object_type) \
     (type*)allocate_object(sizeof(type), object_type)
 
@@ -14,6 +16,11 @@ struct Obj* allocate_object(size_t size, ObjType type) {
 
     object->next = vm.objects;
     vm.objects = object;
+
+    #ifndef DEBUG_LOG_GC
+        cout << (void*)object << " allocate " << size << " for " << type << " bytes" << endl;
+    #endif
+
     return object;
 }
 
@@ -48,7 +55,10 @@ ObjString* allocate_string(char* chars, int length, uint32_t hash) {
     string->length = length;
     string->chars = chars;
     string->hash = hash;
+
+    push(OBJ_VAL(string));
     table_set(&vm.strings, string, NIL_VAL);
+    pop();
     return string;
 }
 
@@ -98,10 +108,10 @@ ObjUpvalue* new_upvalue(Value* slot) {
 
 void print_function(ObjFunction* function) {
     if (function->name == nullptr) {
-        std::cout << "<script>";
+        cout << "<script>";
         return;
     }
-    std::cout << "<fn " << function->name->chars;
+    cout << "<fn " << function->name->chars;
 }
 
 void print_object(Value value) {
@@ -113,13 +123,13 @@ void print_object(Value value) {
             print_function(AS_FUNCTION(value));
             break;
         case OBJ_NATIVE:
-            std::cout << "<native fn>";
+            cout << "<native fn>";
             break;
         case OBJ_STRING:
             printf("%s", AS_CSTRING(value));
             break;
         case OBJ_UPVALUE:
-            std::cout << "upvalue";
+            cout << "upvalue";
             break;
     }
 }

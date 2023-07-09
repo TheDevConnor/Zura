@@ -109,7 +109,7 @@ static void skip_whitespace() {
     }
 }
 
-static Token string() {
+static Token _string() {
     while ((peek() != '"') && !is_at_end()) {
         if (peek() == '\n') scanner.line++;
         advance();

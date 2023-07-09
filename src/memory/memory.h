@@ -20,6 +20,7 @@
     reallocate(pointer, sizeof(type) * (old_count), 0)
 
 void* reallocate(void* pointer, size_t old_size, size_t new_size);
+void sweep();
 void free_objects();
 
 #endif // AZURA_MEMORY_H

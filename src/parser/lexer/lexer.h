@@ -40,7 +40,7 @@ Token scan_token() {
         case ':': return make_token(match('=') ? WALRUS        : COLON);
         case '>': return make_token(match('=') ? GREATER_EQUAL : GREATER);
         case '<': return make_token(match('=') ? LESS_EQUAL    : LESS);
-        case '"': return string();
+        case '"': return _string();
     }
 
     error_token("Unexpected character.");
