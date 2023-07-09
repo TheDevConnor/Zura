@@ -63,8 +63,39 @@ Value clock_native(int arg_count, Value* args) {
     return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
 }
 
+Value sleep_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    double seconds = AS_NUMBER(args[0]);
+    clock_t start = clock();
+    while ((clock() - start) / CLOCKS_PER_SEC < seconds);
+    return NIL_VAL;
+}
+
+Value to_string_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    char buffer[100];
+    sprintf(buffer, "%g", AS_NUMBER(args[0]));
+    return OBJ_VAL(copy_string(buffer, (int)strlen(buffer)));
+}
+
+Value exit_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    exit((int)AS_NUMBER(args[0]));
+    return NIL_VAL;
+}
+
 void define_all_natives() {
     define_native("clock", clock_native);
+    define_native("exit", exit_native);
+    define_native("sleep", sleep_native);
+
+    define_native("to_string", to_string_native);
 
     define_native("has_field", has_field_native);
     define_native("get_field", get_field_native);
