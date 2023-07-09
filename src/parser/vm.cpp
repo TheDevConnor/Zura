@@ -10,7 +10,7 @@
 #include "native_fn/native.h"
 #include "../debug/debug.h"
 #include "parser.h"
-#include "common.h"
+#include "../common.h"
 #include "object.h"
 #include "vm.h"
 

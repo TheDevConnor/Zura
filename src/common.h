@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define DEBUG_STRESS_GC
+#define DEBUG_LOG_GC
+
 #define DEBUG_TRACE_EXECUTION
 #define DEBUG_PRINT_CODE
 

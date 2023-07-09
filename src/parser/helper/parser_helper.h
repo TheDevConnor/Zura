@@ -3,7 +3,7 @@
 
 #include "../lexer/lexer.h"
 #include "../object.h"
-#include "../common.h"
+#include "../../common.h"
 
 class Parser {
 private:

@@ -1,7 +1,7 @@
 #ifndef AZURE_TABLE_H
 #define AZURE_TABLE_H
 
-#include "common.h"
+#include "../common.h"
 #include "value.h"
 
 struct Entry {

@@ -1,1 +1,7 @@
+func math(a, b) {
+    func add(a, b) return a + b;
+    add(a, b);
+}
 
+have m := math(12, 3);
+info m;

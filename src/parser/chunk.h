@@ -1,7 +1,7 @@
 #ifndef AZUA_CHUNK_H
 #define AZUA_CHUNK_H
 
-#include "common.h"
+#include "../common.h"
 #include "value.h"
 
 enum OpCode {

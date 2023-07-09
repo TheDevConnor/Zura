@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "../parser/common.h"
+#include "../common.h"
 
 #define ALLOCATE(type, count) \
     (type*)reallocate(NULL, 0, sizeof(type) * (count))
