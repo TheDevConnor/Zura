@@ -21,4 +21,5 @@ jobs:
         prerelease: true
         title: "Development Release"
         files: |
+          ./zura
           ./README.md
