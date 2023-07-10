@@ -1,6 +1,15 @@
-using "main_2.zu";
-using "main_3.zu";
+using "math.zu";
 
-info x;
-info y;
+// have result := math(10, 5, "+");
+// info result;
+
+// have result_2 := a_math(1 - 2, "sqrt", 10);
+// info result_2;
+
+have result_3 := geo(10, "area");
+info result_3;
+
+// have fib_ := fib(1000);
+// info fib_;
+
 

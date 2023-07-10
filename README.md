@@ -7,6 +7,9 @@
 zura Lang is a high-level programming language designed to be expressive, versatile, and easy to use. It offers dynamic typing with strong type inference, allowing developers to write code without explicitly specifying types. zura Lang supports multiple paradigms, including procedural and object-oriented programming.
 Here is the Discord server! [zura Lang Discord](https://discord.gg/JvExQpGuXM)
 Here is our website for zura Lang! [zura Lang Website](https://zura-lang.thedevconnor.repl.co/)
+
+If you have any suggestions please create an issue, and in the isssue add in the word SUGGESTION: and then your suggestion.
+
 ## Features
 
 - **High-Level**: zura Lang provides a high-level abstraction, allowing developers to write code that is closer to human-readable language.
