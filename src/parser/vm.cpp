@@ -1,4 +1,6 @@
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 #include <stdarg.h>
 #include <cstring>
 #include <fstream>
@@ -192,32 +194,45 @@ void concatenate() {
     push(OBJ_VAL(result));
 }
 
+unordered_set<ObjString*> loadedModules;
+
 ObjModule* load_module(ObjString* name) {
+    loadedModules.insert(name);
+
     const char* moduleFileName = name->chars;
 
     ifstream file(moduleFileName);
     if (!file.is_open()) {
-        string message = "Could not open file -> ";
-        message += set_color(RED);
-        message += moduleFileName;
-        message += set_color(RESET);
-        _runtime_error(message.c_str());
-        return nullptr;
+        std::string errorMessage = "Could not load file -> '";
+        errorMessage += set_color(RED);
+        errorMessage += moduleFileName;
+        errorMessage += set_color(RESET);
+        errorMessage += "'";
+        _runtime_error(errorMessage.c_str());
+        exit(1);
     }
 
-    string source((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
-    ObjFunction* function = compile(source.c_str());
+    string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
-    // Create an ObjModule and assign the compiled function to it
-    ObjModule* module = new ObjModule();
-    module->function = function;
+    InterpretResult result = interpret(source.c_str());
+    if (result != INTERPRET_OK) {
+        // Handle the error appropriately, such as returning an error value or throwing an exception.
+        _runtime_error("Error loading module!");
+        exit(1);
+    }
+
+    loadedModules.erase(name);
+
+    // Add the module globals to the global table
+    ObjModule* module = AS_MODULE(pop());
+    table_add_all(&module->variables, &vm.globals);
+
     return module;
 }
 
 ObjModule* import_module(ObjString* name) {
     ObjModule* module = load_module(name);
-    push(OBJ_VAL(module));
     return module;
 }
 
@@ -469,7 +484,8 @@ static InterpretResult run() {
             case OP_IMPORT: {
                 ObjString* module_name = AS_STRING(pop());
                 ObjModule* module = import_module(module_name);
-                push(OBJ_VAL(module));
+                loadedModules.insert(module_name);
+                table_set(&vm.modules, module_name, OBJ_VAL(module));
                 break;
             }
             case OP_INFO: {

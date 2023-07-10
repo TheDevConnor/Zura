@@ -1,0 +1,6 @@
+using "main_2.zu";
+using "main_3.zu";
+
+info x;
+info y;
+
