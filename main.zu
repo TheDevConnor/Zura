@@ -1,21 +1,23 @@
-// class Person {
-//     say_name() { info this.name; }
-// }
-
-// have jane := Person();
-// jane.name = "Jane";
-
-// have method := jane.say_name;
-// method(); // prints "Jane"
-
-have x := " ________  ___  ___  ________  ________          ___       ________  ________   ________     
+have x := " 
+________  ___  ___  ________  ________          ___       ________  ________   ________     
 |\_____  \|\  \|\  \|\   __  \|\   __  \        |\  \     |\   __  \|\   ___  \|\   ____\    
  \|___/  /\ \  \\\  \ \  \|\  \ \  \|\  \       \ \  \    \ \  \|\  \ \  \\ \  \ \  \___|    
      /  / /\ \  \\\  \ \   _  _\ \   __  \       \ \  \    \ \   __  \ \  \\ \  \ \  \  ___  
     /  /_/__\ \  \\\  \ \  \\  \\ \  \ \  \       \ \  \____\ \  \ \  \ \  \\ \  \ \  \|\  \ 
    |\________\ \_______\ \__\\ _\\ \__\ \__\       \ \_______\ \__\ \__\ \__\\ \__\ \_______\
     \|_______|\|_______|\|__|\|__|\|__|\|__|        \|_______|\|__|\|__|\|__| \|__|\|_______|";
-
 info x;
+
+class CoffeeMaker {
+    init(coffee) { this.coffee = coffee; }
+    brew() {
+        info "Brewing a cup of " + this.coffee;
+        // no reusing the grounds!
+        this.coffee = nil;
+    }
+}
+
+have maker := CoffeeMaker("Sumatra");
+maker.brew();
 
 //! NOTE: Code does not run have not add in this and bond methods

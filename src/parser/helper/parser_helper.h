@@ -132,6 +132,8 @@ struct Local {
 
 enum FunctionType {
     TYPE_FUNCTION,
+    TYPE_INITIALIZER,
+    TYPE_METHOD,
     TYPE_SCRIPT,
 };
 
@@ -151,9 +153,14 @@ struct Compiler {
     int scope_depth;
 };
 
+struct ClassCompiler {
+    struct ClassCompiler* enclosing;
+    bool has_superclass;
+};
 
 struct Parser parser;
 struct Compiler* current = nullptr;
+ClassCompiler* current_class = nullptr;
 
 Chunk* compiling_chunk() { return &current->function->chunk; }
 
@@ -161,6 +168,7 @@ void grouping(bool can_assign);
 void _number(bool can_assign);
 void _string(bool can_assign);
 void _variable(bool can_assign);
+void _this(bool can_assign);
 void and_(bool can_assign);
 void or_(bool can_assign);
 void unary(bool can_assign);
@@ -211,7 +219,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {INFO,          {nullptr,   nullptr,   PREC_NONE}},
     {RETURN,        {nullptr,   nullptr,   PREC_NONE}},
     {SUPER,         {nullptr,   nullptr,   PREC_NONE}},
-    {THIS,          {nullptr,   nullptr,   PREC_NONE}},
+    {THIS,          {_this,     nullptr,    PREC_NONE}},
     {TRUE,          {literal,   nullptr,   PREC_NONE}},
     {HAVE,          {nullptr,   nullptr,   PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,   PREC_NONE}},

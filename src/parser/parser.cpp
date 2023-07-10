@@ -42,7 +42,8 @@ uint8_t make_constant(Value value) {
 }
 
 void emit_return() {
-    emit_byte(OP_NIL);
+    if(current->type == TYPE_INITIALIZER) emit_bytes(OP_GET_LOCAL, 0);
+    else emit_byte(OP_NIL);
     emit_byte(OP_RETURN);
 }
 
@@ -71,13 +72,19 @@ void init_compiler(Compiler* compiler, FunctionType type) {
     compiler->function = new_function();
     current = compiler;
 
-    if(type != TYPE_SCRIPT) current->function->name = copy_string(parser.previous.start, parser.previous.length);
+    if(type != TYPE_SCRIPT) 
+        current->function->name = copy_string(parser.previous.start, parser.previous.length);
 
     Local* local = &current->locals[current->local_count++];
     local->depth = 0;
     local->is_captured = false;
-    local->name.start = "";
-    local->name.length = 0;
+    if (type != TYPE_FUNCTION) {
+        local->name.start = "this";
+        local->name.length = 4;
+    } else {
+        local->name.start = "";
+        local->name.length = 0;
+    }
 }
 
 ObjFunction* end_compiler() {
@@ -313,7 +320,9 @@ void method() {
     parser.consume(IDENTIFIER, "Expected a method name!");
     uint8_t constant = identifier_constant(&parser.previous);
 
-    FunctionType type = TYPE_FUNCTION;
+    FunctionType type = TYPE_METHOD;
+    if(parser.previous.length == 4 && memcmp(parser.previous.start, "init", 4) == 0) 
+        type = TYPE_INITIALIZER;
     function(type);
 
     emit_bytes(OP_METHOD, constant);
@@ -328,6 +337,10 @@ void class_declaration() {
     emit_bytes(OP_CLASS, name_constant);
     define_variable(name_constant);
 
+    ClassCompiler class_compiler;
+    class_compiler.enclosing = current_class;
+    current_class = &class_compiler;
+
     named_variable(class_name, false);
     parser.consume(LEFT_BRACE, "Expected '{' before class body");
     while (!parser.check(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
@@ -335,6 +348,8 @@ void class_declaration() {
     }
     parser.consume(RIGHT_BRACE, "Expected '}' after class body");
     emit_byte(OP_POP);
+
+    current_class = current_class->enclosing;
 }
 
 void func_declaration() {
@@ -464,6 +479,7 @@ void return_statement() {
     if (current->type == TYPE_SCRIPT) parser.error("Can't return from top-level code!");
     if (parser.match(SEMICOLON)) emit_return();
     else {
+        if(current->type == TYPE_INITIALIZER) parser.error("Can't return a value from an initializer.");
         expression();
         parser.consume(SEMICOLON, "Expected ';' after the return value");
         emit_byte(OP_RETURN);
@@ -616,6 +632,15 @@ void _string(bool can_assign) {
 void _variable(bool can_assign) {
     (void)can_assign;
     named_variable(parser.previous, can_assign);
+}
+
+void _this(bool can_assign) {
+    (void)can_assign;
+    if(current_class == nullptr) {
+        parser.error("Cannot use 'this' outside of a class.");
+        return;
+    }
+    _variable(false);
 }
 
 void unary(bool can_assign) {

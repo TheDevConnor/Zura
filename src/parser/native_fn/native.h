@@ -127,7 +127,8 @@ Value len_native(int arg_count, Value* args) {
     if (!IS_STRING(args[0])) return BOOL_VAL(false);
 
     ObjString* string = AS_STRING(args[0]);
-    return NUMBER_VAL(string->length);
+    double number_length = string->length;
+    return NUMBER_VAL(number_length);
 }
 
 void define_all_natives() {

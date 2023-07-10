@@ -58,6 +58,7 @@ void mark_roots() {
 
     mark_table(&vm.globals);
     mark_compiler_roots();
+    mark_object((Obj*)vm.init_string);
 }
 
 void blacken_object(Obj* object) {
@@ -68,6 +69,12 @@ void blacken_object(Obj* object) {
     #endif
 
     switch (object->type) {
+        case OBJ_BOUND_METHOD: {
+            ObjBoundMethod* bound = (ObjBoundMethod*)object;
+            mark_value(bound->receiver);
+            mark_object((Obj*)bound->method);
+            break;
+        }
         case OBJ_CLASS: {
             ObjClass* klass = (ObjClass*)object;
             mark_object((Obj*)klass->name);

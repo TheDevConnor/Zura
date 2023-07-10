@@ -67,12 +67,16 @@ void init_vm() {
     init_table(&vm.globals);
     init_table(&vm.strings);
 
+    vm.init_string = nullptr;
+    vm.init_string = copy_string("init", 4);
+
     define_all_natives();
 }
 
 void free_vm() { 
     free_table(&vm.globals);
     free_table(&vm.strings);
+    vm.init_string = nullptr;
     free_objects(); 
 }
 
@@ -126,9 +130,21 @@ bool call_function(ObjFunction* function, int arg_count) {
 bool call_value(Value callee, int arg_count) {
     if(IS_OBJECT(callee)) {
         switch (OBJ_TYPE(callee)) {
+            case OBJ_BOUND_METHOD: {
+                ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
+                vm.stack_top[-arg_count - 1] = bound->receiver;
+                return call_closure(bound->method, arg_count);
+            }
             case OBJ_CLASS: {
                 ObjClass* klass = AS_CLASS(callee);
                 vm.stack_top[-arg_count - 1] = OBJ_VAL(new_instance(klass));
+                Value initializer;
+                if(table_get(&klass->methouds, vm.init_string, &initializer)) {
+                    return call_closure(AS_CLOSURE(initializer), arg_count);
+                } else if(arg_count != 0) {
+                    _runtime_error("Expected 0 arguments but got %d.", arg_count);
+                    return false;
+                }
                 return true;
             }
             case OBJ_CLOSURE:  return call_closure(AS_CLOSURE(callee), arg_count);
@@ -145,6 +161,24 @@ bool call_value(Value callee, int arg_count) {
     }
     _runtime_error("Can only call functions and classes!");
     return false;
+}
+
+bool bind_method(ObjClass* klass, ObjString* name) {
+    Value method;
+    if(!table_get(&klass->methouds, name, &method)) {
+        string message = "Undefined property -> ";
+        message += set_color(RED);
+        message += name->chars;
+        message += set_color(RESET);
+        _runtime_error(message.c_str());
+        return false;
+    }
+
+    ObjBoundMethod* bound = new_bound_method(peek(0), AS_CLOSURE(method));
+
+    pop();
+    push(OBJ_VAL(bound));
+    return true;
 }
 
 ObjUpvalue* capture_upvalue(Value* local) {
@@ -380,10 +414,8 @@ static InterpretResult run() {
                     break;
                 }
 
-                string message = "Undefiened property ";
-                message += name->chars;
-                runtime_error(message.c_str());
-                return INTERPRET_RUNTIME_ERROR;
+                if (!bind_method(instance->klass, name)) return INTERPRET_RUNTIME_ERROR;
+                break;
             }
             case OP_SET_PROPERTY: {
                 if(!IS_INSTANCE(peek(1))) {

@@ -24,6 +24,13 @@ struct Obj* allocate_object(size_t size, ObjType type) {
     return object;
 }
 
+ObjBoundMethod* new_bound_method(Value receiver, ObjClosure* method) {
+    ObjBoundMethod* bound = ALLOCATE_OBJ(ObjBoundMethod, OBJ_BOUND_METHOD);
+    bound->receiver = receiver;
+    bound->method = method;
+    return bound;
+}
+
 ObjClass* new_class(ObjString* name) {
     ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
     klass->name = name;
@@ -130,6 +137,9 @@ void print_function(ObjFunction* function) {
 
 void print_object(Value value) {
     switch (OBJ_TYPE(value)) {
+        case OBJ_BOUND_METHOD:
+            print_function(AS_BOUND_METHOD(value)->method->function);
+            break;
         case OBJ_CLASS: 
             cout << AS_CLASS(value)->name->chars;
             break;
