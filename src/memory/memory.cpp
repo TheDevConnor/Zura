@@ -33,7 +33,8 @@ static void free_obj(Obj* object) {
 
     switch (object->type) {
         case OBJ_CLASS: {
-            FREE(ObjClass, object);
+            ObjClass* klass = (ObjClass*)object;
+            free_table(&klass->methouds);
             break;
         }
         case OBJ_CLOSURE: {

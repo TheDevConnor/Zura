@@ -110,6 +110,7 @@ void statement();
 void declaration();
 ParseRule* get_rule(TokenKind kind);
 void parse_precedence(Precedence precedence);
+void named_variable(Token name, bool can_assign);
 
 uint8_t identifier_constant(Token* name) {
     return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
@@ -308,16 +309,32 @@ void function(FunctionType type) {
     emit_bytes(OP_CLOSURE, make_constant(OBJ_VAL(function)));
 }
 
+void method() {
+    parser.consume(IDENTIFIER, "Expected a method name!");
+    uint8_t constant = identifier_constant(&parser.previous);
+
+    FunctionType type = TYPE_FUNCTION;
+    function(type);
+
+    emit_bytes(OP_METHOD, constant);
+}
+
 void class_declaration() {
     parser.consume(IDENTIFIER, "Expect class name!");
+    Token class_name = parser.previous;
     uint8_t name_constant = identifier_constant(&parser.previous);
     declare_variable();
 
     emit_bytes(OP_CLASS, name_constant);
     define_variable(name_constant);
 
+    named_variable(class_name, false);
     parser.consume(LEFT_BRACE, "Expected '{' before class body");
+    while (!parser.check(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
+        method();
+    }
     parser.consume(RIGHT_BRACE, "Expected '}' after class body");
+    emit_byte(OP_POP);
 }
 
 void func_declaration() {

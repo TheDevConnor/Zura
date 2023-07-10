@@ -79,6 +79,7 @@ struct ObjClosure {
 struct ObjClass {
     Obj obj;
     ObjString* name;
+    Table methouds;
 };
 
 struct ObjModule {

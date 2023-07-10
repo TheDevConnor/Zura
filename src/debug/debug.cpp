@@ -107,6 +107,7 @@ int disassemble_instruction(Chunk* chunk, int offset) {
         }
         case OP_CLOSE_UPVALUE: return simple_instruction("OP_CLOSE_UPVALUE", offset);
         case OP_CALL:          return byte_instruction("OP_CALL", chunk, offset);
+        case OP_METHOD:        return constant_instruction("OP_METHOD", chunk, offset);
         case OP_CLASS:         return constant_instruction("OP_CLASS", chunk, offset);
         case OP_IMPORT:        return simple_instruction("OP_IMPORT", offset);
         case OP_INFO:          return simple_instruction("OP_INFO", offset);

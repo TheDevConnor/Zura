@@ -174,6 +174,13 @@ void close_upvalues(Value* last) {
     }
 }
 
+void define_method(ObjString* name) {
+    Value method = peek(0);
+    ObjClass* klass = AS_CLASS(peek(1));
+    table_set(&klass->methouds, name, method);
+    pop();
+}
+
 bool is_falsey(Value value) {
     return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
@@ -481,6 +488,10 @@ static InterpretResult run() {
                 break;
             }
             // Statement operation codes
+            case OP_METHOD: {
+                define_method(AS_STRING(read_constant()));
+                break;
+            }
             case OP_IMPORT: {
                 ObjString* module_name = AS_STRING(pop());
                 ObjModule* module = import_module(module_name);

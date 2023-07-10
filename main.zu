@@ -1,15 +1,11 @@
-using "math.zu";
+class Person {
+    say_name() { info this.name; }
+}
 
-// have result := math(10, 5, "+");
-// info result;
+have jane := Person();
+jane.name = "Jane";
 
-// have result_2 := a_math(1 - 2, "sqrt", 10);
-// info result_2;
+have method := jane.say_name;
+method(); // prints "Jane"
 
-have result_3 := geo(10, "area");
-info result_3;
-
-// have fib_ := fib(1000);
-// info fib_;
-
-
+//! NOTE: Code does not run have not add in this and bond methods

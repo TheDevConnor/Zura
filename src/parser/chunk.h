@@ -49,6 +49,7 @@ enum OpCode {
     // Call operation
     OP_CALL,
     // Statements
+    OP_METHOD,
     OP_IMPORT,
     OP_CLASS,
     OP_INFO,

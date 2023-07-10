@@ -27,6 +27,7 @@ struct Obj* allocate_object(size_t size, ObjType type) {
 ObjClass* new_class(ObjString* name) {
     ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
     klass->name = name;
+    init_table(&klass->methouds);
     return klass;
 }
 

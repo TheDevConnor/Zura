@@ -71,6 +71,7 @@ void blacken_object(Obj* object) {
         case OBJ_CLASS: {
             ObjClass* klass = (ObjClass*)object;
             mark_object((Obj*)klass->name);
+            mark_table(&klass->methouds);
             break;
         }
         case OBJ_CLOSURE: {
