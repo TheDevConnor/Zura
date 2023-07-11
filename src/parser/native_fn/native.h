@@ -131,6 +131,15 @@ Value len_native(int arg_count, Value* args) {
     return NUMBER_VAL(number_length);
 }
 
+Value squrt_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    double number = AS_NUMBER(args[0]);
+    double number_squrt = sqrt(number);
+    return NUMBER_VAL(number_squrt);
+}
+
 void define_all_natives() {
     define_native("read_file", read_file_native);
 
@@ -145,6 +154,8 @@ void define_all_natives() {
     define_native("get_field", get_field_native);
     define_native("set_field", set_field_native);
     define_native("delete_field", delete_field_native);
+
+    define_native("sqrt", squrt_native);
 }
 
 #endif //AZURA_NATIVE_H

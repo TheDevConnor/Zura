@@ -146,9 +146,8 @@ bool call_value(Value callee, int arg_count) {
     case OBJ_CLASS: {
       ObjClass *klass = AS_CLASS(callee);
       vm.stack_top[-arg_count - 1] = OBJ_VAL(new_instance(klass));
-      Value initializer;
-      if (table_get(&klass->methouds, vm.init_string, &initializer)) {
-        return call_closure(AS_CLOSURE(initializer), arg_count);
+      if(!IS_NIL(klass->initializer)) {
+        return call_closure(AS_CLOSURE(klass->initializer), arg_count);
       } else if (arg_count != 0) {
         _runtime_error("Expected 0 arguments but got %d.", arg_count);
         return false;
@@ -182,6 +181,7 @@ bool invoke_from_class(ObjClass *klass, ObjString *name, int arg_count) {
     message += name->chars;
     message += set_color(RESET);
     _runtime_error(message.c_str());
+    return false;
   }
   return call_closure(AS_CLOSURE(method), arg_count);
 }
@@ -195,13 +195,6 @@ bool invoke(ObjString *name, int arg_count) {
   }
 
   ObjInstance *instance = AS_INSTANCE(receiver);
-
-  Value value;
-  if (table_get(&instance->fields, name, &value)) {
-    vm.stack_top[-arg_count - 1] = value;
-    return call_value(value, arg_count);
-  }
-
   return invoke_from_class(instance->klass, name, arg_count);
 }
 
@@ -257,6 +250,7 @@ void define_method(ObjString *name) {
   Value method = peek(0);
   ObjClass *klass = AS_CLASS(peek(1));
   table_set(&klass->methouds, name, method);
+  if (name == vm.init_string) klass->initializer = method;
   pop();
 }
 

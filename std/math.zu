@@ -1,52 +1,55 @@
 have pi := 3.14159;
 
-func fib(n) {
-    have a := 0;
-    have b := 1;
-    while (n > 0) {
-        a = b;
-        b = a + b;
-        n = n - 1;
-        info a;
+class Math {
+    fib(n) {
+        have a := 0;
+        have b := 1;
+        while (n > 0) {
+            a = b;
+            b = a + b;
+            n = n - 1;
+            info a;
+        }
     }
-    return "end of fib";
-}
-
-func math(a, b, op) {
-    if (b == 0 and (op == "/" or op == "%")) { 
-        info "ERROR: can't division by zero"; 
-        return exit(1); 
+    factorial(n) {
+        if (n == 0 or n == 1) return 1;
+        else return n * factorial(n - 1);
     }
-    // The basic calculator
-    if (op == "+")      { return a + b; }
-    if (op == "-")      { return a - b; }
-    if (op == "*")      { return a * b; }
-    if (op == "/")      { return a / b; }
-    if (op == "%")      { return a % b; }
-    if (op == "**")     { return a ** b; }
-    else { info "ERROR: invalid op_code -> " + op; return exit(1); }
+    basic_calculator(a, b, op) {
+        // Check division by zero
+        if(b == 0 and (op == "/" or op == "%")){
+            info "Division by zero error";
+            exit(1);
+        }
+        if (op == "+")  return a + b;
+        if (op == "-")  return a - b;
+        if (op == "*")  return a * b;
+        if (op == "/")  return a / b;
+        if (op == "%")  return a % b;
+        if (op == "**") return a ** b;
+        else {
+            info "invalid operator -> " + op;
+            exit(1);
+        }
+    }
+    advance_calculator(a, op, n) {
+        if (op == "nthrt") return a**(1/n);
+        if (op == "sqrt")  return a**(1/2);
+        if (op == "fact")  return factorial(a);
+        else {
+            info "ERROR: invalid op_code -> " + op;
+            exit(1);
+        }
+    }
+    geometry(r, op) {
+        if (op == "circumference") return 2 * pi * r;
+        if (op == "area")          return pi * (r**2);
+        if (op == "diameter")      return 2 * r;
+        else {
+            info "ERROR: invalid op_code -> " + op;
+            exit(1);
+        }
+    }
 }
 
-func fact(n) {
-    if (n == 1 or n == 0) return 1; else return n * factorial(n - 1);
-}
-
-func a_math(a, op, n) {
-    if (op == "nthrt")  { return a**(1/n); }
-    if (op == "sqrt")   { return a**(1/2); }
-    if (op == "fact")   { return fact(a); }
-    else { info "ERROR: invalid op_code -> " + op; return exit(1); }
-}
-
-func geo(r, op) {
-    if (op == "circum") { return 2 * pi * r; }
-    if (op == "area")   { return pi * (r**2); }
-    if (op == "diam")   { return 2 * r; }
-    else { info "ERROR: invalid op_code -> " + op; return exit(1); }
-}
-
-func vol(l,w,h, r, op){
-    if (op == "cube") { return l**3; } 
-    if (op == "rect") { return l*w*h; } 
-    if (op == "pyr")  { return (1/3) * (geo(r, "area")) * h; }
-}
+have math := Math();
