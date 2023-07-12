@@ -1,0 +1,473 @@
+==23575== Memcheck, a memory error detector
+==23575== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==23575== Using Valgrind-3.21.0-d97fed7c3e-20230428 and LibVEX; rerun with -h for copyright info
+==23575== Command: bin/zura
+==23575== 
+--23575-- Valgrind options:
+--23575--    -v
+--23575--    --leak-check=full
+--23575--    --show-leak-kinds=all
+--23575-- Contents of /proc/version:
+--23575--   Linux version 6.4.1-arch2-1 (linux@archlinux) (gcc (GCC) 13.1.1 20230429, GNU ld (GNU Binutils) 2.40.0) #1 SMP PREEMPT_DYNAMIC Tue, 04 Jul 2023 08:39:40 +0000
+--23575-- 
+--23575-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed
+--23575-- Page sizes: currently 4096, max supported 4096
+--23575-- Valgrind library directory: /usr/lib/valgrind
+--23575-- Reading syms from /home/connor/Desktop/Zura-v2/bin/zura
+==23575== Downloading debug info for /home/connor/Desktop/Zura-v2/bin/zura...
+==23575== Server query failed: No such file or directory
+--23575-- Reading syms from /usr/lib/ld-linux-x86-64.so.2
+==23575== Downloading debug info for /usr/lib/ld-linux-x86-64.so.2...
+--23575--   Considering /home/connor/.cache/debuginfod_client/f72a7ea28ae7a23cd90cdcc5537be1efa37c7b36/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/ld-linux-x86-64.so.2
+--23575-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+==23575== Downloading debug info for /usr/lib/valgrind/memcheck-amd64-linux...
+--23575--   Considering /home/connor/.cache/debuginfod_client/21561a08446ac6cd0aca1f19ec3cf8193a37e08d/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/valgrind/memcheck-amd64-linux
+--23575--    object doesn't have a dynamic symbol table
+--23575-- Scheduler: using generic scheduler lock implementation.
+--23575-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==23575== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-23575-by-connor-on-???
+==23575== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-23575-by-connor-on-???
+==23575== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-23575-by-connor-on-???
+==23575== 
+==23575== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==23575== don't want to do, unless you know exactly what you're doing,
+==23575== or are doing some strange experiment):
+==23575==   /usr/lib/valgrind/../../bin/vgdb --pid=23575 ...command...
+==23575== 
+==23575== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==23575==   /path/to/gdb bin/zura
+==23575== and then give GDB the following command
+==23575==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=23575
+==23575== --pid is optional if only one valgrind process is running
+==23575== 
+--23575-- REDIR: 0x4023eb0 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c1162 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--23575-- REDIR: 0x4022660 (ld-linux-x86-64.so.2:index) redirected to 0x580c117c (vgPlain_amd64_linux_REDIR_FOR_index)
+--23575-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+==23575== Downloading debug info for /usr/lib/valgrind/vgpreload_core-amd64-linux.so...
+--23575--   Considering /home/connor/.cache/debuginfod_client/e9d74745228fe25e28f506616e6de17acc8c85dc/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--23575-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+==23575== Downloading debug info for /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so...
+--23575--   Considering /home/connor/.cache/debuginfod_client/6f13a23e116866d1cbd837b779780ab20a826fd0/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+==23575== WARNING: new redirection conflicts with existing -- ignoring it
+--23575--     old: 0x04023eb0 (strlen              ) R-> (0000.0) 0x580c1162 vgPlain_amd64_linux_REDIR_FOR_strlen
+--23575--     new: 0x04023eb0 (strlen              ) R-> (2007.0) 0x04847fe0 strlen
+--23575-- REDIR: 0x4022890 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4849100 (strcmp)
+--23575-- REDIR: 0x4021ab0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x484cef0 (mempcpy)
+--23575-- Reading syms from /usr/lib/libstdc++.so.6.0.31
+--23575-- Reading syms from /usr/lib/libm.so.6
+==23575== Downloading debug info for /usr/lib/libm.so.6...
+--23575--   Considering /home/connor/.cache/debuginfod_client/8933c56b84e52e8a4f59c23a7e9cda651ce59976/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/libm.so.6
+--23575-- Reading syms from /usr/lib/libgcc_s.so.1
+--23575-- Reading syms from /usr/lib/libc.so.6
+==23575== Downloading debug info for /usr/lib/libc.so.6...
+--23575--   Considering /home/connor/.cache/debuginfod_client/2f005a79cd1a8e385972f5a102f16adba414d75e/debuginfo ..
+--23575--   .. CRC is valid
+==23575== Successfully downloaded debug file for /usr/lib/libc.so.6
+==23575== WARNING: new redirection conflicts with existing -- ignoring it
+--23575--     old: 0x04c9a460 (memalign            ) R-> (1011.0) 0x04846db0 memalign
+--23575--     new: 0x04c9a460 (memalign            ) R-> (1017.0) 0x048472e0 aligned_alloc
+==23575== WARNING: new redirection conflicts with existing -- ignoring it
+--23575--     old: 0x04c9a460 (memalign            ) R-> (1011.0) 0x04846db0 memalign
+--23575--     new: 0x04c9a460 (memalign            ) R-> (1017.0) 0x04847260 aligned_alloc
+==23575== WARNING: new redirection conflicts with existing -- ignoring it
+--23575--     old: 0x04c9a460 (memalign            ) R-> (1011.0) 0x04846db0 memalign
+--23575--     new: 0x04c9a460 (memalign            ) R-> (1017.0) 0x048472e0 aligned_alloc
+==23575== WARNING: new redirection conflicts with existing -- ignoring it
+--23575--     old: 0x04c9a460 (memalign            ) R-> (1011.0) 0x04846db0 memalign
+--23575--     new: 0x04c9a460 (memalign            ) R-> (1017.0) 0x04847260 aligned_alloc
+--23575-- REDIR: 0x4024050 (ld-linux-x86-64.so.2:strncmp) redirected to 0x4848930 (strncmp)
+--23575-- REDIR: 0x4ca01f0 (libc.so.6:strncasecmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb2440 (libc.so.6:wmemcmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9e670 (libc.so.6:strchrnul) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9d7f0 (libc.so.6:memrchr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9ce60 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb1f50 (libc.so.6:wcslen) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb37c0 (libc.so.6:wcsnlen) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca04e0 (libc.so.6:strnlen) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0570 (libc.so.6:strpbrk) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9e700 (libc.so.6:strcmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9d880 (libc.so.6:memset) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb1d10 (libc.so.6:wcschr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9e5f0 (libc.so.6:index) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca05a0 (libc.so.6:rindex) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb1da0 (libc.so.6:wcscmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9daa0 (libc.so.6:stpncpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb23c0 (libc.so.6:wmemchr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0390 (libc.so.6:strncmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9db00 (libc.so.6:strcasecmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9f8a0 (libc.so.6:strcspn) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4cb1e30 (libc.so.6:wcscpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9e580 (libc.so.6:strcat) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0290 (libc.so.6:strncasecmp_l) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9cd70 (libc.so.6:bcmp) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9f830 (libc.so.6:strcpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9dba0 (libc.so.6:strcasecmp_l) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0160 (libc.so.6:strlen) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0430 (libc.so.6:strncpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9da30 (libc.so.6:stpcpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9d5b0 (libc.so.6:memmove) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+==23575== Preferring higher priority redirection:
+--23575--     old: 0x04d58b00 (__memcpy_avx_unalign) R-> (2018.0) 0x0484a4e0 __memcpy_avx_unaligned_erms
+--23575--     new: 0x04d58b00 (__memcpy_avx_unalign) R-> (2018.1) 0x0484bf80 memmove
+--23575-- REDIR: 0x4c9ccf0 (libc.so.6:memchr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0760 (libc.so.6:strspn) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9d6d0 (libc.so.6:mempcpy) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4c9d970 (libc.so.6:rawmemchr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4ca0f10 (libc.so.6:strstr) redirected to 0x48361c0 (_vgnU_ifunc_wrapper)
+--23575-- REDIR: 0x4d5d6f0 (libc.so.6:__strrchr_avx2) redirected to 0x48479c0 (rindex)
+--23575-- REDIR: 0x4d5b840 (libc.so.6:__strlen_avx2) redirected to 0x4847ec0 (strlen)
+--23575-- REDIR: 0x4d583a0 (libc.so.6:__memcmp_avx2_movbe) redirected to 0x484b6a0 (bcmp)
+--23575-- REDIR: 0x4c99690 (libc.so.6:malloc) redirected to 0x48417d0 (malloc)
+--23575-- REDIR: 0x4925880 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4841f50 (operator new(unsigned long))
+--23575-- REDIR: 0x4d59500 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x484be70 (memset)
+--23575-- REDIR: 0x4923ab0 (libstdc++.so.6:operator delete(void*)) redirected to 0x48446f0 (operator delete(void*))
+--23575-- REDIR: 0x4c99e80 (libc.so.6:realloc) redirected to 0x4846b60 (realloc)
+--23575-- REDIR: 0x4d58b00 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x484bf80 (memmove)
+--23575-- REDIR: 0x4c99c40 (libc.so.6:free) redirected to 0x48440c0 (free)
+==23575== Syscall param openat(filename) points to unaddressable byte(s)
+==23575==    at 0x4CFB882: open (open64.c:41)
+==23575==    by 0x4C81255: _IO_file_open (fileops.c:188)
+==23575==    by 0x4C813E4: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:280)
+==23575==    by 0x4C7477E: __fopen_internal (iofopen.c:75)
+==23575==    by 0x494A605: std::__basic_file<char>::open(char const*, std::_Ios_Openmode, int) (basic_file.cc:254)
+==23575==    by 0x4997D9F: std::basic_filebuf<char, std::char_traits<char> >::open(char const*, std::_Ios_Openmode) (fstream.tcc:184)
+==23575==    by 0x10C052: read_file(char const*) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10C298: run_file(char const*) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B816: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==23575== 
+Could not open file "==23575== 
+==23575== HEAP SUMMARY:
+==23575==     in use at exit: 1,606 bytes in 37 blocks
+==23575==   total heap usage: 99 allocs, 62 frees, 79,070 bytes allocated
+==23575== 
+==23575== Searching for pointers to 37 not-freed blocks
+==23575== Checked 411,168 bytes
+==23575== 
+==23575== 4 bytes in 1 blocks are still reachable in loss record 1 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E29: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 5 bytes in 1 blocks are still reachable in loss record 2 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x11335A: init_vm() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 5 bytes in 1 blocks are still reachable in loss record 3 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E4F: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 5 bytes in 1 blocks are still reachable in loss record 4 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 6 bytes in 1 blocks are still reachable in loss record 5 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E3C: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 6 bytes in 1 blocks are still reachable in loss record 6 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E62: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 10 bytes in 1 blocks are still reachable in loss record 7 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E16: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 10 bytes in 1 blocks are still reachable in loss record 8 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E75: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 10 bytes in 1 blocks are still reachable in loss record 9 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E88: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 10 bytes in 1 blocks are still reachable in loss record 10 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E9B: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 10 bytes in 1 blocks are still reachable in loss record 11 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EAE: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 13 bytes in 1 blocks are still reachable in loss record 12 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CCA1: copy_string(char const*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EC1: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 13 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E16: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 14 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E29: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 15 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E3C: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 16 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E4F: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 17 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E62: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 18 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E75: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 19 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E88: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 20 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E9B: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 21 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EAE: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 22 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EC1: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 24 bytes in 1 blocks are still reachable in loss record 23 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAC1: new_native(Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DA2: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 24 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x11335A: init_vm() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 25 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E16: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 26 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E29: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 27 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E3C: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 28 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E4F: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 29 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E62: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 30 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E75: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 31 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E88: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 32 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E9B: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 33 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EAE: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 34 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112EC1: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 40 bytes in 1 blocks are still reachable in loss record 35 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CAFF: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 384 bytes in 1 blocks are still reachable in loss record 36 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x11220E: adjust_capacity(Table*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112310: table_set(Table*, ObjString*, Value) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10CB48: allocate_string(char*, int, unsigned int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112D7A: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E75: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== 384 bytes in 1 blocks are still reachable in loss record 37 of 37
+==23575==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==23575==    by 0x11702D: reallocate(void*, unsigned long, unsigned long) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x11220E: adjust_capacity(Table*, int) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112310: table_set(Table*, ObjString*, Value) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112DE1: define_native(char const*, Value (*)(int, Value*)) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x112E88: define_all_natives() (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B80D: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575== 
+==23575== LEAK SUMMARY:
+==23575==    definitely lost: 0 bytes in 0 blocks
+==23575==    indirectly lost: 0 bytes in 0 blocks
+==23575==      possibly lost: 0 bytes in 0 blocks
+==23575==    still reachable: 1,606 bytes in 37 blocks
+==23575==         suppressed: 0 bytes in 0 blocks
+==23575== 
+==23575== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==23575== 
+==23575== 1 errors in context 1 of 1:
+==23575== Syscall param openat(filename) points to unaddressable byte(s)
+==23575==    at 0x4CFB882: open (open64.c:41)
+==23575==    by 0x4C81255: _IO_file_open (fileops.c:188)
+==23575==    by 0x4C813E4: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:280)
+==23575==    by 0x4C7477E: __fopen_internal (iofopen.c:75)
+==23575==    by 0x494A605: std::__basic_file<char>::open(char const*, std::_Ios_Openmode, int) (basic_file.cc:254)
+==23575==    by 0x4997D9F: std::basic_filebuf<char, std::char_traits<char> >::open(char const*, std::_Ios_Openmode) (fstream.tcc:184)
+==23575==    by 0x10C052: read_file(char const*) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10C298: run_file(char const*) (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==    by 0x10B816: main (in /home/connor/Desktop/Zura-v2/bin/zura)
+==23575==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==23575== 
+==23575== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

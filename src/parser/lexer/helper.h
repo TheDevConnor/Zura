@@ -142,7 +142,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "else")    == 0)    return ELSE;
     if (strcmp(keyword, "false")   == 0)   return FALSE;
     if (strcmp(keyword, "for")     == 0)     return FOR;
-    if (strcmp(keyword, "func")     == 0)     return FUNC;
+    if (strcmp(keyword, "func")    == 0)     return FUNC;
     if (strcmp(keyword, "if")      == 0)      return IF;
     if (strcmp(keyword, "info")    == 0)    return INFO;
     if (strcmp(keyword, "nil")     == 0)     return NIL;
@@ -155,6 +155,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "while")   == 0)   return WHILE;
     if (strcmp(keyword, "using")   == 0)   return USING;
     if (strcmp(keyword, "continue")== 0)  return CONTINUE;
+    if (strcmp(keyword, "extends") == 0)  return INHERITANCE;
     if (strcmp(keyword, "break")   == 0)   return BREAK;
 
     return IDENTIFIER;

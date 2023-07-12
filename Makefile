@@ -1,9 +1,11 @@
 CXX := g++
 CXXFLAGS := -O2 -std=c++11 -Wall -Wextra
+CXXFLAGS_DEBUG := -O0 -g -std=c++11 -Wall -ggdb3
 
 VALGRIND := valgrind
 
 BIN_PATH := bin
+BIN_DEBUG_PATH := bin/debug
 SRC_PATH := src
 GC_PATH := src/garbage_collector
 SRC_PARSER_PATH := src/parser
@@ -11,6 +13,7 @@ DEBUG_PATH := src/debug
 MEMORY_PATH := src/memory
 
 TARGET := $(BIN_PATH)
+TARGET_DEBUG := $(BIN_DEBUG_PATH)
 
 RM := rm
 
@@ -26,6 +29,13 @@ workflow:
 	@$(CXX) -o zura $(SOURCE_FILES) $(CXXFLAGS)
 # --> Windows
 	@$(CXX) -o zura.exe $(SOURCE_FILES) $(CXXFLAGS)
+
+debug:
+	@echo Cleaning...
+	@$(RM) -f $(wildcard $(BIN_DEBUG_PATH)/*)
+	@echo Cleaned
+
+	@python progress_bar.py $(CXX) -o $(TARGET_DEBUG)/zura $(SOURCE_FILES) $(CXXFLAGS_DEBUG)
 
 linux:
 	@echo Cleaning...
@@ -43,4 +53,4 @@ windows:
 
 valgrind:
 	@echo Checking for memory leaks
-	$(VALGRIND) ./zura
+	$(VALGRIND) -v --leak-check=full --show-leak-kinds=all bin/zura > --log-file=valgrind.log 2>&1
