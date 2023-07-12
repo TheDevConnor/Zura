@@ -35,21 +35,21 @@ debug:
 	@$(RM) -f $(wildcard $(BIN_DEBUG_PATH)/*)
 	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET_DEBUG)/zura $(SOURCE_FILES) $(CXXFLAGS_DEBUG)
+	@python3 progress_bar.py $(CXX) -o $(TARGET_DEBUG)/zura $(SOURCE_FILES) $(CXXFLAGS_DEBUG)
 
 linux:
 	@echo Cleaning...
 	@$(RM) -f $(wildcard $(BIN_PATH)/*)
 	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
+	@python3 progress_bar.py $(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
 
 windows:
 	@echo Cleaning...
 	@$(RM) $(BIN_PATH)
 	@echo Cleaned
 
-	@python progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
+	@python3 progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
 
 valgrind:
 	@echo Checking for memory leaks
