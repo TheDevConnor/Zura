@@ -1,0 +1,3 @@
+using "std/math.zu";
+
+info math.fact(1.0);
