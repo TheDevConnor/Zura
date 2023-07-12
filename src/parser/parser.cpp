@@ -391,8 +391,25 @@ void class_declaration() {
   define_variable(name_constant);
 
   ClassCompiler class_compiler;
+  class_compiler.has_superclass = false;
   class_compiler.enclosing = current_class;
   current_class = &class_compiler;
+
+  if(parser.match(INHERITANCE)) {
+    parser.consume(IDENTIFIER, "Expect superclass name!");
+    _variable(false);
+
+    if (identifiers_equal(&class_name, &parser.previous))
+      parser.error("A class can't inherit from itself!");
+
+    begin_scope();
+    add_local(synthetic_token("super"));
+    define_variable(0);
+
+    named_variable(class_name, false);
+    emit_byte(OP_INHERIT);
+    class_compiler.has_superclass = true;
+  }
 
   named_variable(class_name, false);
   parser.consume(LEFT_BRACE, "Expected '{' before class body");
@@ -401,6 +418,9 @@ void class_declaration() {
   }
   parser.consume(RIGHT_BRACE, "Expected '}' after class body");
   emit_byte(OP_POP);
+
+  if(class_compiler.has_superclass)
+    end_scope();
 
   current_class = current_class->enclosing;
 }
@@ -718,6 +738,34 @@ void _string(bool can_assign) {
 void _variable(bool can_assign) {
   (void)can_assign;
   named_variable(parser.previous, can_assign);
+}
+
+Token synthetic_token(const char *text) {
+  Token token;
+  token.start = text;
+  token.length = (int)strlen(text);
+  return token;
+}
+
+void super_(bool can_assign) {
+  (void)can_assign;
+  if(current_class == nullptr) parser.error("Cannot use 'super' outside of a class.");
+  else if(!current_class->has_superclass) parser.error("Cannot use 'super' in a class with no superclass.");
+
+  parser.consume(DOT, "Expect '.' after 'super'.");
+  parser.consume(IDENTIFIER, "Expect superclass method name.");
+  uint8_t name = identifier_constant(&parser.previous);
+
+  named_variable(synthetic_token("this"), false);
+  if(parser.match(LEFT_PAREN)) {
+    uint8_t arg_count = argument_list();
+    named_variable(synthetic_token("super"), false);
+    emit_bytes(OP_SUPER_INVOKE, name);
+    emit_byte(arg_count);
+  } else {
+    named_variable(synthetic_token("super"), false);
+    emit_bytes(OP_GET_SUPER, name);
+  }
 }
 
 void _this(bool can_assign) {

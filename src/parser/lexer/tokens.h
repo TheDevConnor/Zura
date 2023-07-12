@@ -35,7 +35,6 @@ typedef enum {
 
 typedef struct {
     TokenKind kind;
-    string lexeme;
     const char* start;
     int length;
     int line;

@@ -19,6 +19,10 @@ enum OpCode {
   // Property operations
   OP_GET_PROPERTY,
   OP_SET_PROPERTY,
+  // Super operations
+  OP_GET_SUPER,
+  OP_SUPER_INVOKE,
+  // Array operations
   // Binary operations
   OP_ADD,
   OP_SUBTRACT,
@@ -49,6 +53,8 @@ enum OpCode {
   // Call operation
   OP_CALL,
   OP_INVOKE,
+  // Class operations
+  OP_INHERIT,
   // Statements
   OP_METHOD,
   OP_IMPORT,

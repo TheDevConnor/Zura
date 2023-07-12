@@ -43,7 +43,6 @@ void _runtime_error(const char *format, ...) {
   vprintf(format, args);
   va_end(args);
   cout << endl;
-
   for (int i = vm.frame_count - 1; i >= 0; i--) {
     CallFrame *frame = &vm.frames[i];
     ObjFunction *function = get_frame_function(frame);
@@ -175,7 +174,7 @@ bool call_value(Value callee, int arg_count) {
 
 bool invoke_from_class(ObjClass *klass, ObjString *name, int arg_count) {
   Value method;
-  if (!table_get(&klass->methouds, name, &method)) {
+  if (!table_get(&klass->methods, name, &method)) {
     string message = "Undefined property";
     message += set_color(RED);
     message += name->chars;
@@ -200,7 +199,7 @@ bool invoke(ObjString *name, int arg_count) {
 
 bool bind_method(ObjClass *klass, ObjString *name) {
   Value method;
-  if (!table_get(&klass->methouds, name, &method)) {
+  if (!table_get(&klass->methods, name, &method)) {
     string message = "Undefined property -> ";
     message += set_color(RED);
     message += name->chars;
@@ -249,7 +248,7 @@ void close_upvalues(Value *last) {
 void define_method(ObjString *name) {
   Value method = peek(0);
   ObjClass *klass = AS_CLASS(peek(1));
-  table_set(&klass->methouds, name, method);
+  table_set(&klass->methods, name, method);
   if (name == vm.init_string) klass->initializer = method;
   pop();
 }
@@ -473,6 +472,23 @@ static InterpretResult run() {
       push(value);
       break;
     }
+    // Super operation codes
+    case OP_GET_SUPER: {
+      ObjString *name = AS_STRING(read_constant());
+      ObjClass *superclass = AS_CLASS(pop());
+      if (!bind_method(superclass, name))
+        return INTERPRET_RUNTIME_ERROR;
+      break;
+    }
+    case OP_SUPER_INVOKE: {
+      ObjString *method = AS_STRING(read_constant());
+      int arg_count = read_byte();
+      ObjClass *superclass = AS_CLASS(pop());
+      if (!invoke_from_class(superclass, method, arg_count))
+        return INTERPRET_RUNTIME_ERROR;
+      frame = &vm.frames[vm.frame_count - 1];
+      break;
+    }
     // Bool operation codes
     case OP_TRUE:
       push(BOOL_VAL(true));
@@ -600,6 +616,24 @@ static InterpretResult run() {
       frame = &vm.frames[vm.frame_count - 1];
       break;
     }
+    // Class operation codes
+    case OP_CLASS: {
+      push(OBJ_VAL(new_class(AS_STRING(read_constant()))));
+      break;
+    }
+    case OP_INHERIT: {
+      Value superclass = peek(1);
+      ObjClass* subclass = AS_CLASS(peek(0));
+
+      if(!IS_CLASS(superclass)) {
+        _runtime_error("Superclass must be a class");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      table_add_all(&AS_CLASS(superclass)->methods, &subclass->methods);
+      pop();
+      break;
+    }
     // Statement operation codes
     case OP_METHOD: {
       define_method(AS_STRING(read_constant()));
@@ -609,16 +643,12 @@ static InterpretResult run() {
       ObjString *module_name = AS_STRING(pop());
       ObjModule *module = import_module(module_name);
       loadedModules.insert(module_name);
-      table_set(&vm.modules, module_name, OBJ_VAL(module));
+      table_add_all(&module->variables, &vm.globals);
       break;
     }
     case OP_INFO: {
       print_value(pop());
       cout << "\n";
-      break;
-    }
-    case OP_CLASS: {
-      push(OBJ_VAL(new_class(AS_STRING(read_constant()))));
       break;
     }
     case OP_RETURN: {

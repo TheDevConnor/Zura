@@ -164,6 +164,9 @@ ClassCompiler* current_class = nullptr;
 
 Chunk* compiling_chunk() { return &current->function->chunk; }
 
+Token synthetic_token(const char* text);
+void super_(bool can_assign);
+
 void grouping(bool can_assign);
 void _number(bool can_assign);
 void _string(bool can_assign);
@@ -218,7 +221,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {OR,            {nullptr,        or_,   PREC_OR}},
     {INFO,          {nullptr,   nullptr,   PREC_NONE}},
     {RETURN,        {nullptr,   nullptr,   PREC_NONE}},
-    {SUPER,         {nullptr,   nullptr,   PREC_NONE}},
+    {SUPER,         {super_,    nullptr,    PREC_NONE}},
     {THIS,          {_this,     nullptr,    PREC_NONE}},
     {TRUE,          {literal,   nullptr,   PREC_NONE}},
     {HAVE,          {nullptr,   nullptr,   PREC_NONE}},

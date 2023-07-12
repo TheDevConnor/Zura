@@ -83,7 +83,7 @@ struct ObjClass {
     Obj obj;
     ObjString* name;
     Value initializer;
-    Table methouds;
+    Table methods;
 };
 
 struct ObjModule {

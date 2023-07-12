@@ -38,7 +38,7 @@ static void free_obj(Obj* object) {
         }
         case OBJ_CLASS: {
             ObjClass* klass = (ObjClass*)object;
-            free_table(&klass->methouds);
+            free_table(&klass->methods);
             break;
         }
         case OBJ_CLOSURE: {
