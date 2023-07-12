@@ -38,9 +38,11 @@ debug:
 	@python3 progress_bar.py $(CXX) -o $(TARGET_DEBUG)/zura $(SOURCE_FILES) $(CXXFLAGS_DEBUG)
 
 linux:
+	@mkdir -p bin/
 	@echo Cleaning...
 	@$(RM) -f $(wildcard $(BIN_PATH)/*)
 	@echo Cleaned
+	
 
 	@python3 progress_bar.py $(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
 
