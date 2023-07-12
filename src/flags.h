@@ -26,6 +26,11 @@ static char* read_file(const char* path) {
 
 void run_file(const char* path) {
     const char* source = read_file(path);
+    // Check to make sure that we have  a .zu file extension
+    if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
+        cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
+        exit(65);
+    }
 
     InterpretResult result = interpret(source);
 

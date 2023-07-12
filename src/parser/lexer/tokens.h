@@ -1,6 +1,8 @@
 #ifndef AZURA_TOKENS_H
 #define AZURA_TOKENS_H
 
+using namespace std;
+
 typedef enum {
     // Single-character Tokens!
     LEFT_PAREN, RIGHT_PAREN,     // ( )
@@ -33,7 +35,7 @@ typedef enum {
 
 typedef struct {
     TokenKind kind;
-    std::string lexeme;
+    string lexeme;
     const char* start;
     int length;
     int line;
