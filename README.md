@@ -16,7 +16,7 @@ If you have any suggestions please create an issue, and in the isssue add in the
 - **Dynamic Typing**: Variables in zura Lang are dynamically typed, meaning their types are determined at runtime.
 - **Strong Type Inference**: zura Lang employs strong type inference, automatically deducing the types of variables based on their assigned values.
 - **File Extension**: zura Lang code files have the extension `.zu`.
-- **Syntax Highlighting**: Here is the link for the syntax highlighting! [Zura Lang Syntax Highlighting](https://github.com/TheDevConnor/Aura-Syntax-Highlighting)
+- **Syntax Highlighting**: Here is the link for the syntax highlighting! [Zura Lang Syntax Highlighting](https://github.com/TheDevConnor/Zura-Highlighting)
 
 ## Installation
 To start using zura Lang, follow the installation instructions below:
