@@ -50,7 +50,7 @@ inline void run_file(const char *path) {
 }
 
 inline string version() {
-  string version = "0.0.1";
+  string version = "v0.0.1";
   return version.c_str();
 }
 
@@ -78,7 +78,7 @@ inline void flags(int argc, char *argv[]) {
     }
   }
   if (argc == 2 && strcmp(argv[1], "--version") == 0) {
-    version();
+    cout << version() << "(" << getCurrentTime() << ")" << endl;
     exit(0);
   }
   if (argc == 2 && strcmp(argv[1], "--license") == 0) {
