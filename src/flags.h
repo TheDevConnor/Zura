@@ -6,6 +6,14 @@
 using namespace std;
 
 static char* read_file(const char* path) {
+    
+    if (!path) {
+        cerr << "No path was provided \n";
+        exit(74);
+
+        // when we get repl to work make it run here
+    }
+    
     ifstream file(path, ios::binary);
     if (!file) {
         cerr << "Could not open file \"" << path << "\"." << endl;
