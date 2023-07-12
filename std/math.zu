@@ -5,9 +5,25 @@ class Math {
         this.pow  = this.pow;
         this.abs  = this.abs;
     }
-    fact(n)   { if (n == 0) return 1; else return n * this.fact(n - 1);   }
-    pow(x, n) { if (n == 0) return 1; else return x * this.pow(x, n - 1); }
-    abs(x)    { if (x < 0) return -x; else return x; }
+    fact(n)   { 
+        if (n == 0) return 1; 
+        else return n * this.fact(n - 1);   
+    }
+    pow(x, n) { 
+        if (n == 0) return 1; 
+        else return x * this.pow(x, n - 1); 
+    }
+    abs(x) { 
+        if (x < 0) return -x; 
+        else return x; 
+    }
+}
+
+class Test extends Math {
+    test() {
+        return this.fact(5);
+    }
 }
 
 have math := Math();
+have test := Test();

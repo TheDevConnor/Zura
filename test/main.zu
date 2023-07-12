@@ -1,3 +1,4 @@
 using "std/math.zu";
 
-info math.fact(1.0);
+// info math.fact(5); // 120
+info test.test(); // 120
