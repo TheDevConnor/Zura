@@ -42,6 +42,7 @@ linux:
 	@echo Cleaning...
 	@$(RM) -f $(wildcard $(BIN_PATH)/*)
 	@echo Cleaned
+
 	
 
 	@python3 progress_bar.py $(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
