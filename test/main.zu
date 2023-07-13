@@ -1,4 +1,7 @@
-using "std/math.zu";
+have x := 1150;
 
-// info math.fact(5); // 120
-info math.nthroot(10, 2);
+// example using || and && operators
+if ((x > 0 && x < 100) || (x > 1000 && x < 2000)) {
+    if (x > 0 && x < 100) info "x is in the range (0, 100)";
+    else info "x is in the range (1000, 2000)";
+}

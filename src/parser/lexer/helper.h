@@ -137,7 +137,6 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     // You can use gperf or implement your own perfect hash function generator.
     // The generated code should provide the perfect hash lookup function.
 
-    if (strcmp(keyword, "and")     == 0)     return AND;
     if (strcmp(keyword, "class")   == 0)   return CLASS;
     if (strcmp(keyword, "else")    == 0)    return ELSE;
     if (strcmp(keyword, "false")   == 0)   return FALSE;
@@ -146,7 +145,6 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "if")      == 0)      return IF;
     if (strcmp(keyword, "info")    == 0)    return INFO;
     if (strcmp(keyword, "nil")     == 0)     return NIL;
-    if (strcmp(keyword, "or")      == 0)      return OR;
     if (strcmp(keyword, "return")  == 0)  return RETURN;
     if (strcmp(keyword, "super")   == 0)   return SUPER;
     if (strcmp(keyword, "this")    == 0)    return THIS;
