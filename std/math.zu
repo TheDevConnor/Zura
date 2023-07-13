@@ -1,12 +1,13 @@
 class Math {
     init() {
         this.pi   = 3.141592653589793;
+        this.e = 2.718281828459045;
+        this.tau = 6.283185307179586;
         this.fact = this.fact;
         this.pow  = this.pow;
         this.abs  = this.abs;
-        this.floor = this.floor;
-        this.ceil = this.ceil;
     }
+
     fact(n)   { 
         if (n == 0) return 1; 
         else return n * this.fact(n - 1);   
@@ -20,15 +21,15 @@ class Math {
         else return x; 
     }
 
+    sqrt(x){ 
+        return x**(1/2);
+    }
+
+    nthroot(x, n){ 
+        return x**(1/n);
+    }
+
 
 
 }
 
-
-have math := Math();
-have test := Test();
-
-
-info math.floor(-4.6);
-
-info math.ceil(-3.4);
