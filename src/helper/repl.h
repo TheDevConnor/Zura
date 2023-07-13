@@ -13,7 +13,9 @@
 
 int repl(int argc, char *argv[])
 {
-
+    (void)argc;
+    (void)argv;
+    
     std::cout << "Zura Lang REPL " << version() << " "
               << "(" << getCurrentTime() << ")" << std::endl;
 
@@ -25,6 +27,8 @@ int repl(int argc, char *argv[])
             break;
         interpret(line);
     }
+
+    return 0;
 }
 
 #endif // REPL_H

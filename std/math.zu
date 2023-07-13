@@ -28,8 +28,6 @@ class Math {
     nthroot(x, n){ 
         return x**(1/n);
     }
-
-
-
 }
 
+have math := Math();

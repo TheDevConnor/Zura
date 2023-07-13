@@ -1,4 +1,4 @@
 using "std/math.zu";
 
 // info math.fact(5); // 120
-info test.test(); // 120
+info math.nthroot(10, 2);
