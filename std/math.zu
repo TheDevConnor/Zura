@@ -4,6 +4,8 @@ class Math {
         this.fact = this.fact;
         this.pow  = this.pow;
         this.abs  = this.abs;
+        this.floor = this.floor;
+        this.ceil = this.ceil;
     }
     fact(n)   { 
         if (n == 0) return 1; 
@@ -17,6 +19,17 @@ class Math {
         if (x < 0) return -x; 
         else return x; 
     }
+
+    floor(x) {
+        if (x < 0) return x - 1;
+        else return x;
+    }
+
+    ceil(x) {
+        if (x < 0) return x;
+        else return x + 1;
+    }
+
 }
 
 class Test extends Math {
