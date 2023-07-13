@@ -15,14 +15,14 @@ int repl(int argc, char *argv[])
 {
     (void)argc;
     (void)argv;
-    
+
     std::cout << "Zura Lang REPL " << version() << " "
               << "(" << getCurrentTime() << ")" << std::endl;
 
     char line[1024];
     for (;;)
     {
-        std::cout << "> ";
+        std::cout << ">>> ";
         if (!fgets(line, sizeof(line), stdin))
             break;
         interpret(line);

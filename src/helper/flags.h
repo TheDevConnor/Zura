@@ -13,9 +13,10 @@ static char *read_file(const char *path)
 
   if (!path)
   {
+    cout << "+=========================================+ \n"
+         << "| No file path was provided, opening REPL | \n"
+         << "+=========================================+" << endl;
     repl(0, NULL);
-
-    // when we get repl to work make it run here
   }
 
   ifstream file(path, ios::binary);
