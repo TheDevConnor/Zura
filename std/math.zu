@@ -21,13 +21,9 @@ class Math {
     }
 
 
+
 }
 
-class Test extends Math {
-    test() {
-        return this.fact(5);
-    }
-}
 
 have math := Math();
 have test := Test();
