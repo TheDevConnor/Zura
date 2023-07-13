@@ -78,7 +78,7 @@ Value to_string_native(int arg_count, Value* args) {
     if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
 
     char buffer[100];
-    sprintf(buffer, "%g", AS_NUMBER(args[0]));
+    sprintf(buffer, "%ld", AS_NUMBER(args[0]));
     return OBJ_VAL(copy_string(buffer, (int)strlen(buffer)));
 }
 

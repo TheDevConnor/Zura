@@ -124,7 +124,7 @@ ObjUpvalue* new_upvalue(Value* slot);
 void print_object(Value value);
 
 static inline bool is_obj_type(Value value, ObjType type) {
-    return IS_OBJECT(value) && AS_OBJ(value)->type == type;
+    return IS_OBJ(value) && AS_OBJ(value)->type == type;
 }
 
 #endif //AZURA_OBJECT_H

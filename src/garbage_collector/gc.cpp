@@ -34,7 +34,7 @@ void mark_object(Obj* object) {
 }
 
 void mark_value(Value value) {
-    if (IS_OBJECT(value)) mark_object(AS_OBJ(value));
+    if (IS_OBJ(value)) mark_object(AS_OBJ(value));
 }
 
 void mark_array(ValueArray* array) {
