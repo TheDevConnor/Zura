@@ -21,13 +21,12 @@ class Math {
     }
 
     floor(x) {
-        if (x < 0) return x - 1;
-        else return x;
+        return x - this.abs(x % 1);
     }
 
     ceil(x) {
-        if (x < 0) return x;
-        else return x + 1;
+        if (x % 1 == 0) return x;
+        else return x + 1 - this.abs(x % 1);
     }
 
 }
