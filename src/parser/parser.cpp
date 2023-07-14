@@ -818,6 +818,37 @@ void dot(bool can_assign) {
     emit_bytes(OP_GET_PROPERTY, name);
 }
 
+void array_literal(bool can_assign) {
+  (void)can_assign;
+  // Read the array length
+  if (parser.match(NUMBER)) {
+    int length = static_cast<int>(strtod(parser.previous.start, nullptr));
+    if (length < 0) {
+      parser.error("Invalid array length.");
+      return;
+    }
+
+    // Emit the array instruction
+    emit_byte(OP_ARRAY_LENGTH);
+    emit_byte(static_cast<uint8_t>(length));
+    parser.consume(RIGHT_BRACKET, "Expect ']' after array length.");
+
+    // Parse and add the array elements
+    parser.consume(LEFT_BRACE, "Expect '{' before array elements.");
+    for (int i = 0; i < length; ++i) {
+      expression();
+      if (i < length - 1) {
+        parser.consume(COMMA, "Expect ',' between array elements.");
+      }
+      cout << "i: " << i << endl;
+      emit_bytes(OP_ARRAY_PUSH, static_cast<uint8_t>(i));
+    }
+    parser.consume(RIGHT_BRACE, "Expect '}' after array elements.");
+  } else {
+    parser.error("Expect array length.");
+  }
+}
+
 void parse_precedence(Precedence prec) {
   parser.advance(); // Consume the operator
   parse_fn prefix_rule = get_rule(parser.previous.kind)->prefix;
@@ -837,6 +868,11 @@ void parse_precedence(Precedence prec) {
 
   if (can_assign && match(EQUAL)) {
     parser.error("Invalid assignment target.");
+  }
+
+  // Check for the array literal
+  if (can_assign && parser.match(LEFT_BRACKET)) {
+    array_literal(can_assign);
   }
 }
 

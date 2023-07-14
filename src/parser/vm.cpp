@@ -489,6 +489,19 @@ static InterpretResult run() {
       frame = &vm.frames[vm.frame_count - 1];
       break;
     }
+    // Array operation codes
+    case OP_ARRAY_LENGTH: {
+      cout << "OP_ARRAY" << endl;
+      int arg_count = read_byte();
+      cout << "arg_count: " << arg_count << endl;
+      break;
+    }
+    case OP_ARRAY_PUSH: {
+      cout << "OP_ARRAY_PUSH" << endl;
+      int arg_count = read_byte();
+      cout << "arg_count: " << arg_count << endl;
+      break;
+    }
     // Bool operation codes
     case OP_TRUE:
       push(BOOL_VAL(true));

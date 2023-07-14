@@ -179,6 +179,7 @@ void call(bool can_assign);
 void dot(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
+void array_literal(bool can_assign);
 
 int inner_most_loop_start = -1;
 int inner_most_loop_scope_depth = 0;
@@ -188,6 +189,8 @@ unordered_map<TokenKind, ParseRule> rules = {
     {RIGHT_PAREN,   {nullptr,   nullptr,   PREC_NONE}},
     {LEFT_BRACE,    {nullptr,   nullptr,   PREC_NONE}},
     {RIGHT_BRACE,   {nullptr,   nullptr,   PREC_NONE}},
+    {LEFT_BRACKET,  {array_literal,   nullptr,   PREC_NONE}},
+    {RIGHT_BRACKET, {nullptr,   nullptr,   PREC_NONE}},
     {COMMA,         {nullptr,   nullptr,   PREC_NONE}},
     {DOT,           {nullptr,   dot,        PREC_CALL}},
     {MINUS,         {unary,     binary,     PREC_TERM}},
