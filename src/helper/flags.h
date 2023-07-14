@@ -1,27 +1,24 @@
 #include "../parser/vm.h"
 #include "./getCurrentTime.h"
-#include "./version.h"
 #include "./repl.h"
+#include "./version.h"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 using namespace std;
 
-static char *read_file(const char *path)
-{
+static char *read_file(const char *path) {
 
-  if (!path)
-  {
-    cout << "+=========================================+ \n"
+  if (!path) {
+    cout << "+-----------------------------------------+ \n"
          << "| No file path was provided, opening REPL | \n"
-         << "+=========================================+" << endl;
+         << "+-----------------------------------------+" << endl;
     repl(0, NULL);
   }
 
   ifstream file(path, ios::binary);
-  if (!file)
-  {
+  if (!file) {
     cerr << "Could not open file \"" << path << "\"." << endl;
     exit(74);
   }
@@ -38,12 +35,10 @@ static char *read_file(const char *path)
   return buffer;
 }
 
-inline void run_file(const char *path)
-{
+inline void run_file(const char *path) {
   const char *source = read_file(path);
   // Check to make sure that we have  a .zu file extension
-  if (strcmp(path + strlen(path) - 3, ".zu") != 0)
-  {
+  if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
     cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
     exit(65);
   }
@@ -56,11 +51,9 @@ inline void run_file(const char *path)
     exit(70);
 }
 
-inline void flags(int argc, char *argv[])
-{
+inline void flags(int argc, char *argv[]) {
 
-  if (argc == 2 && strcmp(argv[1], "--help") == 0)
-  {
+  if (argc == 2 && strcmp(argv[1], "--help") == 0) {
     cout << "Usage: " << argv[0] << " [options]" << endl;
     cout << "Options:" << endl;
     cout << "  --help\t\t\tPrints this help message" << endl;
@@ -69,13 +62,11 @@ inline void flags(int argc, char *argv[])
     exit(0);
   }
 
-  if (argc == 2 && strcmp(argv[1], "--version") == 0)
-  {
+  if (argc == 2 && strcmp(argv[1], "--version") == 0) {
     cout << version() << "(" << getCurrentTime() << ")" << endl;
     exit(0);
   }
-  if (argc == 2 && strcmp(argv[1], "--license") == 0)
-  {
+  if (argc == 2 && strcmp(argv[1], "--license") == 0) {
     cout << "Zura Lang is licenesed under GPL-3.0 "
             "license(https://www.gnu.org/licenses/gpl-3.0.en.html) "
          << endl;
