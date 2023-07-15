@@ -833,7 +833,8 @@ void array_literal(bool can_assign) {
     }
   }
   parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
-  emit_bytes(OP_ARRAY, num_elements);
+  emit_byte(OP_ARRAY);
+  emit_byte((uint8_t)num_elements);
 }
 
 void parse_precedence(Precedence prec) {

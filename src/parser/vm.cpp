@@ -493,20 +493,33 @@ static InterpretResult run() {
     // Array operation codes
     case OP_ARRAY: {
       uint8_t num_elements = read_byte();
-      cout << "OP_ARRAY" << endl;
-      cout << "num_elements: " << static_cast<int>(num_elements) << endl;
-      // Print out the array
+
+      int num_array[num_elements];
+      string str_array[num_elements];
+
+      // Check the type of each element and store them in separate arrays
       for (int i = 0; i < num_elements; i++) {
-        cout << "peek(" << i << "): ";
-        print_value(peek(i));
-        // check if we have a string and a number. If so through an error
-        if (IS_STRING(peek(i)) && IS_NUMBER(peek(i + 1))) {
+        if (IS_NUMBER(peek(i))) {
+          num_array[i] = AS_NUMBER(pop());
+          push(NUMBER_VAL(num_array[i]));
+        } else if (IS_STRING(peek(i))) {
+          str_array[i] = AS_CSTRING(pop());
+          push(OBJ_VAL(copy_string(str_array[i].c_str(), str_array[i].length())));
+        } else {
           _runtime_error("Operands must be numbers or strings in the array!\n");
           return INTERPRET_RUNTIME_ERROR;
         }
-        cout << endl;
       }
-      cout << "end" << endl;
+
+      // Print out the array
+      for (int i = 0; i < num_elements; i++) {
+        if (IS_NUMBER(peek(i))) {
+          cout << "peek(" << i << "): " << AS_NUMBER(peek(i)) << endl;
+        } else if (IS_STRING(peek(i))) {
+          cout << "peek(" << i << "): " << AS_CSTRING(peek(i)) << endl;
+        }
+      }
+
       break;
     }
     // Bool operation codes
