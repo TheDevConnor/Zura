@@ -18,6 +18,8 @@ struct Table {
 void init_table(Table* table);
 void free_table(Table* table);
 
+Table* new_table();
+
 bool table_get(Table* table, ObjString* key, Value* value);
 bool table_set(Table* table, ObjString* key, Value value);
 bool table_delete(Table* table, ObjString* key);

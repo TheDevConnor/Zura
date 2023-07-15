@@ -25,6 +25,7 @@
 #define AS_STRING(value)       ((ObjString*)AS_OBJ(value))
 #define AS_CSTRING(value)      (((ObjString*)AS_OBJ(value))->chars)
 #define AS_MODULE(value)       ((ObjModule*)AS_OBJ(value))
+#define AS_TABLE(value)        ((Table*)AS_OBJ(value))
 
 enum ObjType {
     OBJ_BOUND_METHOD,

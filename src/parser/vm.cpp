@@ -491,16 +491,22 @@ static InterpretResult run() {
       break;
     }
     // Array operation codes
-    case OP_ARRAY_LENGTH: {
+    case OP_ARRAY: {
+      uint8_t num_elements = read_byte();
       cout << "OP_ARRAY" << endl;
-      int arg_count = read_byte();
-      cout << "arg_count: " << arg_count << endl;
-      break;
-    }
-    case OP_ARRAY_PUSH: {
-      cout << "OP_ARRAY_PUSH" << endl;
-      int arg_count = read_byte();
-      cout << "arg_count: " << arg_count << endl;
+      cout << "num_elements: " << static_cast<int>(num_elements) << endl;
+      // Print out the array
+      for (int i = 0; i < num_elements; i++) {
+        cout << "peek(" << i << "): ";
+        print_value(peek(i));
+        // check if we have a string and a number. If so through an error
+        if (IS_STRING(peek(i)) && IS_NUMBER(peek(i + 1))) {
+          _runtime_error("Operands must be numbers or strings in the array!\n");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+        cout << endl;
+      }
+      cout << "end" << endl;
       break;
     }
     // Bool operation codes

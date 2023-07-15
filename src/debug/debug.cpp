@@ -93,11 +93,8 @@ int disassemble_instruction(Chunk *chunk, int offset) {
   case OP_SUPER_INVOKE:
     return invoke_instruction("OP_SUPER_INVOKE", chunk, offset);
 
-  case OP_ARRAY_LENGTH:
+  case OP_ARRAY:
     return byte_instruction("OP_ARRAY", chunk, offset);
-  case OP_ARRAY_PUSH:
-    return byte_instruction("OP_ARRAY_PUSH", chunk, offset);
-
   case OP_JUMP_IF_FALSE:
     return jump_instruction("OP_JUMP_IF_FALSE", 1, chunk, offset);
   case OP_LOOP:

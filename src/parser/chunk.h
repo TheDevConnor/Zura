@@ -23,8 +23,7 @@ enum OpCode {
   OP_GET_SUPER,
   OP_SUPER_INVOKE,
   // Array operations
-  OP_ARRAY_LENGTH,
-  OP_ARRAY_PUSH,
+  OP_ARRAY,
   // Binary operations
   OP_ADD,
   OP_SUBTRACT,

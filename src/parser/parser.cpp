@@ -820,33 +820,20 @@ void dot(bool can_assign) {
 
 void array_literal(bool can_assign) {
   (void)can_assign;
-  // Read the array length
-  if (parser.match(NUMBER)) {
-    int length = static_cast<int>(strtod(parser.previous.start, nullptr));
-    if (length < 0) {
-      parser.error("Invalid array length.");
-      return;
-    }
+  int num_elements = 0;
 
-    // Emit the array instruction
-    emit_byte(OP_ARRAY_LENGTH);
-    emit_byte(static_cast<uint8_t>(length));
-    parser.consume(RIGHT_BRACKET, "Expect ']' after array length.");
-
-    // Parse and add the array elements
-    parser.consume(LEFT_BRACE, "Expect '{' before array elements.");
-    for (int i = 0; i < length; ++i) {
-      expression();
-      if (i < length - 1) {
-        parser.consume(COMMA, "Expect ',' between array elements.");
-      }
-      cout << "i: " << i << endl;
-      emit_bytes(OP_ARRAY_PUSH, static_cast<uint8_t>(i));
+  while (!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
+    expression();
+    num_elements++;
+    if (num_elements > 255) {
+      parser.error("Cannot have more than 255 elements in an array.");
     }
-    parser.consume(RIGHT_BRACE, "Expect '}' after array elements.");
-  } else {
-    parser.error("Expect array length.");
+    if (!parser.match(COMMA)) {
+      break;
+    }
   }
+  parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
+  emit_bytes(OP_ARRAY, num_elements);
 }
 
 void parse_precedence(Precedence prec) {
