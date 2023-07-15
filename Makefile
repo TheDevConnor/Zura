@@ -22,12 +22,12 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q 
 endif
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp*) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp*) $(wildcard $(DEBUG_PATH)/*.cpp*) $(wildcard $(MEMORY_PATH)/*.cpp*)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp)
 
 workflow:
 # --> Linux 
 	@$(CXX) -o zura $(SOURCE_FILES) $(CXXFLAGS)
-# --> Windows
+# --> Windows GCC
 	@$(CXX) -o zura.exe $(SOURCE_FILES) $(CXXFLAGS)
 
 debug:
@@ -51,6 +51,9 @@ windows:
 	@echo Cleaned
 
 	@python3 progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
+
+windows-msvc:
+	cl.exe /Fe:zura.exe $(SOURCE_FILES) /EHsc
 
 valgrind:
 	@echo Checking for memory leaks
