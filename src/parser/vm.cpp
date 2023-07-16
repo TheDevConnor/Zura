@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <vector>
 #include <string>
+#include <stdint.h>
 
 #include "../common.h"
 #include "../debug/debug.h"
@@ -492,10 +493,11 @@ static InterpretResult run() {
     }
     // Array operation codes
     case OP_ARRAY: {
+      
       uint8_t num_elements = read_byte();
-
-      int num_array[num_elements];
-      string str_array[num_elements];
+      
+      int    num_array[UINT8_MAX] = {};
+      string str_array[UINT8_MAX] = {};
 
       // Check the type of each element and store them in separate arrays
       for (int i = 0; i < num_elements; i++) {

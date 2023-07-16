@@ -4,7 +4,8 @@ CXXFLAGS_DEBUG := -O0 -g -std=c++11 -Wall -ggdb3
 
 VALGRIND := valgrind
 
-BIN_PATH := bin
+BIN_PATH := ./bin/
+OBJ_PATH := ./obj/
 BIN_DEBUG_PATH := bin/debug
 SRC_PATH := src
 GC_PATH := src/garbage_collector
@@ -23,6 +24,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp)
+
 
 workflow:
 # --> Linux 
@@ -52,9 +54,28 @@ windows:
 
 	@python3 progress_bar.py $(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
 
-windows-msvc:
-	cl.exe /Fe:zura.exe $(SOURCE_FILES) /EHsc
-
 valgrind:
 	@echo Checking for memory leaks
 	$(VALGRIND) -v --leak-check=full --show-leak-kinds=all bin/zura > --log-file=valgrind.log 2>&1
+
+# For x64-windows only
+# Build then Link
+OBJ_FILES    := $(wildcard $(OBJ_PATH)*.obj) $(wildcard $(OBJ_PATH)*.o)
+PDB_FILES    := $(wildcard *.pdb)
+EXE_FILES    := $(wildcard $(BIN_PATH)*.exe)
+LIB_FILES    := $(wildcard *.lib)
+CLEAN_FILES  := $(OBJ_FILES) $(PDB_FILES) $(EXE_FILES) $(LIB_FILES)
+
+.PHONY: x64-windows-clean x64-windows-debug x64-windows-clean
+
+x64-windows-debug:
+
+	cl.exe /Od /EHsc /fsanitize=address /Zi /Fo:$(OBJ_PATH) /c $(SOURCE_FILES) 
+	cl.exe /Od /EHsc /fsanitize=address /Zi $(OBJ_FILES) /Fe:$(BIN_PATH)zura-debug.exe $(SOURCE_FILES) 
+
+x64-windows-release:
+	cl.exe /O2 /EHsc /Fo:$(OBJ_PATH) /c $(SOURCE_FILES) 
+	cl.exe /Od /EHsc  $(OBJ_FILES) /Fe:$(BIN_PATH)zura.exe $(SOURCE_FILES) 
+
+x64-windows-clean: 
+	@$(RM) $(CLEAN_FILES)
