@@ -1,1 +1,9 @@
+// This is a comment!
+
+func fig(s) {
+  return s + 2; 
+}
 have x := [1, 10, 3];
+have y := "this is a string with a nested (5*3)";
+
+info fig(3);
