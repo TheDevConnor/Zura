@@ -1,2 +1,20 @@
-have num := to_number(input "Enter a number: ");
-info "You entered: " + to_string(num);
+func increment(n) {
+    for (have i := 0; i < n;) {
+        info i;
+        i = ++i;
+    }
+}
+
+func decrement(n) {
+    for (n = n; n > 0;) {
+        info n;
+        n = --n;
+    }
+}
+
+func main() {
+    increment(10);
+    decrement(10);
+}
+
+main();

@@ -19,6 +19,7 @@ typedef enum {
     GREATER, GREATER_EQUAL,  // > >=
     LESS, LESS_EQUAL,        // < <=
     WALRUS, INHERITANCE,     // := extends
+    INCREMENT, DECREMENT,    // ++ --
 
     // Literals!
     IDENTIFIER, STRING, NUMBER, INAPPEND,

@@ -31,6 +31,8 @@ enum OpCode {
   OP_DIVIDE,
   OP_MODULO,
   OP_POWER,
+  OP_INCREMENT,
+  OP_DECREMENT,
   // Bool operations
   OP_NIL,
   OP_TRUE,

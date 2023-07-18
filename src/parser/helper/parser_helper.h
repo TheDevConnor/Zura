@@ -201,6 +201,8 @@ unordered_map<TokenKind, ParseRule> rules = {
     {STAR,          {nullptr,    binary,  PREC_FACTOR}},
     {MODULO,        {nullptr,    binary,  PREC_FACTOR}},
     {POWER,         {nullptr,    binary,  PREC_FACTOR}},
+    {INCREMENT,     {unary,     nullptr,  PREC_NONE}},
+    {DECREMENT,     {unary,     nullptr,  PREC_NONE}},
     {BANG,          {unary,     nullptr,  PREC_NONE}},
     {BANG_EQUAL,    {nullptr,    binary,  PREC_EQUALITY}},
     {EQUAL,         {nullptr,    binary,  PREC_COMPARISON}},

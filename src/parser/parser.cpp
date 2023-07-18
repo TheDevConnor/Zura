@@ -798,6 +798,12 @@ void unary(bool can_assign) {
   case MINUS:
     emit_byte(OP_NEGATE);
     break;
+  case INCREMENT:
+    emit_byte(OP_INCREMENT);
+    break;
+  case DECREMENT:
+    emit_byte(OP_DECREMENT);
+    break;
   default:
     return; // Unreachable
   }

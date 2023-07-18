@@ -133,6 +133,10 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return simple_instruction("OP_MODULO", offset);
   case OP_POWER:
     return simple_instruction("OP_POWER", offset);
+  case OP_INCREMENT:
+    return simple_instruction("OP_INCREMENT", offset);
+  case OP_DECREMENT:
+    return simple_instruction("OP_DECREMENT", offset);
 
   case OP_NOT:
     return simple_instruction("OP_NOT", offset);

@@ -584,6 +584,17 @@ static InterpretResult run() {
     case OP_POWER:
       POW_OP(NUMBER_VAL, **);
       break;
+    case OP_INCREMENT: {
+      // ++2 and we have the value pushed on the stack
+      double a = AS_NUMBER(pop());
+      push(NUMBER_VAL(a + 1));
+      break;
+    }
+    case OP_DECREMENT: {
+      double a = AS_NUMBER(pop());
+      push(NUMBER_VAL(a - 1));
+      break;
+    }
 
     case OP_NOT:
       push(BOOL_VAL(is_falsey(pop())));
