@@ -74,6 +74,12 @@ static void free_obj(Obj* object) {
             FREE(ObjUpvalue, object);
             break;
         }
+        case OBJ_ARRAY: {
+            ObjArray* array = (ObjArray*) object;
+            FREE_ARRAY(Value, array->data.values, array->data.capacity);
+            FREE(ObjArray, object);
+            break;
+        }
     }
 }
 

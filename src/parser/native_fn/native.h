@@ -82,6 +82,20 @@ Value to_string_native(int arg_count, Value* args) {
     return OBJ_VAL(copy_string(buffer, (int)strlen(buffer)));
 }
 
+Value to_number_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_STRING(args[0])) return BOOL_VAL(false);
+
+    char* string = AS_CSTRING(args[0]);
+    char* end;
+    errno = 0;
+    long long number = strtoll(string, &end, 10);
+    if (errno == ERANGE) {
+        return BOOL_VAL(false);
+    }
+    return NUMBER_VAL(number);
+}
+
 Value exit_native(int arg_count, Value* args) {
     if (arg_count != 1) return BOOL_VAL(false);
     if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
@@ -149,6 +163,7 @@ void define_all_natives() {
     define_native("sleep", sleep_native);
 
     define_native("to_string", to_string_native);
+    define_native("to_number", to_number_native);
 
     define_native("has_field", has_field_native);
     define_native("get_field", get_field_native);

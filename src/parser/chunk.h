@@ -60,6 +60,7 @@ enum OpCode {
   OP_METHOD,
   OP_IMPORT,
   OP_CLASS,
+  OP_INPUT,
   OP_INFO,
   OP_POP,
 };

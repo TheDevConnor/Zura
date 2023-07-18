@@ -552,6 +552,12 @@ void info_statement() {
   emit_byte(OP_INFO);
 }
 
+void input_statement(bool can_assign) {
+  (void)can_assign;
+  expression();
+  emit_byte(OP_INPUT);
+}
+
 void return_statement() {
   if (current->type == TYPE_SCRIPT)
     parser.error("Can't return from top-level code!");
@@ -824,10 +830,10 @@ void array_literal(bool can_assign) {
 
   while (!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
     expression();
-    num_elements++;
     if (num_elements > 255) {
       parser.error("Cannot have more than 255 elements in an array.");
     }
+    num_elements++;
     if (!parser.match(COMMA)) {
       break;
     }

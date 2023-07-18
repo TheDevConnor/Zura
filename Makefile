@@ -4,8 +4,8 @@ CXXFLAGS_DEBUG := -O0 -g -std=c++11 -Wall -ggdb3
 
 VALGRIND := valgrind
 
-BIN_PATH := ./bin/
-OBJ_PATH := ./obj/
+BIN_PATH := bin
+OBJ_PATH := obj
 BIN_DEBUG_PATH := bin/debug
 SRC_PATH := src
 GC_PATH := src/garbage_collector
@@ -69,7 +69,6 @@ CLEAN_FILES  := $(OBJ_FILES) $(PDB_FILES) $(EXE_FILES) $(LIB_FILES)
 .PHONY: x64-windows-clean x64-windows-debug x64-windows-clean
 
 x64-windows-debug:
-
 	cl.exe /Od /EHsc /fsanitize=address /Zi /Fo:$(OBJ_PATH) /c $(SOURCE_FILES) 
 	cl.exe /Od /EHsc /fsanitize=address /Zi $(OBJ_FILES) /Fe:$(BIN_PATH)zura-debug.exe $(SOURCE_FILES) 
 

@@ -319,6 +319,29 @@ ObjModule *import_module(ObjString *name) {
   return module;
 }
 
+ObjArray* new_array() {
+  ObjArray* array = new ObjArray();
+  init_value_array(&array->data);
+  return array;
+}
+
+void _write_value_array(ValueArray *array, Value value) {
+  if (array->capacity < array->count + 1) {
+    int old_capacity = array->capacity;
+    array->capacity = GROW_CAPACITY(old_capacity);
+    array->values = GROW_ARRAY(Value, array->values, old_capacity,
+                               array->capacity);
+  }
+
+  array->values[array->count] = value;
+  array->count++;
+}
+
+ObjArray* write_array(ObjArray* array, Value value) {
+  _write_value_array(&array->data, value);
+  return array;
+}
+
 static InterpretResult run() {
 #ifndef DEBUG_TRACE_EXECUTION
   auto print_stack = []() {
@@ -493,35 +516,15 @@ static InterpretResult run() {
     }
     // Array operation codes
     case OP_ARRAY: {
-      
-      uint8_t num_elements = read_byte();
-      
-      int    num_array[UINT8_MAX] = {};
-      string str_array[UINT8_MAX] = {};
-
-      // Check the type of each element and store them in separate arrays
-      for (int i = 0; i < num_elements; i++) {
-        if (IS_NUMBER(peek(i))) {
-          num_array[i] = AS_NUMBER(pop());
-          push(NUMBER_VAL(num_array[i]));
-        } else if (IS_STRING(peek(i))) {
-          str_array[i] = AS_CSTRING(pop());
-          push(OBJ_VAL(copy_string(str_array[i].c_str(), str_array[i].length())));
-        } else {
-          _runtime_error("Operands must be numbers or strings in the array!\n");
-          return INTERPRET_RUNTIME_ERROR;
-        }
+      // Stack: [element1] [element2] ... [elementN] [count]
+      // Create a new array object and populate it with elements from the stack
+      Value count = read_byte(); // Read the number of elements
+      ObjArray* array = new_array(); // Create a new array object
+      for (int i = count - 1; i >= 0; i--) {
+          Value element = pop(); // Pop the element from the stack
+          write_array(array, element); // Write the element to the array
       }
-
-      // Print out the array
-      for (int i = 0; i < num_elements; i++) {
-        if (IS_NUMBER(peek(i))) {
-          cout << "peek(" << i << "): " << AS_NUMBER(peek(i)) << endl;
-        } else if (IS_STRING(peek(i))) {
-          cout << "peek(" << i << "): " << AS_CSTRING(peek(i)) << endl;
-        }
-      }
-
+      push(OBJ_VAL(array)); // Push the array object onto the stack
       break;
     }
     // Bool operation codes
@@ -684,6 +687,14 @@ static InterpretResult run() {
     case OP_INFO: {
       print_value(pop());
       cout << "\n";
+      break;
+    }
+    case OP_INPUT: {
+      print_value(pop());
+      cout << " ";
+      string input;
+      getline(cin, input);
+      push(OBJ_VAL(copy_string(input.c_str(), input.length())));
       break;
     }
     case OP_RETURN: {

@@ -162,5 +162,13 @@ void print_object(Value value) {
         case OBJ_UPVALUE:
             cout << "upvalue";
             break;
+        case OBJ_ARRAY:
+            printf("[");
+            for (int i = 0; i < AS_ARRAY(value)->data.count; i++) {
+                print_value(AS_ARRAY(value)->data.values[i]);
+                if (i != AS_ARRAY(value)->data.count - 1) cout << ", ";
+            }
+            printf("]");
+            break;
     }
 }

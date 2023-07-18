@@ -95,6 +95,7 @@ int disassemble_instruction(Chunk *chunk, int offset) {
 
   case OP_ARRAY:
     return byte_instruction("OP_ARRAY", chunk, offset);
+
   case OP_JUMP_IF_FALSE:
     return jump_instruction("OP_JUMP_IF_FALSE", 1, chunk, offset);
   case OP_LOOP:
@@ -171,6 +172,8 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return simple_instruction("OP_IMPORT", offset);
   case OP_INFO:
     return simple_instruction("OP_INFO", offset);
+  case OP_INPUT:
+    return simple_instruction("OP_INPUT", offset);
 
   case OP_RETURN:
     return simple_instruction("OP_RETURN", offset);

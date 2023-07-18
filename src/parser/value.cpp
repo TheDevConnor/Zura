@@ -16,6 +16,8 @@ void print_value(Value value) {
         cout << AS_NUMBER(value);
     } else if (IS_OBJ(value)) {
         print_object(value);
+    } else {
+        cout << "Unknown value type: " << value << endl;
     }
 #else
     switch (value.type) {
