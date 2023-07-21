@@ -162,10 +162,35 @@ struct Parser parser;
 struct Compiler* current = nullptr;
 ClassCompiler* current_class = nullptr;
 
+void init_compiler(Compiler *compiler, FunctionType type);
+ObjFunction *end_compiler();
+
 Chunk* compiling_chunk() { return &current->function->chunk; }
 
 Token synthetic_token(const char* text);
 void super_(bool can_assign);
+
+void begin_scope() { current->scope_depth++; }
+void end_scope();
+
+uint8_t parser_variable(const char *error_msg);
+
+void add_local(Token name);
+void declare_variable();
+void mark_initialized();
+void define_variable(uint8_t global);
+
+uint8_t argument_list();
+
+void expression();
+void statement();
+void declaration();
+
+ParseRule *get_rule(TokenKind kind);
+
+void named_variable(Token name, bool can_assign);
+uint8_t identifier_constant(Token *name);
+bool identifiers_equal(Token *a, Token *b);
 
 void grouping(bool can_assign);
 void _number(bool can_assign);
@@ -181,9 +206,73 @@ void binary(bool can_assign);
 void literal(bool can_assign);
 void array_literal(bool can_assign);
 void input_statement(bool can_assign);
+void parse_precedence(Precedence prec);
+
+void expression() { parse_precedence(PREC_ASSIGNMENT); }
 
 int inner_most_loop_start = -1;
 int inner_most_loop_scope_depth = 0;
+
+void emit_byte(uint8_t byte) {
+  write_chunk(compiling_chunk(), byte, parser.previous.line);
+}
+
+void emit_bytes(uint8_t byte1, uint8_t byte2) {
+  emit_byte(byte1);
+  emit_byte(byte2);
+}
+
+void emit_loop(int loop_start) {
+  emit_byte(OP_LOOP);
+
+  int offset = compiling_chunk()->count - loop_start + 2;
+  if (offset > UINT16_MAX)
+    parser.error("Loop body too large.");
+
+  emit_byte((offset >> 8) & 0xff);
+  emit_byte(offset & 0xff);
+}
+
+int emit_jump(uint8_t instruction) {
+  emit_byte(instruction);
+  emit_byte(0xff);
+  emit_byte(0xff);
+  return compiling_chunk()->count - 2;
+}
+
+uint8_t make_constant(Value value) {
+  int constant = add_constant(compiling_chunk(), value);
+  if (constant > UINT8_MAX) {
+    parser.error("Too many constants in one chunk.");
+    return 0;
+  }
+
+  return static_cast<uint8_t>(constant);
+}
+
+void emit_return() {
+  if (current->type == TYPE_INITIALIZER)
+    emit_bytes(OP_GET_LOCAL, 0);
+  else
+    emit_byte(OP_NIL);
+  emit_byte(OP_RETURN);
+}
+
+void emit_constant(Value v) { emit_bytes(OP_CONSTANT, make_constant(v)); }
+
+void patch_jump(int offset) {
+  // -2 to adjust for the bytecode for the jump offset itself.
+  int jump = compiling_chunk()->count - offset - 2;
+
+  if (jump > UINT16_MAX) {
+    parser.error("Too much code to jump over.");
+  }
+
+  compiling_chunk()->code[offset] = (jump >> 8) & 0xff;
+  compiling_chunk()->code[offset + 1] = jump & 0xff;
+}
+
+void var_declaration();
 
 unordered_map<TokenKind, ParseRule> rules = {
     {LEFT_PAREN,    {grouping,     call, PREC_CALL}},

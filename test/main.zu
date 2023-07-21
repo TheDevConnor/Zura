@@ -1,20 +1,6 @@
-func increment(n) {
-    for (have i := 0; i < n;) {
-        info i;
-        i = ++i;
-    }
+func test(a, b) {
+    return a + b;
 }
 
-func decrement(n) {
-    for (n = n; n > 0;) {
-        info n;
-        n = --n;
-    }
-}
-
-func main() {
-    increment(10);
-    decrement(10);
-}
-
-main();
+have x := test(1, 2);
+info x; // 3
