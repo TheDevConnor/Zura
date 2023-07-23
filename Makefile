@@ -12,6 +12,7 @@ GC_PATH := src/garbage_collector
 SRC_PARSER_PATH := src/parser
 DEBUG_PATH := src/debug
 MEMORY_PATH := src/memory
+VM_PATH := src/vm
 
 TARGET := $(BIN_PATH)
 TARGET_DEBUG := $(BIN_DEBUG_PATH)
@@ -23,7 +24,7 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q 
 endif
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp) $(wildcard $(VM_PATH)/*.cpp)
 
 
 workflow:
