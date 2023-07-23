@@ -180,7 +180,7 @@ void break_statement() {
   parser.consume(SEMICOLON, "Expect ';' after 'break'.");
 }
 
-void using_statement() {
+void include_statement() {
   parser.consume(STRING, "Expect string after 'using'.");
   ObjString *moduleName =
       copy_string(parser.previous.start + 1, parser.previous.length - 2);

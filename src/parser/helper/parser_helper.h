@@ -322,7 +322,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {HAVE,          {nullptr,   nullptr,  PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,  PREC_NONE}},
     {MODULE,        {nullptr,   nullptr,  PREC_NONE}},
-    {USING,         {nullptr,   nullptr,  PREC_NONE}},
+    {INCLUDE,       {nullptr,   nullptr,  PREC_NONE}},
     {INAPPEND,      {nullptr,   nullptr,  PREC_NONE}},
     {INPUT,         {input_statement,   nullptr,  PREC_NONE}},
     {ERROR_TOKEN,   {nullptr,   nullptr,  PREC_NONE}},

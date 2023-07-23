@@ -294,8 +294,8 @@ void statement() {
   else if (parser.match(FOR))
     for_statement();
   // Import statements
-  else if (parser.match(USING))
-    using_statement();
+  else if (parser.match(INCLUDE))
+    include_statement();
   // Block statements
   else if (parser.match(LEFT_BRACE)) {
     begin_scope();

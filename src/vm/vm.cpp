@@ -1,14 +1,15 @@
-#include <cmath>
-#include <cstring>
-#include <fstream>
+#include <unordered_set>
+#include <unordered_map>
 #include <functional>
+#include <filesystem>
 #include <iostream>
 #include <stdarg.h>
-#include <unordered_map>
-#include <unordered_set>
+#include <stdint.h>
+#include <cstring>
+#include <fstream>
 #include <vector>
 #include <string>
-#include <stdint.h>
+#include <cmath>
 
 #include "../parser/helper/terminal_color.h"
 #include "../parser/native_fn/native.h"
@@ -42,23 +43,24 @@ inline ObjFunction *get_frame_function(CallFrame *frame) {
 void _runtime_error(const char *format, ...) {
   va_list args;
   va_start(args, format);
-  vprintf(format, args);
+  vfprintf(stderr, format, args);
   va_end(args);
-  cout << endl;
+  fputs("\n", stderr);
+
+  // Print out the line of code that caused the error
   for (int i = vm.frame_count - 1; i >= 0; i--) {
     CallFrame *frame = &vm.frames[i];
     ObjFunction *function = get_frame_function(frame);
+    // -1 because the IP is sitting on the next instruction to be executed
     size_t instruction = frame->ip - function->chunk.code - 1;
-    cout << set_color(RESET) << "[" << set_color(YELLOW) << "line "
-         << set_color(RESET) << "-> " << set_color(RED)
-         << function->chunk.lines[instruction] << set_color(RESET) << "] in ";
+    fprintf(stderr, "[line %d] in ", function->chunk.lines[instruction]);
     if (function->name == nullptr) {
-      cout << set_color(RED) << "script" << set_color(RESET) << endl;
+      fprintf(stderr, "script\n");
     } else {
-      cout << set_color(RED) << function->name->chars << set_color(RESET)
-           << endl;
+      fprintf(stderr, "%s()\n", function->name->chars);
     }
   }
+
   reset_stack();
 }
 
@@ -279,47 +281,64 @@ void concatenate() {
 }
 
 unordered_set<ObjString *> loadedModules;
+unordered_set<ObjString *> loadingModules; // Track modules currently being loaded
 
 ObjModule *load_module(ObjString *name) {
-  loadedModules.insert(name);
+    // Check if the module is already being loaded
+    if (loadingModules.find(name) != loadingModules.end()) {
+        std::string errorMessage = "Circular dependency detected in module -> '";
+        errorMessage += set_color(RED);
+        errorMessage += name->chars;
+        errorMessage += set_color(RESET);
+        errorMessage += "'";
+        _runtime_error(errorMessage.c_str());
+        exit(1);
+    }
 
-  const char *moduleFileName = name->chars;
+    loadedModules.insert(name);
 
-  ifstream file(moduleFileName);
-  if (!file.is_open()) {
-    std::string errorMessage = "Could not load file -> '";
-    errorMessage += set_color(RED);
-    errorMessage += moduleFileName;
-    errorMessage += set_color(RESET);
-    errorMessage += "'";
-    _runtime_error(errorMessage.c_str());
-    exit(1);
-  }
+    // Mark the module as currently being loaded
+    loadingModules.insert(name);
 
-  string source((std::istreambuf_iterator<char>(file)),
-                std::istreambuf_iterator<char>());
-  file.close();
+    string moduleFileName = string(name->chars, name->length);
+    moduleFileName += ".zu";
 
-  InterpretResult result = interpret(source.c_str());
-  if (result != INTERPRET_OK) {
-    // Handle the error appropriately, such as returning an error value or
-    // throwing an exception.
-    _runtime_error("Error loading module!");
-    exit(1);
-  }
+    FILE *file = fopen(moduleFileName.c_str(), "rb");
+    if (!file) {
+        std::string errorMessage = "Could not load file -> '";
+        errorMessage += set_color(RED);
+        errorMessage += moduleFileName;
+        errorMessage += set_color(RESET);
+        errorMessage += "'";
+        _runtime_error(errorMessage.c_str());
+        exit(1);
+    }
 
-  loadedModules.erase(name);
+    std::vector<char> buffer;
+    char chunk[1024];
+    while (size_t bytesRead = fread(chunk, 1, sizeof(chunk), file)) {
+        buffer.insert(buffer.end(), chunk, chunk + bytesRead);
+    }
+    fclose(file);
 
-  // Add the module globals to the global table
-  ObjModule *module = AS_MODULE(pop());
-  table_add_all(&module->variables, &vm.globals);
+    string source(buffer.begin(), buffer.end());
 
-  return module;
-}
+    InterpretResult result = interpret(source.c_str());
+    if (result != INTERPRET_OK) {
+        // Handle the error appropriately, such as returning an error value or
+        // throwing an exception.
+        _runtime_error("Error loading module!");
+        exit(1);
+    }
 
-ObjModule *import_module(ObjString *name) {
-  ObjModule *module = load_module(name);
-  return module;
+    // Finished loading the module, remove it from loadingModules
+    loadingModules.erase(name);
+
+    // Add the module globals to the global table
+    ObjModule *module = AS_MODULE(pop());
+    table_add_all(&module->variables, &vm.globals);
+
+    return module;
 }
 
 static InterpretResult run() {
@@ -671,7 +690,7 @@ static InterpretResult run() {
     }
     case OP_IMPORT: {
       ObjString *module_name = AS_STRING(pop());
-      ObjModule *module = import_module(module_name);
+      ObjModule *module = load_module(module_name);
       loadedModules.insert(module_name);
       table_add_all(&module->variables, &vm.globals);
       break;
