@@ -1,3 +1,4 @@
 include "test/test2";
 
 info x;
+info Test().test();

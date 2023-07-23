@@ -40,26 +40,28 @@ inline ObjFunction *get_frame_function(CallFrame *frame) {
     return ((ObjClosure *)frame->function)->function;
 }
 
-void _runtime_error(const char *format, ...) {
+void runtimeError(const char *format, ...) {
+  size_t instruction = vm.frames->ip - vm.frames->closure->function->chunk.code - 1;
+  int line = vm.frames->closure->function->chunk.lines[instruction];
+  if (vm.frames->closure->function->name != nullptr) {
+    cout << "[" << set_color(YELLOW) << "line" << set_color(RESET) << " -> " 
+         << set_color(RED) << line << set_color(RESET) << "][" << set_color(YELLOW)
+         << "pos" << set_color(RESET) << " -> " << set_color(RED) << instruction
+         << set_color(RESET) << "][" << set_color(YELLOW) << "func" << set_color(RESET)
+         << " -> " << set_color(RED) << vm.frames->closure->function->name->chars
+         << set_color(RESET) << "] in script \n";
+  } else {
+    cout << "[" << set_color(YELLOW) << "line" << set_color(RESET) << " -> " 
+         << set_color(RED) << line << set_color(RESET) << "][" << set_color(YELLOW)
+         << "pos" << set_color(RESET) << " -> " << set_color(RED) << instruction
+         << set_color(RESET) << "] in script \n";
+  }
+
   va_list args;
   va_start(args, format);
   vfprintf(stderr, format, args);
   va_end(args);
   fputs("\n", stderr);
-
-  // Print out the line of code that caused the error
-  for (int i = vm.frame_count - 1; i >= 0; i--) {
-    CallFrame *frame = &vm.frames[i];
-    ObjFunction *function = get_frame_function(frame);
-    // -1 because the IP is sitting on the next instruction to be executed
-    size_t instruction = frame->ip - function->chunk.code - 1;
-    fprintf(stderr, "[line %d] in ", function->chunk.lines[instruction]);
-    if (function->name == nullptr) {
-      fprintf(stderr, "script\n");
-    } else {
-      fprintf(stderr, "%s()\n", function->name->chars);
-    }
-  }
 
   reset_stack();
 }
@@ -116,12 +118,12 @@ bool call(Obj *callee, ObjFunction *function, int arg_count) {
     message += set_color(RED);
     message += to_string(arg_count);
     message += set_color(RESET);
-    _runtime_error(message.c_str());
+    runtimeError(message.c_str());
     return false;
   }
 
   if (vm.frame_count == FRAMES_MAX) {
-    _runtime_error("Stack overflow!");
+    runtimeError("Stack overflow!");
     return false;
   }
 
@@ -155,7 +157,7 @@ bool call_value(Value callee, int arg_count) {
       if(!IS_NIL(klass->initializer)) {
         return call_closure(AS_CLOSURE(klass->initializer), arg_count);
       } else if (arg_count != 0) {
-        _runtime_error("Expected 0 arguments but got %d.", arg_count);
+        runtimeError("Expected 0 arguments but got %d.", arg_count);
         return false;
       }
       return true;
@@ -175,7 +177,7 @@ bool call_value(Value callee, int arg_count) {
       break; // Non-callable object type.
     }
   }
-  _runtime_error("Can only call functions and classes!");
+  runtimeError("Can only call functions and classes!");
   return false;
 }
 
@@ -186,7 +188,7 @@ bool invoke_from_class(ObjClass *klass, ObjString *name, int arg_count) {
     message += set_color(RED);
     message += name->chars;
     message += set_color(RESET);
-    _runtime_error(message.c_str());
+    runtimeError(message.c_str());
     return false;
   }
   return call_closure(AS_CLOSURE(method), arg_count);
@@ -196,7 +198,7 @@ bool invoke(ObjString *name, int arg_count) {
   Value receiver = peek(arg_count);
 
   if (!IS_INSTANCE(receiver)) {
-    _runtime_error("Only instances have methods");
+    runtimeError("Only instances have methods");
     return false;
   }
 
@@ -211,7 +213,7 @@ bool bind_method(ObjClass *klass, ObjString *name) {
     message += set_color(RED);
     message += name->chars;
     message += set_color(RESET);
-    _runtime_error(message.c_str());
+    runtimeError(message.c_str());
     return false;
   }
 
@@ -281,17 +283,31 @@ void concatenate() {
 }
 
 unordered_set<ObjString *> loadedModules;
-unordered_set<ObjString *> loadingModules; // Track modules currently being loaded
+unordered_set<ObjString *> loadingModules;
+vector<ObjString *> circularDependence;
 
 ObjModule *load_module(ObjString *name) {
-    // Check if the module is already being loaded
+// Check if the module is already being loaded
     if (loadingModules.find(name) != loadingModules.end()) {
-        std::string errorMessage = "Circular dependency detected in module -> '";
+        // Circular dependency detected, collect all modules involved
+        circularDependence.push_back(name);
+        for (const auto &module : loadingModules) {
+            if (module != name) {
+                circularDependence.push_back(module);
+            }
+        }
+
+        string errorMessage = "Circular dependency detected in modules -> '";
         errorMessage += set_color(RED);
-        errorMessage += name->chars;
+        for (size_t i = 0; i < circularDependence.size(); i++) {
+            errorMessage += circularDependence[i]->chars;
+            if (i < circularDependence.size() - 1) {
+                errorMessage += ", ";
+            }
+        }
         errorMessage += set_color(RESET);
         errorMessage += "'";
-        _runtime_error(errorMessage.c_str());
+        runtimeError(errorMessage.c_str(), circularDependence.size());
         exit(1);
     }
 
@@ -310,7 +326,7 @@ ObjModule *load_module(ObjString *name) {
         errorMessage += moduleFileName;
         errorMessage += set_color(RESET);
         errorMessage += "'";
-        _runtime_error(errorMessage.c_str());
+        runtimeError(errorMessage.c_str());
         exit(1);
     }
 
@@ -327,7 +343,7 @@ ObjModule *load_module(ObjString *name) {
     if (result != INTERPRET_OK) {
         // Handle the error appropriately, such as returning an error value or
         // throwing an exception.
-        _runtime_error("Error loading module!");
+        runtimeError("Error loading module!");
         exit(1);
     }
 
@@ -366,7 +382,7 @@ static InterpretResult run() {
 #define BINARY_OP(value_type, op)                                              \
   do {                                                                         \
     if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {                          \
-      _runtime_error("Operands must be numbers\n");                            \
+      runtimeError("Operands must be numbers\n");                            \
       return INTERPRET_RUNTIME_ERROR;                                          \
     }                                                                          \
     double b = AS_NUMBER(pop());                                               \
@@ -377,7 +393,7 @@ static InterpretResult run() {
 #define MODULO_OP(value_type, op)                                              \
   do {                                                                         \
     if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {                          \
-      _runtime_error("Operands must be numbers\n");                            \
+      runtimeError("Operands must be numbers\n");                            \
       return INTERPRET_RUNTIME_ERROR;                                          \
     }                                                                          \
     double b = AS_NUMBER(pop());                                               \
@@ -388,7 +404,7 @@ static InterpretResult run() {
 #define POW_OP(value_type, op)                                                 \
   do {                                                                         \
     if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {                          \
-      _runtime_error("Operands must be numbers\n");                            \
+      runtimeError("Operands must be numbers\n");                            \
       return INTERPRET_RUNTIME_ERROR;                                          \
     }                                                                          \
     double b = AS_NUMBER(pop());                                               \
@@ -420,7 +436,7 @@ static InterpretResult run() {
         message += set_color(RED);
         message += string(name->chars, name->length);
         message += set_color(RESET);
-        _runtime_error(message.c_str());
+        runtimeError(message.c_str());
         return INTERPRET_RUNTIME_ERROR;
       }
       break;
@@ -433,7 +449,7 @@ static InterpretResult run() {
         message += set_color(RED);
         message += string(name->chars, name->length);
         message += set_color(RESET);
-        _runtime_error(message.c_str());
+        runtimeError(message.c_str());
         return INTERPRET_RUNTIME_ERROR;
       }
       push(value);
@@ -470,7 +486,7 @@ static InterpretResult run() {
     // Property operations codes
     case OP_GET_PROPERTY: {
       if (!IS_INSTANCE(peek(0))) {
-        _runtime_error("Only instance have properties");
+        runtimeError("Only instance have properties");
         return INTERPRET_RUNTIME_ERROR;
       }
       ObjInstance *instance = AS_INSTANCE(peek(0));
@@ -489,7 +505,7 @@ static InterpretResult run() {
     }
     case OP_SET_PROPERTY: {
       if (!IS_INSTANCE(peek(1))) {
-        _runtime_error("Only instances have fields");
+        runtimeError("Only instances have fields");
         return INTERPRET_RUNTIME_ERROR;
       }
       ObjInstance *instance = AS_INSTANCE(peek(1));
@@ -564,7 +580,7 @@ static InterpretResult run() {
         double a = AS_NUMBER(pop());
         push(NUMBER_VAL(a + b));
       } else {
-        _runtime_error("Operands must be two numbers or two strings\n");
+        runtimeError("Operands must be two numbers or two strings\n");
         return INTERPRET_RUNTIME_ERROR;
       }
       break;
@@ -601,7 +617,7 @@ static InterpretResult run() {
       break;
     case OP_NEGATE: {
       if (!IS_NUMBER(peek(0))) {
-        _runtime_error("Operands must be numbers\n");
+        runtimeError("Operands must be numbers\n");
         return INTERPRET_RUNTIME_ERROR;
       }
       push(NUMBER_VAL(-AS_NUMBER(pop())));
@@ -675,7 +691,7 @@ static InterpretResult run() {
       ObjClass* subclass = AS_CLASS(peek(0));
 
       if(!IS_CLASS(superclass)) {
-        _runtime_error("Superclass must be a class");
+        runtimeError("Superclass must be a class");
         return INTERPRET_RUNTIME_ERROR;
       }
 
