@@ -105,11 +105,6 @@ void blacken_object(Obj* object) {
         case OBJ_UPVALUE:
             mark_value(((ObjUpvalue*)object)->closed);
             break;
-        case OBJ_ARRAY: {
-            ObjArray* array = (ObjArray*)object;
-            mark_array(&array->data);
-            break;
-        }
         case OBJ_NATIVE:
         case OBJ_STRING:
             break;

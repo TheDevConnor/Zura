@@ -4,7 +4,7 @@
 #include "../parser/object.h"
 #include "../parser/value.h"
 #include "../parser/table.h"
-#include "../parser/vm.h"
+#include "../vm/vm.h"
 #include "../common.h"
 
 void mark_object(Obj* object);

@@ -16,8 +16,6 @@ void print_value(Value value) {
         cout << AS_NUMBER(value);
     } else if (IS_OBJ(value)) {
         print_object(value);
-    } else {
-        cout << "Unknown value type: " << value << endl;
     }
 #else
     switch (value.type) {
@@ -33,10 +31,8 @@ void print_value(Value value) {
 
 bool values_equal(Value a, Value b) {
 #ifdef NAN_BOXING
-    if (IS_NUMBER(a) && IS_NUMBER(b)) {
-        return AS_NUMBER(a) == AS_NUMBER(b);
-    }
-    return a == b;
+    if (IS_NUMBER(a) && IS_NUMBER(b)) return AS_NUMBER(a) == AS_NUMBER(b);
+    return false;
 #else
     if (a.type != b.type) return false;
     switch (a.type) {

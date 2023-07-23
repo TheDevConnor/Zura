@@ -1,6 +1,7 @@
 #ifndef AZURA_VALUE_H
 #define AZURA_VALUE_H
 
+#include <iostream>
 #include <cstring>
 
 #include "../memory/memory.h"
@@ -28,23 +29,25 @@ typedef struct ObjString obj_string;
     #define IS_OBJ(value)      (((value) & (QNAN | SIGN_BIT)) == (QNAN | SIGN_BIT))
 
     #define AS_BOOL(value)     ((value) == TRUE_VAL)
-    #define AS_NUMBER(value)    value_to_num(value)
-    #define AS_OBJ(value)       ((Obj*)(uintptr_t)((value) & ~(SIGN_BIT | QNAN)))
+    #define AS_NUMBER(value)   value_to_num(value)
+    #define AS_OBJ(value)      ((Obj*)(uintptr_t)((value) & ~(SIGN_BIT | QNAN)))
 
-    #define BOOL_VAL(b)         ((b) ? TRUE_VAL : FALSE_VAL)
-    #define NIL_VAL             ((Value)(uint64_t)(QNAN | TAG_NIL))
-    #define NUMBER_VAL(num)     num_to_value(num)
-    #define OBJ_VAL(obj)        (Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)(obj))
+    #define BOOL_VAL(b)        ((b) ? TRUE_VAL : FALSE_VAL)
+    #define NIL_VAL            ((Value)(uint64_t)(QNAN | TAG_NIL))
+    #define NUMBER_VAL(num)    num_to_value(num)
+    #define OBJ_VAL(obj)       (Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)(obj))
 
     inline Value value_to_num(Value value) {
         double num;
         memcpy(&num, &value, sizeof(Value));
+        // std::cout << " " << num << std::endl;
         return num;
     }
 
     inline Value num_to_value(double num) {
         Value value;
         memcpy(&value, &num, sizeof(double));
+        // std::cout << " "<< num << std::endl;
         return value;
     }
 #else

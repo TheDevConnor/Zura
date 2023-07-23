@@ -15,7 +15,6 @@
 #define IS_INSTANCE(value)     is_obj_type(value, OBJ_INSTANCE)
 #define IS_NATIVE(value)       is_obj_type(value, OBJ_NATIVE)
 #define IS_STRING(value)       is_obj_type(value, OBJ_STRING)
-#define IS_ARRAY(value)        is_obj_type(value, OBJ_ARRAY)
 
 #define AS_BOUND_METHOD(value) ((ObjBoundMethod*)AS_OBJ(value))
 #define AS_CLASS(value)        ((ObjClass*)AS_OBJ(value))
@@ -27,7 +26,6 @@
 #define AS_CSTRING(value)      (((ObjString*)AS_OBJ(value))->chars)
 #define AS_MODULE(value)       ((ObjModule*)AS_OBJ(value))
 #define AS_TABLE(value)        ((Table*)AS_OBJ(value))
-#define AS_ARRAY(value)        ((ObjArray*)AS_OBJ(value))
 
 enum ObjType {
     OBJ_BOUND_METHOD,
@@ -38,7 +36,6 @@ enum ObjType {
     OBJ_NATIVE,
     OBJ_STRING,
     OBJ_UPVALUE,
-    OBJ_ARRAY,
 };
 
 struct Obj {
@@ -107,11 +104,6 @@ struct ObjBoundMethod {
     Obj obj;
     Value receiver;
     ObjClosure* method;
-};
-
-struct ObjArray {
-    int length;
-    ValueArray data;
 };
 
 ObjBoundMethod* new_bound_method(Value receiver, ObjClosure* method);

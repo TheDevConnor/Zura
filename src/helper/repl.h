@@ -2,7 +2,7 @@
 
 #define REPL_H
 
-#include "../parser/vm.h"
+#include "../vm/vm.h"
 #include "getCurrentTime.h"
 #include "version.h"
 #include <iostream>

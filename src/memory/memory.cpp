@@ -3,7 +3,7 @@
 
 #include "../garbage_collector/gc.h"
 #include "../parser/object.h"
-#include "../parser/vm.h"
+#include "../vm/vm.h"
 #include "memory.h"
 
 using namespace std;
@@ -72,12 +72,6 @@ static void free_obj(Obj* object) {
             ObjClosure* closure = (ObjClosure*) object;
             FREE_ARRAY(ObjUpvalue*, closure->upvalues, closure->upvalue_count);
             FREE(ObjUpvalue, object);
-            break;
-        }
-        case OBJ_ARRAY: {
-            ObjArray* array = (ObjArray*) object;
-            FREE_ARRAY(Value, array->data.values, array->data.capacity);
-            FREE(ObjArray, object);
             break;
         }
     }

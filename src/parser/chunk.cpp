@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "vm.h"
-#include "chunk.h"
 #include "../memory/memory.h"
+#include "../vm/vm.h"
+#include "chunk.h"
 
 void init_chunk(Chunk* chunk) {
     chunk->lines = nullptr;

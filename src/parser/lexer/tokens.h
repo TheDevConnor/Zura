@@ -22,7 +22,7 @@ typedef enum {
     INCREMENT, DECREMENT,    // ++ --
 
     // Literals!
-    IDENTIFIER, STRING, NUMBER, INAPPEND,
+    IDENTIFIER, STRING, NUMBER, INAPPEND, FLOAT,
 
     // Keywords!
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,

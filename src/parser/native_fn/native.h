@@ -4,9 +4,10 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include <cmath>
 
+#include "../../vm/vm.h"
 #include "../object.h"
-#include "../vm.h"
 
 void define_native(const char* name, NativeFn function) {
     push(OBJ_VAL(copy_string(name, (int)strlen(name))));

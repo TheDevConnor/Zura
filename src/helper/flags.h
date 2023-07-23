@@ -1,4 +1,4 @@
-#include "../parser/vm.h"
+#include "../vm/vm.h"
 #include "./getCurrentTime.h"
 #include "./repl.h"
 #include "./version.h"

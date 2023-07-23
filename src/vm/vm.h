@@ -1,10 +1,10 @@
 #ifndef AZURA_VM_H
 #define AZURA_VM_H
 
-#include "chunk.h"
-#include "table.h"
-#include "object.h"
-#include "value.h"
+#include "../parser/object.h"
+#include "../parser/chunk.h"
+#include "../parser/table.h"
+#include "../parser/value.h"
 
 #define FRAMES_MAX 64
 #define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
@@ -36,6 +36,9 @@ struct VM {
     int gray_count;
     int gray_capacity;
     Obj** gray_stack;
+
+    Table arrays;
+    ValueArray array_values;
 };
 
 enum InterpretResult {

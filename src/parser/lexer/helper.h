@@ -179,6 +179,7 @@ static Token number() {
 
         while (is_digit(peek())) advance();
     }
+    // print out the number
     return make_token(NUMBER);
 }
 

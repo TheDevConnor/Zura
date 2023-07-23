@@ -4,7 +4,7 @@
 
 #include "debug/debug.h"
 #include "parser/chunk.h"
-#include "parser/vm.h"
+#include "vm/vm.h"
 #include "helper/flags.h"
 
 int main(int argc, char *argv[])

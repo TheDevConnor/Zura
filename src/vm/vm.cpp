@@ -10,16 +10,16 @@
 #include <string>
 #include <stdint.h>
 
-#include "../common.h"
-#include "../debug/debug.h"
+#include "../parser/helper/terminal_color.h"
+#include "../parser/native_fn/native.h"
+#include "../parser/parser.h"
+#include "../parser/object.h"
 #include "../memory/memory.h"
-#include "chunk.h"
-#include "helper/terminal_color.h"
-#include "native_fn/native.h"
-#include "object.h"
-#include "parser.h"
-#include "table.h"
-#include "value.h"
+#include "../parser/value.h"
+#include "../parser/table.h"
+#include "../parser/chunk.h"
+#include "../debug/debug.h"
+#include "../common.h"
 #include "vm.h"
 
 using namespace std;
@@ -75,9 +75,11 @@ void init_vm() {
 
   init_table(&vm.globals);
   init_table(&vm.strings);
+  init_table(&vm.arrays);
+
+  init_value_array(&vm.array_values);
 
   vm.init_string = nullptr;
-  vm.init_string = copy_string("init", 4);
 
   define_all_natives();
 }
@@ -85,7 +87,8 @@ void init_vm() {
 void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
-  vm.init_string = nullptr;
+  free_table(&vm.arrays);
+
   free_objects();
 }
 
@@ -319,29 +322,6 @@ ObjModule *import_module(ObjString *name) {
   return module;
 }
 
-ObjArray* new_array() {
-  ObjArray* array = new ObjArray();
-  init_value_array(&array->data);
-  return array;
-}
-
-void _write_value_array(ValueArray *array, Value value) {
-  if (array->capacity < array->count + 1) {
-    int old_capacity = array->capacity;
-    array->capacity = GROW_CAPACITY(old_capacity);
-    array->values = GROW_ARRAY(Value, array->values, old_capacity,
-                               array->capacity);
-  }
-
-  array->values[array->count] = value;
-  array->count++;
-}
-
-ObjArray* write_array(ObjArray* array, Value value) {
-  _write_value_array(&array->data, value);
-  return array;
-}
-
 static InterpretResult run() {
 #ifndef DEBUG_TRACE_EXECUTION
   auto print_stack = []() {
@@ -359,7 +339,8 @@ static InterpretResult run() {
 
 #define read_byte() (*frame->ip++)
 #define read_short()                                                           \
-  (frame->ip += 2, (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
+  (frame->ip += 2,                                                             \
+  (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
 #define read_constant()                                                        \
   (frame->closure->function->chunk.constants.values[read_byte()])
 
@@ -406,9 +387,11 @@ static InterpretResult run() {
 
     uint8_t instruction;
     switch (instruction = read_byte()) {
-    case OP_CONSTANT:
-      push(read_constant());
+    case OP_CONSTANT: {
+      Value constant = read_constant();
+      push(constant);
       break;
+    }
     // Global variable operation codes
     case OP_SET_GLOBAL: {
       ObjString *name = AS_STRING(read_constant());
@@ -516,16 +499,14 @@ static InterpretResult run() {
     }
     // Array operation codes
     case OP_ARRAY: {
-      // Stack: [element1] [element2] ... [elementN] [count]
-      // Create a new array object and populate it with elements from the stack
-      Value count = read_byte(); // Read the number of elements
-      ObjArray* array = new_array(); // Create a new array object
-      for (int i = count - 1; i >= 0; i--) {
-          Value element = pop(); // Pop the element from the stack
-          write_array(array, element); // Write the element to the array
-      }
-      push(OBJ_VAL(array)); // Push the array object onto the stack
-      break;
+        uint8_t num_elements = read_byte();
+        ValueArray array;
+        init_value_array(&array);
+        for (int i = 0; i < num_elements; i++) {
+            write_value_array(&array, num_elements);
+        }
+        push(OBJ_VAL(&array));
+        break;
     }
     // Bool operation codes
     case OP_TRUE:
@@ -713,14 +694,14 @@ static InterpretResult run() {
       close_upvalues(frame->slots);
       vm.frame_count--;
       if (vm.frame_count == 0) {
-        return INTERPRET_OK;
+          pop();
+          return INTERPRET_OK;
       }
       vm.stack_top = frame->slots;
       push(result);
-
       frame = &vm.frames[vm.frame_count - 1];
       break;
-    }
+  }
     default: {
       cout << "Unknown opcode " << instruction;
       return INTERPRET_RUNTIME_ERROR;
