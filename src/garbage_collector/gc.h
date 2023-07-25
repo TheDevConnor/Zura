@@ -1,9 +1,9 @@
 #ifndef AZURA_GC_H
 #define AZURA_GC_H
 
-#include "../parser/object.h"
-#include "../parser/value.h"
-#include "../parser/table.h"
+#include "../compiler/object.h"
+#include "../compiler/value.h"
+#include "../compiler/table.h"
 #include "../vm/vm.h"
 #include "../common.h"
 

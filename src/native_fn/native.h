@@ -6,8 +6,8 @@
 #include <ctime>
 #include <cmath>
 
-#include "../../vm/vm.h"
-#include "../object.h"
+#include "../compiler/object.h"
+#include "../vm/vm.h"
 
 void define_native(const char* name, NativeFn function) {
     push(OBJ_VAL(copy_string(name, (int)strlen(name))));
@@ -79,7 +79,7 @@ Value to_string_native(int arg_count, Value* args) {
     if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
 
     char buffer[100];
-    sprintf(buffer, "%lld", AS_NUMBER(args[0]));
+    sprintf(buffer, "%f", AS_NUMBER(args[0]));
     return OBJ_VAL(copy_string(buffer, (int)strlen(buffer)));
 }
 
@@ -90,7 +90,7 @@ Value to_number_native(int arg_count, Value* args) {
     char* string = AS_CSTRING(args[0]);
     char* end;
     errno = 0;
-    long long number = strtoll(string, &end, 10);
+    double number = strtoll(string, &end, 10);
     if (errno == ERANGE) {
         return BOOL_VAL(false);
     }
@@ -155,6 +155,34 @@ Value squrt_native(int arg_count, Value* args) {
     return NUMBER_VAL(number_squrt);
 }
 
+Value sin_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    double number = AS_NUMBER(args[0]);
+    double number_sin = sin(number);
+    std::cout << number_sin << "\n";
+    return NUMBER_VAL(number_sin);
+}
+Value cos_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    double number = AS_NUMBER(args[0]);
+    double number_cos = cos(number);
+    std::cout << number_cos << "\n";
+    return NUMBER_VAL(number_cos);
+}
+Value tan_native(int arg_count, Value* args) {
+    if (arg_count != 1) return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
+
+    double number = AS_NUMBER(args[0]);
+    double number_tan = tan(number);
+    std::cout << number_tan << "\n";
+    return NUMBER_VAL(number_tan);
+}
+
 void define_all_natives() {
     define_native("read_file", read_file_native);
 
@@ -172,6 +200,9 @@ void define_all_natives() {
     define_native("delete_field", delete_field_native);
 
     define_native("sqrt", squrt_native);
+    define_native("sin", sin_native);
+    define_native("cos", cos_native);
+    define_native("tan", tan_native);
 }
 
 #endif //AZURA_NATIVE_H

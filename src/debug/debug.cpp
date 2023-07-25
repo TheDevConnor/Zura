@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "../parser/chunk.h"
-#include "../parser/object.h"
-#include "../parser/value.h"
+#include "../compiler/object.h"
+#include "../compiler/value.h"
 #include "debug.h"
 
 using namespace std;

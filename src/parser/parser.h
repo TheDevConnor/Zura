@@ -1,7 +1,7 @@
 #ifndef AZURA_PARSER_H
 #define AZURA_PARSER_H
 
-#include "object.h"
+#include "../compiler/object.h"
 #include "../vm/vm.h"
 
 ObjFunction* compile(const char* source);

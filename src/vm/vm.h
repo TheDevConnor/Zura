@@ -1,10 +1,10 @@
 #ifndef AZURA_VM_H
 #define AZURA_VM_H
 
-#include "../parser/object.h"
+#include "../compiler/object.h"
+#include "../compiler/value.h"
+#include "../compiler/table.h"
 #include "../parser/chunk.h"
-#include "../parser/table.h"
-#include "../parser/value.h"
 
 #define FRAMES_MAX 64
 #define STACK_MAX (FRAMES_MAX * UINT8_COUNT)

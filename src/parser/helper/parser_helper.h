@@ -1,8 +1,8 @@
 #ifndef PARSER_HELPER_H
 #define PARSER_HELPER_H
 
+#include "../../compiler/object.h"
 #include "../lexer/lexer.h"
-#include "../object.h"
 #include "../../common.h"
 
 using namespace std;

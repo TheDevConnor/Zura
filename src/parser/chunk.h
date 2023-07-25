@@ -2,7 +2,7 @@
 #define AZUA_CHUNK_H
 
 #include "../common.h"
-#include "value.h"
+#include "../compiler/value.h"
 
 enum OpCode {
   OP_CONSTANT,

@@ -9,11 +9,11 @@ using namespace std;
 void print_value(Value value) {
 #ifdef NAN_BOXING
     if (IS_BOOL(value)) {
-        cout << (AS_BOOL(value) ? "true" : "false");
+        printf(AS_BOOL(value) ? "true" : "false");
     } else if (IS_NIL(value)) {
-        cout << "nil";
+        printf("nil");
     } else if (IS_NUMBER(value)) {
-        cout << AS_NUMBER(value);
+        printf("%g", AS_NUMBER(value));
     } else if (IS_OBJ(value)) {
         print_object(value);
     }

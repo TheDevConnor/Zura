@@ -1,8 +1,8 @@
 #ifndef AZURA_OBJECT_H
 #define AZURA_OBJECT_H
 
+#include "../parser/chunk.h"
 #include "../common.h"
-#include "chunk.h"
 #include "table.h"
 #include "value.h"
 

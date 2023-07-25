@@ -1,3 +1,2 @@
-include "test/test2";
 
 have x := 45;

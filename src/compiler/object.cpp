@@ -1,4 +1,4 @@
-#include "helper/import.h"
+#include "../parser/helper/import.h"
 
 #include "../memory/memory.h"
 #include "../vm/vm.h"

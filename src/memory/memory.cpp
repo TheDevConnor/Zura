@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "../garbage_collector/gc.h"
-#include "../parser/object.h"
+#include "../compiler/object.h"
 #include "../vm/vm.h"
 #include "memory.h"
 

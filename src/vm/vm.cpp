@@ -12,12 +12,12 @@
 #include <cmath>
 
 #include "../parser/helper/terminal_color.h"
-#include "../parser/native_fn/native.h"
+#include "../native_fn/native.h"
 #include "../parser/parser.h"
-#include "../parser/object.h"
+#include "../compiler/object.h"
 #include "../memory/memory.h"
-#include "../parser/value.h"
-#include "../parser/table.h"
+#include "../compiler/value.h"
+#include "../compiler/table.h"
 #include "../parser/chunk.h"
 #include "../debug/debug.h"
 #include "../common.h"
@@ -535,10 +535,11 @@ static InterpretResult run() {
     // Array operation codes
     case OP_ARRAY: {
         uint8_t num_elements = read_byte();
+        Value elements = peek(0);
         ValueArray array;
         init_value_array(&array);
         for (int i = 0; i < num_elements; i++) {
-            write_value_array(&array, num_elements);
+            write_value_array(&array, elements);
         }
         push(OBJ_VAL(&array));
         break;
