@@ -137,36 +137,35 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     // The generated code should provide the perfect hash lookup function.
 
     if (strcmp(keyword, "class")   == 0)   return CLASS;
-    if (strcmp(keyword, "else")    == 0)    return ELSE;
+    if (strcmp(keyword, "else")    == 0)   return ELSE;
     if (strcmp(keyword, "false")   == 0)   return FALSE;
-    if (strcmp(keyword, "for")     == 0)     return FOR;
-    if (strcmp(keyword, "func")    == 0)     return FUNC;
-    if (strcmp(keyword, "if")      == 0)      return IF;
-    if (strcmp(keyword, "info")    == 0)    return INFO;
-    if (strcmp(keyword, "input")     == 0)     return INPUT;
-    if (strcmp(keyword, "nil")     == 0)     return NIL;
-    if (strcmp(keyword, "return")  == 0)  return RETURN;
+    if (strcmp(keyword, "for")     == 0)   return FOR;
+    if (strcmp(keyword, "fn")      == 0)   return FUNC;
+    if (strcmp(keyword, "if")      == 0)   return IF;
+    if (strcmp(keyword, "info")    == 0)   return INFO;
+    if (strcmp(keyword, "input")   == 0)   return INPUT;
+    if (strcmp(keyword, "nil")     == 0)   return NIL;
+    if (strcmp(keyword, "return")  == 0)   return RETURN;
     if (strcmp(keyword, "super")   == 0)   return SUPER;
-    if (strcmp(keyword, "this")    == 0)    return THIS;
-    if (strcmp(keyword, "true")    == 0)    return TRUE;
-    if (strcmp(keyword, "var")     == 0)     return VAR;
+    if (strcmp(keyword, "this")    == 0)   return THIS;
+    if (strcmp(keyword, "true")    == 0)   return TRUE;
+    if (strcmp(keyword, "var")     == 0)   return VAR;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
-    if (strcmp(keyword, "include")   == 0)   return INCLUDE;
-    if (strcmp(keyword, "continue")== 0)  return CONTINUE;
-    if (strcmp(keyword, "extends") == 0)  return INHERITANCE;
+    if (strcmp(keyword, "include") == 0)   return INCLUDE;
+    if (strcmp(keyword, "continue")== 0)   return CONTINUE;
+    if (strcmp(keyword, "extends") == 0)   return INHERITANCE;
     if (strcmp(keyword, "break")   == 0)   return BREAK;
-
     // types
-    if (strcmp(keyword, "i8")      == 0)      return I8;
-    if (strcmp(keyword, "i16")     == 0)     return I16;
-    if (strcmp(keyword, "i32")     == 0)     return I32;
-    if (strcmp(keyword, "i64")     == 0)     return I64;
+    if (strcmp(keyword, "i8")      == 0)    return I8;
+    if (strcmp(keyword, "i16")     == 0)    return I16;
+    if (strcmp(keyword, "i32")     == 0)    return I32;
+    if (strcmp(keyword, "i64")     == 0)    return I64;
     if (strcmp(keyword, "i128")    == 0)    return I128;
-    if (strcmp(keyword, "f32")     == 0)     return F32;
-    if (strcmp(keyword, "f64")     == 0)     return F64;
+    if (strcmp(keyword, "f32")     == 0)    return F32;
+    if (strcmp(keyword, "f64")     == 0)    return F64;
     if (strcmp(keyword, "f128")    == 0)    return F128;
     if (strcmp(keyword, "bool")    == 0)    return BOOL;
-    if (strcmp(keyword, "string")  == 0)  return STRING_TYPE;
+    if (strcmp(keyword, "string")  == 0)    return STRING_TYPE;
     if (strcmp(keyword, "void")    == 0)    return VOID;
 
     return IDENTIFIER;
