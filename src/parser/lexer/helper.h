@@ -149,7 +149,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "super")   == 0)   return SUPER;
     if (strcmp(keyword, "this")    == 0)   return THIS;
     if (strcmp(keyword, "true")    == 0)   return TRUE;
-    if (strcmp(keyword, "var")     == 0)   return VAR;
+    if (strcmp(keyword, "have")    == 0)   return VAR;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
     if (strcmp(keyword, "include") == 0)   return INCLUDE;
     if (strcmp(keyword, "continue")== 0)   return CONTINUE;
