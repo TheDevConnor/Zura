@@ -1,5 +1,4 @@
-#ifndef AZURA_MEMORY_H
-#define AZURA_MEMORY_H
+#pragma once
 
 #include <stdlib.h>
 
@@ -22,5 +21,3 @@
 void* reallocate(void* pointer, size_t old_size, size_t new_size);
 void sweep();
 void free_objects();
-
-#endif // AZURA_MEMORY_H

@@ -15,6 +15,7 @@ GC_PATH := src/garbage_collector
 MEMORY_PATH := src/memory
 NATIVEFN_PATH := src/native
 SRC_PARSER_PATH := src/parser
+TYPE_PATH := src/types
 VM_PATH := src/vm
 
 TARGET := $(BIN_PATH)
@@ -27,7 +28,7 @@ ifeq ($(OS),Windows_NT)
 	RM := del /q 
 endif
 
-SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp) $(wildcard $(VM_PATH)/*.cpp) $(wildcard $(COMPILER_PATH)/*.cpp) $(wildcard $(NATIVEFN_PATH)/*.cpp)
+SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp) $(wildcard $(VM_PATH)/*.cpp) $(wildcard $(COMPILER_PATH)/*.cpp) $(wildcard $(NATIVEFN_PATH)/*.cpp) $(wildcard $(TYPE_PATH)/*.cpp)
 
 workflow:
 # --> Linux 

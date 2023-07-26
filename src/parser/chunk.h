@@ -1,5 +1,4 @@
-#ifndef AZUA_CHUNK_H
-#define AZUA_CHUNK_H
+#pragma once
 
 #include "../common.h"
 #include "../compiler/value.h"
@@ -80,5 +79,3 @@ void init_chunk(Chunk *chunk);
 void free_chunk(Chunk *chunk);
 void write_chunk(Chunk *chunk, uint8_t byte, int line);
 int add_constant(Chunk *chunk, Value value);
-
-#endif // AZUA_CHUNK_H

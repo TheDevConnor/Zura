@@ -1,5 +1,4 @@
-#ifndef AZURA_VM_H
-#define AZURA_VM_H
+#pragma once
 
 #include "../compiler/object.h"
 #include "../compiler/value.h"
@@ -55,5 +54,3 @@ void free_vm();
 InterpretResult interpret(const char* source);
 void push(Value value);
 Value pop();
-
-#endif // AZURA_VM_H

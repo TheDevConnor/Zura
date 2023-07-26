@@ -1,5 +1,4 @@
-#ifndef PARSER_HELPER_H
-#define PARSER_HELPER_H
+#pragma once
 
 #include "../../compiler/object.h"
 #include "../lexer/lexer.h"
@@ -319,7 +318,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {SUPER,         {super_,    nullptr,  PREC_NONE}},
     {THIS,          {_this,     nullptr,  PREC_NONE}},
     {TRUE,          {literal,   nullptr,  PREC_NONE}},
-    {HAVE,          {nullptr,   nullptr,  PREC_NONE}},
+    {VAR,          {nullptr,   nullptr,  PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,  PREC_NONE}},
     {MODULE,        {nullptr,   nullptr,  PREC_NONE}},
     {INCLUDE,       {nullptr,   nullptr,  PREC_NONE}},
@@ -332,12 +331,10 @@ unordered_map<TokenKind, ParseRule> rules = {
 const unordered_map<TokenKind, bool> return_context = {
     {CLASS, true},
     {FUNC, true},
-    {HAVE, true},
+    {VAR, true},
     {FOR, true},
     {IF, true},
     {WHILE, true},
     {INFO, true},
     {RETURN, true}
 };
-
-#endif // PARSER_HELPER_H

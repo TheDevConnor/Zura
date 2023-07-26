@@ -1,5 +1,4 @@
-#ifndef AZURA_TERMINAL_COLOR_H
-#define AZURA_TERMINAL_COLOR_H
+#pragma once
 
 enum TColor {
     RED,
@@ -25,5 +24,3 @@ const char* set_color(TColor color) {
         default: return "\033[0m";
     }
 }
-
-#endif // AZURA_TERMINAL_COLOR_H

@@ -1,5 +1,4 @@
-#ifndef AZURA_LEXER_H
-#define AZURA_LEXER_H
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -48,5 +47,3 @@ Token scan_token() {
     error_token("Unexpected character.");
     return make_token(ERROR_TOKEN);
 }
-
-#endif // AZURA_LEXER_H

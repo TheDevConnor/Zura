@@ -1,5 +1,4 @@
-#ifndef AZURA_GC_H
-#define AZURA_GC_H
+#pragma once
 
 #include "../compiler/object.h"
 #include "../compiler/value.h"
@@ -11,5 +10,3 @@ void mark_object(Obj* object);
 void mark_value(Value value);
 void mark_roots();
 void collect_garbage();
-
-#endif // AZURA_GC_H

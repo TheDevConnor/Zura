@@ -1,5 +1,4 @@
-#ifndef AZURE_TABLE_H
-#define AZURE_TABLE_H
+#pragma once
 
 #include "../common.h"
 #include "value.h"
@@ -30,5 +29,3 @@ ObjString* table_find_string(Table* table, const char* chars, int length, uint32
 
 void table_remove_white(Table* table);
 void mark_table(Table* table);
-
-#endif // AZURE_TABLE_H

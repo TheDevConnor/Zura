@@ -1,5 +1,4 @@
-#ifndef AZURA_VALUE_H
-#define AZURA_VALUE_H
+#pragma once
 
 #include <iostream>
 #include <cstring>
@@ -95,5 +94,3 @@ void print_value(Value value);
 void init_value_array(ValueArray* array);
 void write_value_array(ValueArray* array, Value value);
 void free_value_array(ValueArray* array);
-
-#endif // AZURA_VALUE_H

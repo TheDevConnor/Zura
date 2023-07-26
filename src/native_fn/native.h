@@ -1,5 +1,4 @@
-#ifndef AZURA_NATIVE_H
-#define AZURA_NATIVE_H
+#pragma once
 
 #include <iostream>
 #include <cstring>
@@ -204,5 +203,3 @@ void define_all_natives() {
     define_native("cos", cos_native);
     define_native("tan", tan_native);
 }
-
-#endif //AZURA_NATIVE_H

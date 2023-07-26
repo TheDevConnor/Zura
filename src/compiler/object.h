@@ -1,5 +1,4 @@
-#ifndef AZURA_OBJECT_H
-#define AZURA_OBJECT_H
+#pragma once
 
 #include "../parser/chunk.h"
 #include "../common.h"
@@ -127,5 +126,3 @@ void print_object(Value value);
 static inline bool is_obj_type(Value value, ObjType type) {
     return IS_OBJ(value) && AS_OBJ(value)->type == type;
 }
-
-#endif //AZURA_OBJECT_H

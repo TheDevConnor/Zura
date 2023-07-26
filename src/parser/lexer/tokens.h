@@ -1,5 +1,4 @@
-#ifndef AZURA_TOKENS_H
-#define AZURA_TOKENS_H
+#pragma once
 
 using namespace std;
 
@@ -26,7 +25,7 @@ typedef enum {
 
     // Keywords!
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,
-    INFO, INPUT, RETURN, SUPER, THIS, TRUE, HAVE, WHILE, MODULE,
+    INFO, INPUT, RETURN, SUPER, THIS, TRUE, VAR, WHILE, MODULE,
     INCLUDE, CONTINUE, BREAK, BIT_AND, BIT_OR,
     
     ERROR_TOKEN,
@@ -45,5 +44,3 @@ typedef struct {
 void init_tokenizer(const char* source);
 const char* get_source_line_start(int line);
 Token scan_token();
-
-#endif // AZURA_TOKENS_H

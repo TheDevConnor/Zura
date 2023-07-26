@@ -268,7 +268,7 @@ void declaration() {
     class_declaration();
   } else if (parser.match(FUNC)) {
     func_declaration();
-  } else if (parser.match(HAVE)) {
+  } else if (parser.match(VAR)) {
     var_declaration();
   } else {
     statement();

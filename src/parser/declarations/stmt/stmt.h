@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../helper/parser_helper.h"
 #include "../../chunk.h"
 
@@ -29,7 +31,7 @@ void for_statement() {
   loop_variable_name.start = nullptr;
 
   parser.consume(LEFT_PAREN, "Expect '(' after 'for'.");
-  if (parser.match(HAVE)) {
+  if (parser.match(VAR)) {
     loop_variable_name = parser.current;
     var_declaration();
     loop_variable = current->local_count - 1;
