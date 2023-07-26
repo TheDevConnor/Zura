@@ -67,6 +67,7 @@ zura.exe --help
 
 ## Examples
 
+### Current code examples do not work as intended!
 Here are some examples showcasing the features and syntax of zura Lang:
 
 ### Fibonacci Sequence

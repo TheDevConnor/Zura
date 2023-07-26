@@ -156,6 +156,19 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "extends") == 0)  return INHERITANCE;
     if (strcmp(keyword, "break")   == 0)   return BREAK;
 
+    // types
+    if (strcmp(keyword, "i8")      == 0)      return I8;
+    if (strcmp(keyword, "i16")     == 0)     return I16;
+    if (strcmp(keyword, "i32")     == 0)     return I32;
+    if (strcmp(keyword, "i64")     == 0)     return I64;
+    if (strcmp(keyword, "i128")    == 0)    return I128;
+    if (strcmp(keyword, "f32")     == 0)     return F32;
+    if (strcmp(keyword, "f64")     == 0)     return F64;
+    if (strcmp(keyword, "f128")    == 0)    return F128;
+    if (strcmp(keyword, "bool")    == 0)    return BOOL;
+    if (strcmp(keyword, "string")  == 0)  return STRING_TYPE;
+    if (strcmp(keyword, "void")    == 0)    return VOID;
+
     return IDENTIFIER;
 }
 

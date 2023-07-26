@@ -21,12 +21,18 @@ typedef enum {
     INCREMENT, DECREMENT,    // ++ --
 
     // Literals!
-    IDENTIFIER, STRING, NUMBER, INAPPEND, FLOAT,
+    IDENTIFIER, STRING, NUMBER, INAPPEND,
 
     // Keywords!
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,
     INFO, INPUT, RETURN, SUPER, THIS, TRUE, VAR, WHILE, MODULE,
     INCLUDE, CONTINUE, BREAK, BIT_AND, BIT_OR,
+
+    // Types!
+    I8, I16, I32, I64, I128, // ints
+    F32, F64, F128,          // floats
+    BOOL, STRING_TYPE,       // bool and string
+    VOID,                    // void
     
     ERROR_TOKEN,
     // End of file!
