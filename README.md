@@ -216,7 +216,7 @@ For example 'have add := 45.2 + 2;'
 Contributions to zura Lang are welcome! If you find any bugs, have suggestions for improvements, or want to contribute new features, please submit a pull request.
 
 ## License
-zura Lang is licensed under the MIT License. Feel free to use, modify, and distribute the language for personal or commercial projects.
+zura Lang is licensed under the GNU GPLv3 License. Feel free to use, modify, and distribute the language for personal or commercial projects.
 
 We hope you find zura Lang useful and enjoyable to work with. If you have any questions or need further assistance, please don't hesitate to reach out.
 
