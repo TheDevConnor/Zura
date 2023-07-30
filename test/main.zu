@@ -1,4 +1,3 @@
-fn main() {
-    info "Hello, world!";
-}
-main();
+info std_sqrt(4);
+
+info std_sqrt(4);

@@ -318,7 +318,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {SUPER,         {super_,    nullptr,  PREC_NONE}},
     {THIS,          {_this,     nullptr,  PREC_NONE}},
     {TRUE,          {literal,   nullptr,  PREC_NONE}},
-    {VAR,          {nullptr,   nullptr,  PREC_NONE}},
+    {VAR,           {nullptr,   nullptr,  PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,  PREC_NONE}},
     {MODULE,        {nullptr,   nullptr,  PREC_NONE}},
     {INCLUDE,       {nullptr,   nullptr,  PREC_NONE}},
