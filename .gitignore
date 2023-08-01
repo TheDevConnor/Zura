@@ -1,4 +1,5 @@
-bin/*
+bin/
+obj/
 .vscode/settings.json
 *.swp
 *~
