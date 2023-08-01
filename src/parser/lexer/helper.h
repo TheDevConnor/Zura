@@ -24,16 +24,16 @@ void init_tokenizer(const char* source) {
 }
 
 const char* get_source_line_start(int line) {
-    const char* current = scanner.start;
+    const char* current = scanner.source;
     int current_line = 1;
 
-    while (current_line < line) {
+    while (current_line < line && *current != '\0') {
         if (*current == '\n') current_line++;
         current++;
     }
 
     // Include leading whitespace
-    while (*current != '\n' && isspace(*current)) current--;
+    while (*current != '\n' && *current != '\0' && isspace(*current)) current--;
     if (*current++ == '\n') current++;
     return current;
 }
@@ -149,7 +149,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "super")   == 0)   return SUPER;
     if (strcmp(keyword, "this")    == 0)   return THIS;
     if (strcmp(keyword, "true")    == 0)   return TRUE;
-    if (strcmp(keyword, "have")    == 0)   return VAR;
+    if (strcmp(keyword, "var")    == 0)   return VAR;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
     if (strcmp(keyword, "include") == 0)   return INCLUDE;
     if (strcmp(keyword, "continue")== 0)   return CONTINUE;

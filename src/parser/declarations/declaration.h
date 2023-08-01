@@ -93,6 +93,9 @@ void func_declaration() {
 void var_declaration() {
   uint8_t global = parser_variable("Expect variable name.");
 
+  if (parser.match(EQUAL))
+    parser.error("You must use a ':=' to declare a variable! While '=' is used for reassignment.");
+
   if (parser.match(WALRUS))
     expression();
   else

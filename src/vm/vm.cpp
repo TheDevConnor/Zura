@@ -339,11 +339,17 @@ ObjModule *load_module(ObjString *name) {
 
     string source(buffer.begin(), buffer.end());
 
+    // ObjFunction* result = compile(source.c_str());
+    // if (!result) {
+    //     // Handle the error appropriately, such as returning an error value or
+    //     // throwing an exception.
+    //     runtimeError("Error loading module!");
+    //     exit(1);
+    // }
+
     InterpretResult result = interpret(source.c_str());
     if (result != INTERPRET_OK) {
-        // Handle the error appropriately, such as returning an error value or
-        // throwing an exception.
-        runtimeError("Error loading module!");
+        runtime_error("Error loading module!");
         exit(1);
     }
 
