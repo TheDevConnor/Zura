@@ -34,7 +34,9 @@ If you are on linux and you want to install it using the make command do this:
 ```
 git clone https://github.com/TheDevConnor/Zura-v2
 cd Zura-v2
-bash ./build.sh linux
+
+chmod a+x build.sh 
+./build.sh
 ```
 
 Now add the zura.exe to your path and you are done! It will be located in the bin folder.
