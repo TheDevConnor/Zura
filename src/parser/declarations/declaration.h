@@ -95,6 +95,8 @@ void var_declaration() {
 
   if (parser.match(EQUAL))
     parser.error("You must use a ':=' to declare a variable! While '=' is used for reassignment.");
+  if (parser.match(COLON))
+    parser.error("You must use a ':=' to declare a variable! While ':' is used for type annotation.");
 
   if (parser.match(WALRUS))
     expression();

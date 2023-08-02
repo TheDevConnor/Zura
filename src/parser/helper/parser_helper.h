@@ -64,7 +64,7 @@ public:
         // Print to the error
         int num_spaces = token->column - 3;
         for (int i = 0; i < num_spaces; i++) cout << " ";
-        cout << colorize(RED) << "^" << colorize(RESET);
+        cout << colorize(RED) << "^" << colorize(RESET) << " ";
 
         // Print the error message
         cout << message << "\n";
