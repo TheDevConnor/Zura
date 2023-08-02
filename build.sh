@@ -58,7 +58,7 @@ linux() {
     for file in $SOURCE_FILES; do
         current_file=$((current_file + 1))
         print_progress_bar "$current_file" "$total_files" "Building (Linux)" "zura" 0 30 "#"
-        $CXX -c "$file" -o "$OBJ_PATH\\${file##*/}.o" $CXXFLAGS
+        $CXX -c "$file" -o "$OBJ_PATH/${file##*/}.o" $CXXFLAGS
     done
 
     # Collect all object files and specify them for linking
