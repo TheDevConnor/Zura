@@ -40,12 +40,12 @@ clean() {
     echo "Cleaning..."
     rm -f "$BIN_PATH"/*
     rm -f "$OBJ_PATH"/*
-    mkdir -p "$BIN_PATH" # Create the bin directory if it doesn't exist
-    mkdir -p "$OBJ_PATH" # Create the obj directory if it doesn't exist
     echo "Cleaned"
 }
 
 linux() {
+    mkdir -p "$BIN_PATH" # Create the bin directory if it doesn't exist
+    mkdir -p "$OBJ_PATH" # Create the obj directory if it doesn't exist
     # For Linux, use backslashes in the paths
     TARGET="$BIN_PATH/zura"
 
@@ -69,6 +69,8 @@ linux() {
 }
 
 windows() {
+    mkdir -p "$BIN_PATH" # Create the bin directory if it doesn't exist
+    mkdir -p "$OBJ_PATH" # Create the obj directory if it doesn't exist
     # For Windows, use backslashes in the paths
     TARGET="$BIN_PATH\\zura.exe"
 
