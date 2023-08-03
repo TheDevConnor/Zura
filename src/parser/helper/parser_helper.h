@@ -59,10 +59,10 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        fprintf(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start);
+        fprintf_s(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start - 1);
 
         // Print to the error
-        int num_spaces = token->column - 3;
+        int num_spaces = token->column - 2;
         for (int i = 0; i < num_spaces; i++) cout << " ";
         cout << colorize(RED) << "^" << colorize(RESET) << " ";
 

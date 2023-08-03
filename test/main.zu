@@ -8,7 +8,7 @@ class Math {
         return this.val1 + this.val2;
     }
 }
-var math := Math(1, 2);
+have math := Math(1, 2);
 info math.add();
 
 // TODO: Going to fix methods next
