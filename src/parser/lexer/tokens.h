@@ -10,7 +10,7 @@ typedef enum {
     COMMA, DOT, MINUS, PLUS,     // , . - +
     SEMICOLON, SLASH, STAR,      // ; / *
     HASHTAG, COLON, MODULO,      // # : %
-    DOLLAR,  POWER,              // $ ^
+    DOLLAR,  POWER, TILDE,       // $ ^
 
     // One or two character tokens!
     BANG, BANG_EQUAL,        // ! !=

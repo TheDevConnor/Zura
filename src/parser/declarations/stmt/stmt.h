@@ -2,6 +2,7 @@
 
 #include "../../helper/parser_helper.h"
 #include "../../chunk.h"
+#include <string>
 
 void expression_statement() {
   expression();

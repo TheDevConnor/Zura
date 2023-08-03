@@ -31,6 +31,7 @@ Token scan_token() {
         case '/': return make_token(SLASH);
         case '%': return make_token(MODULO);
         case '#': return make_token(HASHTAG);
+        case '~': return make_token(TILDE);
         case '+': return make_token(match('+') ? INCREMENT     : PLUS);
         case '-': return make_token(match('-') ? DECREMENT     : MINUS);
         case '&': return make_token(match('&') ? AND           : BIT_AND);

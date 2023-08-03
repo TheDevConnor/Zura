@@ -746,7 +746,7 @@ static InterpretResult run() {
       push(result);
       frame = &vm.frames[vm.frame_count - 1];
       break;
-  }
+    }
     default: {
       cout << "Unknown opcode " << instruction;
       return INTERPRET_RUNTIME_ERROR;

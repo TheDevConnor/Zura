@@ -183,23 +183,23 @@ Value tan_native(int arg_count, Value* args) {
 }
 
 void define_all_natives() {
-    define_native("read_file", read_file_native);
+    define_native("std_file_readFile", read_file_native);
 
     define_native("len", len_native);
     define_native("clock", clock_native);
     define_native("exit", exit_native);
     define_native("sleep", sleep_native);
 
-    define_native("to_string", to_string_native);
-    define_native("to_number", to_number_native);
+    define_native("std_toString", to_string_native);
+    define_native("std_toNumber", to_number_native);
 
-    define_native("has_field", has_field_native);
-    define_native("get_field", get_field_native);
-    define_native("set_field", set_field_native);
-    define_native("delete_field", delete_field_native);
+    define_native("std_hasField", has_field_native);
+    define_native("std_getField", get_field_native);
+    define_native("std_setField", set_field_native);
+    define_native("std_deleteField", delete_field_native);
 
-    define_native("sqrt", squrt_native);
-    define_native("sin", sin_native);
-    define_native("cos", cos_native);
-    define_native("tan", tan_native);
+    define_native("std_math_sqrt", squrt_native);
+    define_native("std_math_sin", sin_native);
+    define_native("std_math_cos", cos_native);
+    define_native("std_math_tan", tan_native);
 }
