@@ -59,7 +59,7 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        fprintf_s(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start - 1);
+        fprintf(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start - 1);
 
         // Print to the error
         int num_spaces = token->column - 2;
