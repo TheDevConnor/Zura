@@ -1,5 +1,1 @@
-fn add(x, y) {
-    return x + y;
-}
-
-info add(1, 2);
+include "std/math";

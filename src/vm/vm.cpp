@@ -721,6 +721,12 @@ static InterpretResult run() {
       table_add_all(&module->variables, &vm.globals);
       break;
     }
+    case OP_STD: {
+      cout << "Standard library loaded\n";
+      ObjString* std_name = AS_STRING(pop()); // std/math -> math
+      std_name->chars += 4; // math
+      break;
+    }
     case OP_INFO: {
       print_value(pop());
       cout << "\n";

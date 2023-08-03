@@ -21,7 +21,7 @@
 #include <stdbool.h>
 
 #define DEBUG_STRESS_GC
-// #define DEBUG_LOG_GC
+#define DEBUG_LOG_GC
 
 // #define NAN_BOXING
 

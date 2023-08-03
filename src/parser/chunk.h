@@ -60,6 +60,7 @@ enum OpCode {
   // Statements
   OP_METHOD,
   OP_IMPORT,
+  OP_STD,
   OP_CLASS,
   OP_INPUT,
   OP_INFO,
