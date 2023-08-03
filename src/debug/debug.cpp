@@ -179,6 +179,9 @@ int disassemble_instruction(Chunk *chunk, int offset) {
   case OP_INPUT:
     return simple_instruction("OP_INPUT", offset);
 
+  case OP_STD:
+    return simple_instruction("OP_STD", offset);
+
   case OP_RETURN:
     return simple_instruction("OP_RETURN", offset);
   default:

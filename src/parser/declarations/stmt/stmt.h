@@ -2,6 +2,7 @@
 
 #include "../../helper/parser_helper.h"
 #include "../../chunk.h"
+#include "../../../native_fn/native.h"
 #include <string>
 
 void expression_statement() {
@@ -188,8 +189,7 @@ void include_statement() {
 
   if (string(moduleName->chars).find("std/") != string::npos) {
     parser.consume(SEMICOLON, "Expect ';' after value.");
-    emit_constant(OBJ_VAL(moduleName));
-    emit_byte(OP_STD);
+    define_native("len", len_native);
     return;
   }
 

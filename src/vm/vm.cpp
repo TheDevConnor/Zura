@@ -12,7 +12,6 @@
 #include <cmath>
 
 #include "../parser/helper/terminal_color.h"
-#include "../native_fn/native.h"
 #include "../parser/parser.h"
 #include "../compiler/object.h"
 #include "../memory/memory.h"
@@ -85,8 +84,6 @@ void init_vm() {
 
   vm.init_string = nullptr;
   vm.init_string = copy_string("init", 4);
-
-  define_all_natives();
 }
 
 void free_vm() {

@@ -8,12 +8,23 @@
 #include "../compiler/object.h"
 #include "../vm/vm.h"
 
-void define_native(const char* name, NativeFn function) {
+// void define_native(const char* name, NativeFn function) {
+//     push(OBJ_VAL(copy_string(name, (int)strlen(name))));
+//     push(OBJ_VAL(new_native(function)));
+//     // table_set(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+//     table_add_all(&vm.globals, &vm.strings);
+//     pop();
+//     pop();
+// }
+
+Value define_native(const char* name, NativeFn function) {
     push(OBJ_VAL(copy_string(name, (int)strlen(name))));
     push(OBJ_VAL(new_native(function)));
     table_set(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+    Value value = vm.stack[1];
     pop();
     pop();
+    return value;
 }
 
 Value has_field_native(int arg_count, Value* args) {
@@ -185,7 +196,7 @@ Value tan_native(int arg_count, Value* args) {
 void define_all_natives() {
     define_native("std_file_readFile", read_file_native);
 
-    define_native("len", len_native);
+    // define_native("len", len_native);
     define_native("clock", clock_native);
     define_native("exit", exit_native);
     define_native("sleep", sleep_native);
