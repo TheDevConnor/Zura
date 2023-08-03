@@ -54,17 +54,17 @@ public:
         else printf("at %s'%.*s'%s\n", colorize(RED), token->length, token->start, colorize(RESET));
 
         // iterator over the tokens in the current line
-        const char* line_start = token->start;
+        const char* line_start = get_source_line_start(token->line);
         const char* line_end = line_start;
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        cout << colorize(MAGENTA) << std::string(line_start, line_end - line_start) << "\n";
+        fprintf(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start - 1);
 
         // Print to the error
-        int num_spaces = token->column - 1;
+        int num_spaces = token->column - 2;
         for (int i = 0; i < num_spaces; i++) cout << " ";
-        cout << colorize(RED) << "^" << colorize(RESET);
+        cout << colorize(RED) << "^" << colorize(RESET) << " ";
 
         // Print the error message
         cout << message << "\n";

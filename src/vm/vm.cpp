@@ -84,6 +84,7 @@ void init_vm() {
   init_value_array(&vm.array_values);
 
   vm.init_string = nullptr;
+  vm.init_string = copy_string("init", 4);
 
   define_all_natives();
 }
@@ -92,6 +93,8 @@ void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
   free_table(&vm.arrays);
+
+  vm.init_string = nullptr;
 
   free_objects();
 }
@@ -123,7 +126,7 @@ bool call(Obj *callee, ObjFunction *function, int arg_count) {
   }
 
   if (vm.frame_count == FRAMES_MAX) {
-    runtimeError("Stack overflow!");
+    runtimeError("Stack overflow!🫃");
     return false;
   }
 
@@ -339,11 +342,17 @@ ObjModule *load_module(ObjString *name) {
 
     string source(buffer.begin(), buffer.end());
 
+    // ObjFunction* result = compile(source.c_str());
+    // if (!result) {
+    //     // Handle the error appropriately, such as returning an error value or
+    //     // throwing an exception.
+    //     runtimeError("Error loading module!");
+    //     exit(1);
+    // }
+
     InterpretResult result = interpret(source.c_str());
     if (result != INTERPRET_OK) {
-        // Handle the error appropriately, such as returning an error value or
-        // throwing an exception.
-        runtimeError("Error loading module!");
+        runtime_error("Error loading module!");
         exit(1);
     }
 

@@ -1,3 +1,30 @@
-info std_sqrt(4);
+class Math {
+    init(val1, val2) {
+        this.val1 = val1;
+        this.val2 = val2;
+    }
 
-info std_sqrt(4);
+    add() {
+        return this.val1 + this.val2;
+    }
+}
+have math := Math(1, 2);
+info math.add();
+
+// TODO: Going to fix methods next
+// class Math {
+//     init(val1, val2, op) {
+//         this.val1 = val1;
+//         this.val2 = val2;
+//         this.op   = op; 
+//     }
+//     method() {
+//         fn add () {
+//             if (this.op == "+") return this.val1 + this.val2;
+//         }
+
+//         add();
+//     }
+// }
+// var math := Math(1, 2, "+");
+// math.method();

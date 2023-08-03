@@ -17,7 +17,6 @@ void block() {
   parser.consume(RIGHT_BRACE, "Expect '}' after block.");
 }
 
-
 void info_statement() {
   expression();
   parser.consume(SEMICOLON, "Expect ';' after value.");
