@@ -1,5 +1,29 @@
 include "std";
 include "std/math";
-include "std/fs";
 
-info fs_readFile("test/test2.zu");
+info "-Math Standard Lib-";
+info "random -> " + toString(math_random());
+info "random range -> " + toString(math_random_range(1, 10));
+info "-------------------";
+info "abs -> " + toString(math_abs(-10));
+info "ceil -> " + toString(math_ceil(10.5));
+info "floor -> " + toString(math_floor(10.5));
+info "round -> " + toString(math_round(10.35));
+info "-------------------";
+info "sqrt -> " + toString(math_sqrt(4));
+info "-------------------";
+info "log -> " + toString(math_log(5, 10));
+info "log10 -> " + toString(math_log10(10));
+// these are in radians
+info "-------------------";
+info "sin -> " + toString(math_sin(10));
+info "cos -> " + toString(math_cos(10));
+info "tan -> " + toString(math_tan(10));
+info "-------------------";
+info "csc -> " + toString(math_csc(10));
+info "sec -> " + toString(math_sec(10));
+info "cot -> " + toString(math_cot(10));
+info "-------------------";
+info "asin -> " + toString(math_asin(10));
+info "acos -> " + toString(math_acos(10));
+info "atan -> " + toString(math_atan(10));`
