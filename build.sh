@@ -2,7 +2,7 @@
 
 # Variables
 CXX="g++"
-CXXFLAGS="-O2 -std=c++11 -Wall -Wextra"
+CXXFLAGS="-O2 -std=c++17 -Wall -Wextra"
 CXXFLAGS_DEBUG="-O0 -g -std=c++11 -Wall -ggdb3"
 VALGRIND="valgrind"
 BIN_PATH="bin"
