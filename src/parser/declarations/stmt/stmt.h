@@ -3,6 +3,7 @@
 #include "../../helper/parser_helper.h"
 #include "../../chunk.h"
 #include "../../../native_fn/native.h"
+#include "../../../native_fn/define_native.h"
 #include <string>
 
 void expression_statement() {
@@ -187,9 +188,18 @@ void include_statement() {
   parser.consume(STRING, "Expect string after 'using'.");
   ObjString *moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
 
-  if (string(moduleName->chars).find("std/") != string::npos) {
+  if (string(moduleName->chars).find("std") != string::npos) {
     parser.consume(SEMICOLON, "Expect ';' after value.");
-    define_native("len", len_native);
+    if (string(moduleName->chars).find("/fs") != string::npos) {
+      define_native("fs");
+      return;
+    }
+    if (string(moduleName->chars).find("/math") != string::npos) {
+      define_native("math");
+      return;
+    }
+
+    define_native("std");
     return;
   }
 

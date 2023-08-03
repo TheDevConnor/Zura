@@ -1,3 +1,5 @@
+include "std";
 include "std/math";
+include "std/fs";
 
-info len("Hello"); // 5
+info fs_readFile("test/test2.zu");
