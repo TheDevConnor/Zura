@@ -26,4 +26,4 @@ info "cot -> " + toString(math_cot(10));
 info "-------------------";
 info "asin -> " + toString(math_asin(10));
 info "acos -> " + toString(math_acos(10));
-info "atan -> " + toString(math_atan(10));`
+info "atan -> " + toString(math_atan(10));
