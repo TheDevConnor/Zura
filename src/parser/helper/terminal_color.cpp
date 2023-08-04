@@ -14,7 +14,8 @@ const char* set_color(TColor color) {
         case FG_DARK_BLUE: return "\033[0;34m";
         case FG_DARK_MAGENTA: return "\033[0;35m";
         case FG_DARK_CYAN: return "\033[0;36m";
-        case FG_DARK_WHITE: return "\033[0;37m";
+        case FG_DARK_GRAY: return "\033[0;37m";
+        case FG_LIGHT_GRAY: return "\033[0;90m";
         case FG_BRIGHT_RED: return "\033[0;91m";
         case FG_BRIGHT_GREEN: return "\033[0;92m";
         case FG_BRIGHT_YELLOW: return "\033[0;93m";
@@ -32,7 +33,8 @@ const char* set_color(TColor color) {
         case BG_DARK_BLUE: return "\033[0;44m";
         case BG_DARK_MAGENTA: return "\033[0;45m";
         case BG_DARK_CYAN: return "\033[0;46m";
-        case BG_DARK_WHITE: return "\033[0;47m";
+        case BG_DARK_GRAY: return "\033[0;47m";
+        case BG_LIGHT_GRAY: return "\033[0;100m";
         case BG_BRIGHT_RED: return "\033[0;101m";
         case BG_BRIGHT_GREEN: return "\033[0;102m";
         case BG_BRIGHT_YELLOW: return "\033[0;103m";
