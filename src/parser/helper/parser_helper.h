@@ -21,12 +21,12 @@ public:
         panic_mode = true;
 
         printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
-        set_color(YELLOW), set_color(CYAN), token->line, set_color(RESET), 
-            set_color(YELLOW), set_color(CYAN), token->column - 1, set_color(RESET));
+                set_color(FG_BRIGHT_YELLOW), set_color(FG_BRIGHT_CYAN), token->line, set_color(RESET), 
+            set_color(FG_BRIGHT_YELLOW), set_color(FG_BRIGHT_CYAN), token->column - 1, set_color(RESET));
 
         if (token->kind == EOF_TOKEN) printf("at end \n");
         else if (token->kind == ERROR_TOKEN) {}
-        else printf("at %s'%.*s'%s\n", set_color(RED), token->length, token->start, set_color(RESET));
+        else printf("at %s'%.*s'%s\n", set_color(FG_BRIGHT_RED), token->length, token->start, set_color(RESET));
 
         // iterator over the tokens in the current line
         const char* line_start = get_source_line_start(token->line);
@@ -34,12 +34,12 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        fprintf(stderr, "%s%.*s\n", set_color(MAGENTA), (int)(line_end - line_start), line_start - 1);
+        fprintf(stderr, "%s%.*s\n", set_color(FG_BRIGHT_MAGENTA), (int)(line_end - line_start), line_start - 1);
 
         // Print to the error
         int num_spaces = token->column - 2;
         for (int i = 0; i < num_spaces; i++) cout << " ";
-        cout << set_color(RED) << "^" << set_color(RESET) << " ";
+        cout << set_color(FG_BRIGHT_RED) << "^" << set_color(RESET) << " ";
 
         // Print the error message
         cout << message << "\n";

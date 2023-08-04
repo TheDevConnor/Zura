@@ -43,16 +43,16 @@ void runtimeError(const char *format, ...) {
   size_t instruction = vm.frames->ip - vm.frames->closure->function->chunk.code - 1;
   int line = vm.frames->closure->function->chunk.lines[instruction];
   if (vm.frames->closure->function->name != nullptr) {
-    cout << "[" << set_color(YELLOW) << "line" << set_color(RESET) << " -> " 
-         << set_color(RED) << line << set_color(RESET) << "][" << set_color(YELLOW)
-         << "pos" << set_color(RESET) << " -> " << set_color(RED) << instruction
-         << set_color(RESET) << "][" << set_color(YELLOW) << "func" << set_color(RESET)
-         << " -> " << set_color(RED) << vm.frames->closure->function->name->chars
+    cout << "[" << set_color(FG_BRIGHT_YELLOW) << "line" << set_color(RESET) << " -> " 
+         << set_color(FG_BRIGHT_RED) << line << set_color(RESET) << "][" << set_color(FG_BRIGHT_YELLOW)
+         << "pos" << set_color(RESET) << " -> " << set_color(FG_BRIGHT_RED) << instruction
+         << set_color(RESET) << "][" << set_color(FG_BRIGHT_YELLOW) << "func" << set_color(RESET)
+         << " -> " << set_color(FG_BRIGHT_RED) << vm.frames->closure->function->name->chars
          << set_color(RESET) << "] in script \n";
   } else {
-    cout << "[" << set_color(YELLOW) << "line" << set_color(RESET) << " -> " 
-         << set_color(RED) << line << set_color(RESET) << "][" << set_color(YELLOW)
-         << "pos" << set_color(RESET) << " -> " << set_color(RED) << instruction
+    cout << "[" << set_color(FG_BRIGHT_YELLOW) << "line" << set_color(RESET) << " -> " 
+         << set_color(FG_BRIGHT_RED) << line << set_color(RESET) << "][" << set_color(FG_BRIGHT_YELLOW)
+         << "pos" << set_color(RESET) << " -> " << set_color(FG_BRIGHT_RED) << instruction
          << set_color(RESET) << "] in script \n";
   }
 
@@ -111,11 +111,11 @@ Value peek(int distance) { return vm.stack_top[-1 - distance]; }
 bool call(Obj *callee, ObjFunction *function, int arg_count) {
   if (arg_count != function->arity) {
     string message = "Expected -> ";
-    message += set_color(RED);
+    message += set_color(FG_BRIGHT_RED);
     message += to_string(function->arity);
     message += set_color(RESET);
     message += " arguments but got -> ";
-    message += set_color(RED);
+    message += set_color(FG_BRIGHT_RED);
     message += to_string(arg_count);
     message += set_color(RESET);
     runtimeError(message.c_str());
@@ -185,7 +185,7 @@ bool invoke_from_class(ObjClass *klass, ObjString *name, int arg_count) {
   Value method;
   if (!table_get(&klass->methods, name, &method)) {
     string message = "Undefined property";
-    message += set_color(RED);
+    message += set_color(FG_BRIGHT_RED);
     message += name->chars;
     message += set_color(RESET);
     runtimeError(message.c_str());
@@ -210,7 +210,7 @@ bool bind_method(ObjClass *klass, ObjString *name) {
   Value method;
   if (!table_get(&klass->methods, name, &method)) {
     string message = "Undefined property -> ";
-    message += set_color(RED);
+    message += set_color(FG_BRIGHT_RED);
     message += name->chars;
     message += set_color(RESET);
     runtimeError(message.c_str());
@@ -298,7 +298,7 @@ ObjModule *load_module(ObjString *name) {
         }
 
         string errorMessage = "Circular dependency detected in modules -> '";
-        errorMessage += set_color(RED);
+        errorMessage += set_color(FG_BRIGHT_RED);
         for (size_t i = 0; i < circularDependence.size(); i++) {
             errorMessage += circularDependence[i]->chars;
             if (i < circularDependence.size() - 1) {
@@ -322,7 +322,7 @@ ObjModule *load_module(ObjString *name) {
     FILE *file = fopen(moduleFileName.c_str(), "rb");
     if (!file) {
         std::string errorMessage = "Could not load file -> '";
-        errorMessage += set_color(RED);
+        errorMessage += set_color(FG_BRIGHT_RED);
         errorMessage += moduleFileName;
         errorMessage += set_color(RESET);
         errorMessage += "'";
@@ -439,7 +439,7 @@ static InterpretResult run() {
       if (table_set(&vm.globals, name, peek(0))) {
         table_delete(&vm.globals, name);
         string message = "Undefined variable -> ";
-        message += set_color(RED);
+        message += set_color(FG_BRIGHT_RED);
         message += string(name->chars, name->length);
         message += set_color(RESET);
         runtimeError(message.c_str());
@@ -452,7 +452,7 @@ static InterpretResult run() {
       Value value;
       if (!table_get(&vm.globals, name, &value)) {
         string message = "Undefined variable -> ";
-        message += set_color(RED);
+        message += set_color(FG_BRIGHT_RED);
         message += string(name->chars, name->length);
         message += set_color(RESET);
         runtimeError(message.c_str());

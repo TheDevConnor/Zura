@@ -1,4 +1,7 @@
 include "test/test";
 
-info x;
-x = "Hello World";
+fn main(){
+    main();
+}
+
+main();
