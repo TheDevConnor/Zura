@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../terminal_colors/terminal_color.h"
 #include "../../compiler/object.h"
 #include "../lexer/lexer.h"
 #include "../../common.h"
@@ -7,32 +8,6 @@
 using namespace std;
 
 class Parser {
-private:
-    typedef enum {
-        RED,
-        GREEN,
-        YELLOW,
-        BLUE,
-        MAGENTA,
-        CYAN,
-        WHITE,
-        RESET
-    } Color;
-
-    const char* colorize(Color color) {
-        switch (color) {
-            case RED: return "\033[0;31m";
-            case GREEN: return "\033[0;32m";
-            case YELLOW: return "\033[0;33m";
-            case BLUE: return "\033[0;34m";
-            case MAGENTA: return "\033[0;35m";
-            case CYAN: return "\033[0;36m";
-            case WHITE: return "\033[0;37m";
-            case RESET: return "\033[0m";
-            default: return "\033[0m";
-        }
-    }
-
 public:
     Token current;
     Token previous;
@@ -46,12 +21,12 @@ public:
         panic_mode = true;
 
         printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
-        colorize(YELLOW), colorize(CYAN), token->line, colorize(RESET), 
-            colorize(YELLOW), colorize(CYAN), token->column - 1, colorize(RESET));
+        set_color(YELLOW), set_color(CYAN), token->line, set_color(RESET), 
+            set_color(YELLOW), set_color(CYAN), token->column - 1, set_color(RESET));
 
         if (token->kind == EOF_TOKEN) printf("at end \n");
         else if (token->kind == ERROR_TOKEN) {}
-        else printf("at %s'%.*s'%s\n", colorize(RED), token->length, token->start, colorize(RESET));
+        else printf("at %s'%.*s'%s\n", set_color(RED), token->length, token->start, set_color(RESET));
 
         // iterator over the tokens in the current line
         const char* line_start = get_source_line_start(token->line);
@@ -59,12 +34,12 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        fprintf(stderr, "%s%.*s\n", colorize(MAGENTA), (int)(line_end - line_start), line_start - 1);
+        fprintf(stderr, "%s%.*s\n", set_color(MAGENTA), (int)(line_end - line_start), line_start - 1);
 
         // Print to the error
         int num_spaces = token->column - 2;
         for (int i = 0; i < num_spaces; i++) cout << " ";
-        cout << colorize(RED) << "^" << colorize(RESET) << " ";
+        cout << set_color(RED) << "^" << set_color(RESET) << " ";
 
         // Print the error message
         cout << message << "\n";

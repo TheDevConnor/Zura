@@ -11,7 +11,7 @@
 #include <string>
 #include <cmath>
 
-#include "../parser/helper/terminal_color.h"
+#include "../terminal_colors/terminal_color.h"
 #include "../parser/parser.h"
 #include "../compiler/object.h"
 #include "../memory/memory.h"

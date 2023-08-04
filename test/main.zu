@@ -1,29 +1,5 @@
-include "std";
-include "std/math";
+fn main() {
+    main();
+}
 
-info "-Math Standard Lib-";
-info "random -> " + toString(mathRandom());
-info "random range -> " + toString(mathRandomRange(1, 10));
-info "-------------------";
-info "abs -> " + toString(mathAbs(-10));
-info "ceil -> " + toString(mathCeil(10.5));
-info "floor -> " + toString(mathFloor(10.5));
-info "round -> " + toString(mathRound(10.35));
-info "-------------------";
-info "sqrt -> " + toString(mathSqrt(4));
-info "-------------------";
-info "log -> " + toString(mathLog(5, 10));
-info "log10 -> " + toString(mathLog10(10));
-// these are in radians
-info "-------------------";
-info "sin -> " + toString(mathSin(10));
-info "cos -> " + toString(mathCos(10));
-info "tan -> " + toString(mathTan(10));
-info "-------------------";
-info "csc -> " + toString(mathCsc(10));
-info "sec -> " + toString(mathSec(10));
-info "cot -> " + toString(mathCot(10));
-info "-------------------";
-info "asin -> " + toString(mathAsin(10));
-info "acos -> " + toString(mathAcos(10));
-info "atan -> " + toString(mathAtan(10));
+main();

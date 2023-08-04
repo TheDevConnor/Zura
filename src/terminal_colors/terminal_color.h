@@ -11,7 +11,7 @@ enum TColor {
     RESET
 };
 
-const char* set_color(TColor color) {
+inline const char* set_color(TColor color) {
     switch (color) {
         case RED: return "\033[0;31m";
         case GREEN: return "\033[0;32m";
