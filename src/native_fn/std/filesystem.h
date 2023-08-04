@@ -45,6 +45,6 @@ class Fs {
 
     public:
     static void define_filesystem_natives() {
-        Natives::define_native("fs_readFile", read_file_native);
+        Natives::define_native("fsReadFile", read_file_native);
     }
 };

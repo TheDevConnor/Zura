@@ -167,29 +167,29 @@ class Math {
 
     public:
     static void define_math_natives() {
-        Natives::define_native("math_random", random_native);
-        Natives::define_native("math_random_range", random_range_native);
+        Natives::define_native("mathRandom", random_native);
+        Natives::define_native("mathRandomRange", random_range_native);
 
-        Natives::define_native("math_round", round_native);
-        Natives::define_native("math_floor", floor_native);
-        Natives::define_native("math_ceil", ceil_native);
-        Natives::define_native("math_abs", abs_native);
+        Natives::define_native("mathRound", round_native);
+        Natives::define_native("mathFloor", floor_native);
+        Natives::define_native("mathCeil", ceil_native);
+        Natives::define_native("mathAbs", abs_native);
 
-        Natives::define_native("math_log", log_native);
-        Natives::define_native("math_log10", log10_native);
+        Natives::define_native("mathLog", log_native);
+        Natives::define_native("mathLog10", log10_native);
 
-        Natives::define_native("math_sqrt", sqrt_native);
+        Natives::define_native("mathSqrt", sqrt_native);
 
-        Natives::define_native("math_sin", sin_native);
-        Natives::define_native("math_cos", cos_native);
-        Natives::define_native("math_tan", tan_native);
+        Natives::define_native("mathSin", sin_native);
+        Natives::define_native("mathCos", cos_native);
+        Natives::define_native("mathTan", tan_native);
 
-        Natives::define_native("math_csc", csc_native); // Cosecant
-        Natives::define_native("math_sec", sec_native); // Secant
-        Natives::define_native("math_cot", cot_native); // Cotangent
+        Natives::define_native("mathCsc", csc_native); // Cosecant
+        Natives::define_native("mathSec", sec_native); // Secant
+        Natives::define_native("mathCot", cot_native); // Cotangent
 
-        Natives::define_native("math_asin", asin_native); // Arch Sine
-        Natives::define_native("math_acos", acos_native); // Arch Cosine
-        Natives::define_native("math_atan", atan_native); // Arch Tangent
+        Natives::define_native("mathAsin", asin_native); // Arch Sine
+        Natives::define_native("mathAcos", acos_native); // Arch Cosine
+        Natives::define_native("mathAtan", atan_native); // Arch Tangent
     }
 };
