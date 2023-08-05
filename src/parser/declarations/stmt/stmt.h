@@ -190,6 +190,10 @@ void include_statement() {
 
   if (string(moduleName->chars).find("std") != string::npos) {
     parser.consume(SEMICOLON, "Expect ';' after value.");
+    if (string(moduleName->chars).find("/os") != string::npos) {
+      define_native("os");
+      return;
+    }
     if (string(moduleName->chars).find("/fs") != string::npos) {
       define_native("fs");
       return;
@@ -198,7 +202,6 @@ void include_statement() {
       define_native("math");
       return;
     }
-
     define_native("std");
     return;
   }

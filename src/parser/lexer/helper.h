@@ -132,17 +132,17 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
 
     if (strcmp(keyword, "class")   == 0)   return CLASS;
     if (strcmp(keyword, "else")    == 0)   return ELSE;
-    if (strcmp(keyword, "false")   == 0)   return FALSE;
+    if (strcmp(keyword, "false")   == 0)   return TK_FALSE;
     if (strcmp(keyword, "for")     == 0)   return FOR;
     if (strcmp(keyword, "fn")      == 0)   return FUNC;
     if (strcmp(keyword, "if")      == 0)   return IF;
     if (strcmp(keyword, "info")    == 0)   return INFO;
-    if (strcmp(keyword, "input")   == 0)   return INPUT;
+    if (strcmp(keyword, "input")   == 0)   return TK_INPUT;
     if (strcmp(keyword, "nil")     == 0)   return NIL;
     if (strcmp(keyword, "return")  == 0)   return RETURN;
     if (strcmp(keyword, "super")   == 0)   return SUPER;
-    if (strcmp(keyword, "this")    == 0)   return THIS;
-    if (strcmp(keyword, "true")    == 0)   return TRUE;
+    if (strcmp(keyword, "this")    == 0)   return TK_THIS;
+    if (strcmp(keyword, "true")    == 0)   return TK_TRUE;
     if (strcmp(keyword, "have")     == 0)   return VAR;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
     if (strcmp(keyword, "include") == 0)   return INCLUDE;
@@ -158,9 +158,9 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "f32")     == 0)    return F32;
     if (strcmp(keyword, "f64")     == 0)    return F64;
     if (strcmp(keyword, "f128")    == 0)    return F128;
-    if (strcmp(keyword, "bool")    == 0)    return BOOL;
+    if (strcmp(keyword, "bool")    == 0)    return TK_BOOL;
     if (strcmp(keyword, "string")  == 0)    return STRING_TYPE;
-    if (strcmp(keyword, "void")    == 0)    return VOID;
+    if (strcmp(keyword, "void")    == 0)    return TK_VOID;
 
     return IDENTIFIER;
 }

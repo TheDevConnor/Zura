@@ -1,5 +1,6 @@
-fn main() {
-    main();
-}
+include "std";
 
-main();
+include "std/os";
+have start := clock();
+osExecuteCommand("nvim");
+info toString(clock() - start) + "sec";

@@ -247,10 +247,10 @@ void binary(bool can_assign) {
 void literal(bool can_assign) {
   (void)can_assign;
   switch (parser.previous.kind) {
-  case FALSE:
+  case TK_FALSE:
     emit_byte(OP_FALSE);
     break;
-  case TRUE:
+  case TK_TRUE:
     emit_byte(OP_TRUE);
     break;
   case NIL:

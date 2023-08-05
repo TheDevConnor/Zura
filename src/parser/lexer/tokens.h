@@ -24,15 +24,15 @@ typedef enum {
     IDENTIFIER, STRING, NUMBER, INAPPEND,
 
     // Keywords!
-    AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,
-    INFO, INPUT, RETURN, SUPER, THIS, TRUE, VAR, WHILE, MODULE,
+    AND, CLASS, ELSE, TK_FALSE, FUNC, FOR, IF, NIL, OR,
+    INFO, TK_INPUT, RETURN, SUPER, TK_THIS, TK_TRUE, VAR, WHILE, MODULE,
     INCLUDE, CONTINUE, BREAK, BIT_AND, BIT_OR,
 
     // Types!
     I8, I16, I32, I64, I128, // ints
     F32, F64, F128,          // floats
-    BOOL, STRING_TYPE,       // bool and string
-    VOID,                    // void
+    TK_BOOL, STRING_TYPE,       // bool and string
+    TK_VOID,                    // void
     
     ERROR_TOKEN,
     // End of file!

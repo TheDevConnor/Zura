@@ -42,9 +42,57 @@ class Fs {
         fclose(file);
         return OBJ_VAL(copy_string(buffer, (int)bytes_read));
     }
+    static Value write_file_native(int arg_count, Value* args) {
+        if (arg_count != 2) return BOOL_VAL(false);
+        if (!IS_STRING(args[0])) return BOOL_VAL(false);
+        if (!IS_STRING(args[1])) return BOOL_VAL(false);
 
+        ObjString* path = AS_STRING(args[0]);
+        ObjString* content = AS_STRING(args[1]);
+
+        FILE* file = fopen(path->chars, "wb");
+        if (file == NULL) {
+            return NIL_VAL;
+        }
+
+        size_t bytes_written = fwrite(content->chars, sizeof(char), content->length, file);
+        if (bytes_written < content->length) {
+            fclose(file);
+            return NIL_VAL;
+        }
+
+        fclose(file);
+        return BOOL_VAL(true);
+    }
+    static Value generate_file_native(int arg_count, Value* args) {
+        if (arg_count != 1) return BOOL_VAL(false);
+        if (!IS_STRING(args[0])) return BOOL_VAL(false);
+
+        ObjString* path = AS_STRING(args[0]);
+        FILE* file = fopen(path->chars, "wb");
+        if (file == NULL) {
+            return NIL_VAL;
+        }
+
+        fclose(file);
+        return BOOL_VAL(true);
+    }
+    static Value delete_file_native(int arg_count, Value* args) {
+        if (arg_count != 1) return BOOL_VAL(false);
+        if (!IS_STRING(args[0])) return BOOL_VAL(false);
+
+        ObjString* path = AS_STRING(args[0]);
+        if (remove(path->chars) != 0) {
+            return NIL_VAL;
+        }
+
+        return BOOL_VAL(true);
+    }
     public:
     static void define_filesystem_natives() {
         Natives::define_native("fsReadFile", read_file_native);
+        Natives::define_native("fsWriteFile", write_file_native);
+        Natives::define_native("fsGenerateFile", generate_file_native);
+        Natives::define_native("fsDeleteFile", delete_file_native);
     }
 };

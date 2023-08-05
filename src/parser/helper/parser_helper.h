@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../terminal_colors/terminal_color.h"
+// #include "../../terminal_colors/terminal_color.h"
+#include "../../lib/colorize.hpp"
 #include "../../compiler/object.h"
 #include "../lexer/lexer.h"
 #include "../../common.h"
@@ -20,13 +21,13 @@ public:
         if(panic_mode) return;
         panic_mode = true;
 
-        printf("\n[%sline: %s%d%s] [%spos: %s%d%s] Error: ", 
-                set_color(FG_BRIGHT_YELLOW), set_color(FG_BRIGHT_CYAN), token->line, set_color(RESET), 
-            set_color(FG_BRIGHT_YELLOW), set_color(FG_BRIGHT_CYAN), token->column - 1, set_color(RESET));
+        cout << "\n[" << termcolor::yellow << "line: " << termcolor::cyan << token->line << termcolor::reset << "] " <<
+                  "[" << termcolor::yellow << "pos: "  << termcolor::cyan << token->column - 1 << termcolor::reset << "] Error: ";
 
         if (token->kind == EOF_TOKEN) printf("at end \n");
-        else if (token->kind == ERROR_TOKEN) {}
-        else printf("at %s'%.*s'%s\n", set_color(FG_BRIGHT_RED), token->length, token->start, set_color(RESET));
+        else if (token->kind == ERROR_TOKEN) {} // Nothing
+        else cout << "at " << termcolor::red << "'" << termcolor::reset << termcolor::cyan << token->length << 
+                              termcolor::reset << termcolor::red << "'" << termcolor::reset << "\n";
 
         // iterator over the tokens in the current line
         const char* line_start = get_source_line_start(token->line);
@@ -34,12 +35,12 @@ public:
         while (*line_end != '\n' && *line_end != '\0') line_end++;
 
         // Print the line
-        fprintf(stderr, "%s%.*s\n", set_color(FG_BRIGHT_MAGENTA), (int)(line_end - line_start), line_start - 1);
-
+        cout << termcolor::magenta << string(line_start - 1, line_end - line_start) << termcolor::reset << "\n";
+        
         // Print to the error
         int num_spaces = token->column - 2;
         for (int i = 0; i < num_spaces; i++) cout << " ";
-        cout << set_color(FG_BRIGHT_RED) << "^" << set_color(RESET) << " ";
+        cout << termcolor::red << "^" << termcolor::reset << " ";
 
         // Print the error message
         cout << message << "\n";
@@ -280,7 +281,7 @@ unordered_map<TokenKind, ParseRule> rules = {
     {AND,           {nullptr,      and_,  PREC_AND}},
     {CLASS,         {nullptr,   nullptr,  PREC_NONE}},
     {ELSE,          {nullptr,   nullptr,  PREC_NONE}},
-    {FALSE,         {literal,   nullptr,  PREC_NONE}},
+    {TK_FALSE,      {literal,   nullptr,  PREC_NONE}},
     {FUNC,          {nullptr,   nullptr,  PREC_NONE}},
     {FOR,           {nullptr,   nullptr,  PREC_NONE}},
     {CONTINUE,      {nullptr,   nullptr,  PREC_NONE}},
@@ -291,14 +292,14 @@ unordered_map<TokenKind, ParseRule> rules = {
     {INFO,          {nullptr,   nullptr,  PREC_NONE}},
     {RETURN,        {nullptr,   nullptr,  PREC_NONE}},
     {SUPER,         {super_,    nullptr,  PREC_NONE}},
-    {THIS,          {_this,     nullptr,  PREC_NONE}},
-    {TRUE,          {literal,   nullptr,  PREC_NONE}},
+    {TK_THIS,       {_this,     nullptr,  PREC_NONE}},
+    {TK_TRUE,       {literal,   nullptr,  PREC_NONE}},
     {VAR,           {nullptr,   nullptr,  PREC_NONE}},
     {WHILE,         {nullptr,   nullptr,  PREC_NONE}},
     {MODULE,        {nullptr,   nullptr,  PREC_NONE}},
     {INCLUDE,       {nullptr,   nullptr,  PREC_NONE}},
     {INAPPEND,      {nullptr,   nullptr,  PREC_NONE}},
-    {INPUT,         {input_statement,   nullptr,  PREC_NONE}},
+    {TK_INPUT,      {input_statement,   nullptr,  PREC_NONE}},
     {ERROR_TOKEN,   {nullptr,   nullptr,  PREC_NONE}},
     {EOF_TOKEN,     {nullptr,   nullptr,  PREC_NONE}},
 };
