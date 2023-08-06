@@ -735,7 +735,6 @@ static InterpretResult run() {
       break;
     }
     default: {
-      cout << "Unknown opcode " << instruction;
       return INTERPRET_RUNTIME_ERROR;
     }
     }

@@ -1,6 +1,4 @@
+include "test/test";
 include "std";
 
-include "std/os";
-have start := clock();
-osExecuteCommand("nvim");
-info toString(clock() - start) + "sec";
+info y;
