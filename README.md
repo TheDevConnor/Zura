@@ -19,8 +19,6 @@ If you have any suggestions please create an issue, and in the isssue add in the
 - **Syntax Highlighting**: Here is the link for the syntax highlighting! [Zura Lang Syntax Highlighting](https://github.com/TheDevConnor/Zura-Highlighting)
 
 ## Installation
-Prior to building, an installation of Python 3 must be on the host system.
-
 To start using zura Lang, follow the installation instructions below:
 
 If you are on windows and you want to install it using the make command do this:
