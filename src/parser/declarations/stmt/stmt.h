@@ -188,6 +188,10 @@ void include_statement() {
       define_native("math");
       return;
     }
+    if (string(moduleName->chars).find("/logger") != string::npos) { 
+      define_native("logger");
+      return;
+    }
     define_native("std");
     return;
   }
