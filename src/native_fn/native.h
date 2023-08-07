@@ -3,6 +3,7 @@
 #include <string>
 
 #include "std/math.h"
+#include "std/logger.h"
 #include "std/filesystem.h"
 #include "std/std.h"
 #include "std/os.h"
@@ -20,5 +21,8 @@ void define_native(std::string native_name) {
     }
     if (native_name == "std") {
         StdFunc::define_std_natives();
+    }
+    if (native_name == "logger") {
+        Logger::define_logger_natives();
     }
 }
