@@ -1,9 +1,8 @@
-// while loop
-// while(true) {
-//     info "Hello World!";
-// }
+include "std";
 
 // for loop
-while (have i := 0; i <= 10) : (i = ++i) {
-    info i;
-}
+info("Hello World");
+have start := clock();
+
+sleep(2);
+info clock() - start;

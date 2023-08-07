@@ -295,6 +295,8 @@ void statement() {
   else if (parser.match(INCLUDE))
     include_statement();
   // Block statements
+  else if (parser.match(SLEEP)) 
+    sleep_statment();
   else if (parser.match(LEFT_BRACE)) {
     begin_scope();
     block();

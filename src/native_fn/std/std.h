@@ -17,15 +17,6 @@ class StdFunc {
         return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
     }
 
-    static Value sleep_native(int arg_count, Value* args) {
-        if (arg_count != 1) return BOOL_VAL(false);
-        if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
-
-        double seconds = AS_NUMBER(args[0]);
-        clock_t start = clock();
-        while ((clock() - start) / CLOCKS_PER_SEC < seconds);
-        return NIL_VAL;
-    }
 
     static Value len_native(int arg_count, Value* args) {
         if (arg_count != 1) return BOOL_VAL(false);
@@ -72,7 +63,6 @@ class StdFunc {
         Natives::define_native("len", len_native);
         Natives::define_native("clock", clock_native);
         Natives::define_native("exit", exit_native);
-        Natives::define_native("sleep", sleep_native);
         Natives::define_native("toString", to_string_native);
         Natives::define_native("toNumber", to_number_native);
     }

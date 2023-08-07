@@ -421,6 +421,18 @@ static InterpretResult run() {
       push(constant);
       break;
     }
+
+    case OP_SLEEP: { 
+      Value duration = peek(0);
+      if (!IS_NUMBER(duration)) {
+        runtimeError("Duration must be a number in seconds\n");
+        return INTERPRET_RUNTIME_ERROR;
+      } 
+      sleep(AS_NUMBER(duration));
+      table_add_all(&vm.globals, &vm.arrays);
+      break;
+    }
+
     // Global variable operation codes
     case OP_SET_GLOBAL: {
       ObjString *name = AS_STRING(read_constant());
@@ -713,14 +725,7 @@ static InterpretResult run() {
       cout << "\n";
       break;
     }
-    case OP_INPUT: {
-      print_value(pop());
-      cout << " ";
-      string input;
-      getline(cin, input);
-      push(OBJ_VAL(copy_string(input.c_str(), input.length())));
-      break;
-    }
+
     case OP_RETURN: {
       Value result = pop();
       close_upvalues(frame->slots);

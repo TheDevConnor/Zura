@@ -200,3 +200,11 @@ void include_statement() {
   emit_constant(OBJ_VAL(moduleName));
   emit_byte(OP_IMPORT);
 }
+
+void sleep_statment(){ 
+  parser.consume(LEFT_PAREN, "Expect '(' after 'sleep'."); 
+  expression();
+  parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
+  parser.consume(SEMICOLON, "Expect ';' after value.");
+  emit_byte(OP_SLEEP);
+}
