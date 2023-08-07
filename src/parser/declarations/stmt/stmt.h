@@ -32,15 +32,9 @@ void for_statement() {
   Token loop_variable_name;
   loop_variable_name.start = nullptr;
 
-  parser.consume(LEFT_PAREN, "Expect '(' after 'for'.");
-  if (parser.match(VAR)) {
-    loop_variable_name = parser.current;
-    var_declaration();
-    loop_variable = current->local_count - 1;
-  } else if (parser.match(SEMICOLON))
-    ; // No initializer
-  else
-    expression_statement();
+  loop_variable_name = parser.current;
+  var_declaration();
+  loop_variable = current->local_count - 1;
 
   int surrounding_loop_start = inner_most_loop_start;
   int surrounding_loop_scope = inner_most_loop_scope_depth;
@@ -50,43 +44,31 @@ void for_statement() {
   int exit_jump = -1;
   if (!parser.match(SEMICOLON)) {
     expression();
-    parser.consume(SEMICOLON, "Expect ';' after loop condition.");
 
     // Jump out of the loop if the condition is false
     exit_jump = emit_jump(OP_JUMP_IF_FALSE);
     emit_byte(OP_POP); // Condition
   }
+  parser.consume(RIGHT_PAREN, "Expect ')' after the conditions of the for loop.");
 
-  int body_jump = -1;
+  parser.consume(COLON, "Expect ':' after the conditions of the for loop.");
+
+  // increment
+  parser.consume(LEFT_PAREN, "Expect '(' after the colon.");
   if (!parser.match(RIGHT_PAREN)) {
-    body_jump = emit_jump(OP_JUMP);
+    int body_jump = emit_jump(OP_JUMP);
 
     int increment_start = compiling_chunk()->count;
     expression();
     emit_byte(OP_POP);
-    parser.consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+    parser.consume(RIGHT_PAREN, "Expect ')' after the increment of the for loop.");
 
     emit_loop(inner_most_loop_start);
     inner_most_loop_start = increment_start;
     patch_jump(body_jump);
   }
 
-  int inner_varuable = -1;
-  if (loop_variable != -1) {
-    begin_scope();
-    emit_bytes(OP_GET_LOCAL, (uint8_t)loop_variable);
-    add_local(loop_variable_name);
-    mark_initialized();
-    inner_varuable = current->local_count - 1;
-  }
-
   statement();
-
-  if (loop_variable != -1) {
-    emit_bytes(OP_GET_LOCAL, (uint8_t)inner_varuable);
-    emit_bytes(OP_SET_LOCAL, (uint8_t)loop_variable);
-    emit_byte(OP_POP);
-  }
 
   emit_loop(inner_most_loop_start);
 
@@ -100,6 +82,25 @@ void for_statement() {
   inner_most_loop_scope_depth = surrounding_loop_scope;
 
   end_scope();
+}
+
+void while_statement() {
+  int loop_start = compiling_chunk()->count;
+  parser.consume(LEFT_PAREN, "Expect '(' after 'while'.");
+  if (parser.match(VAR)) {
+    for_statement();
+    return;
+  }
+  expression();
+  parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
+
+  int exit_jump = emit_jump(OP_JUMP_IF_FALSE);
+  emit_byte(OP_POP);
+  statement();
+  emit_loop(loop_start);
+
+  patch_jump(exit_jump);
+  emit_byte(OP_POP);
 }
 
 void if_statement() {
@@ -139,21 +140,6 @@ void return_statement() {
     parser.consume(SEMICOLON, "Expected ';' after the return value");
     emit_byte(OP_RETURN);
   }
-}
-
-void while_statement() {
-  int loop_start = compiling_chunk()->count;
-  parser.consume(LEFT_PAREN, "Expect '(' after 'while'.");
-  expression();
-  parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
-
-  int exit_jump = emit_jump(OP_JUMP_IF_FALSE);
-  emit_byte(OP_POP);
-  statement();
-  emit_loop(loop_start);
-
-  patch_jump(exit_jump);
-  emit_byte(OP_POP);
 }
 
 void continue_statement() {

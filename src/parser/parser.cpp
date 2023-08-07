@@ -291,8 +291,6 @@ void statement() {
     break_statement();
   else if (parser.match(WHILE))
     while_statement();
-  else if (parser.match(FOR))
-    for_statement();
   // Import statements
   else if (parser.match(INCLUDE))
     include_statement();
