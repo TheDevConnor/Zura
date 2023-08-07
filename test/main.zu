@@ -1,4 +1,9 @@
-include "test/test";
-include "std";
+// while loop
+// while(true) {
+//     info "Hello World!";
+// }
 
-info y;
+// for loop
+while (have i := 0; i <= 10) : (i = ++i) {
+    info i;
+}
