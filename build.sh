@@ -5,7 +5,8 @@ CXX="g++"
 CXXFLAGS="-O2 -std=c++17 -Wall -Wextra"
 CXXFLAGS_DEBUG="-O0 -g -std=c++11 -Wall -ggdb3"
 VALGRIND="valgrind"
-BIN_PATH="bin"
+UNIX_BIN_PATH="zbin"
+WINDOWS_BIN_PATH="bin"
 OBJ_PATH="obj"
 BIN_DEBUG_PATH="bin/debug"
 SRC_PATH="src"
@@ -38,16 +39,16 @@ print_progress_bar() {
 
 clean() {
     echo "Cleaning..."
-    rm -f "$BIN_PATH"/*
-    rm -f "$OBJ_PATH"/*
+    rm -rf "$BIN_PATH"
+    rm -rf "$OBJ_PATH"
     echo "Cleaned"
 }
 
 linux() {
-    mkdir -p "$BIN_PATH" # Create the bin directory if it doesn't exist
+    mkdir -p "$UNIX_BIN_PATH" # Create the bin directory if it doesn't exist
     mkdir -p "$OBJ_PATH" # Create the obj directory if it doesn't exist
     # For Linux, use backslashes in the paths
-    TARGET="$BIN_PATH/zura"
+    TARGET="$UNIX_BIN_PATH/zura"
 
     # Collect all source files and count them
     SOURCE_FILES=$(find "$SRC_PATH" -name "*.cpp")
@@ -69,10 +70,10 @@ linux() {
 }
 
 windows() {
-    mkdir -p "$BIN_PATH" # Create the bin directory if it doesn't exist
+    mkdir -p "$WINDOWS_BIN_PATH" # Create the bin directory if it doesn't exist
     mkdir -p "$OBJ_PATH" # Create the obj directory if it doesn't exist
     # For Windows, use backslashes in the paths
-    TARGET="$BIN_PATH\\zura.exe"
+    TARGET="$WINDOWS_BIN_PATH\\zura.exe"
 
     # Collect all source files and count them
     SOURCE_FILES=$(find "$SRC_PATH" -name "*.cpp")
