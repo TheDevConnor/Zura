@@ -144,6 +144,7 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "this")    == 0)   return TK_THIS;
     if (strcmp(keyword, "true")    == 0)   return TK_TRUE;
     if (strcmp(keyword, "have")     == 0)   return VAR;
+    if (strcmp(keyword, "static")  == 0)   return STATIC;
     if (strcmp(keyword, "while")   == 0)   return WHILE;
     if (strcmp(keyword, "include") == 0)   return INCLUDE;
     if (strcmp(keyword, "sleep")   == 0)   return SLEEP;

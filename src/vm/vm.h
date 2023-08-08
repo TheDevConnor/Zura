@@ -23,6 +23,7 @@ struct VM {
     Value* stack_top;
     Table globals;
     Table strings;
+    Table statics;
     ObjString* init_string;
     ObjUpvalue* open_upvalues;
 
