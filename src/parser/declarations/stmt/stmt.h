@@ -94,6 +94,12 @@ void while_statement() {
   expression();
   parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
 
+  if (parser.match(COLON)) {
+    parser.consume(LEFT_PAREN, "Expect '(' after ':'.");
+    expression();
+    parser.consume(RIGHT_PAREN, "Expect ')' after increment.");
+  }
+
   int exit_jump = emit_jump(OP_JUMP_IF_FALSE);
   emit_byte(OP_POP);
   statement();
