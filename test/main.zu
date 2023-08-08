@@ -3,6 +3,5 @@ include "std";
 // for loop
 info("Hello World");
 have start := clock();
-
-sleep(2);
+sleep(5);
 info clock() - start;

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdarg.h>
 #include <stdint.h>
+#include <unistd.h> 
 #include <cstring>
 #include <fstream>
 #include <vector>
