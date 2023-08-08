@@ -72,7 +72,9 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return constant_instruction("OP_SET_GLOBAL", chunk, offset);
   case OP_DEFINE_GLOBAL:
     return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
-
+  case OP_DEFINE_STATIC:
+    return constant_instruction("OP_DEFINE_STATIC", chunk, offset);
+    
   case OP_GET_LOCAL:
     return byte_instruction("OP_GET_LOCAL", chunk, offset);
   case OP_SET_LOCAL:
@@ -178,9 +180,11 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return simple_instruction("OP_INFO", offset);
   case OP_INPUT:
     return simple_instruction("OP_INPUT", offset);
-
   case OP_STD:
     return simple_instruction("OP_STD", offset);
+
+  case OP_SLEEP:
+    return simple_instruction("OP_SLEEP", offset);
 
   case OP_RETURN:
     return simple_instruction("OP_RETURN", offset);
