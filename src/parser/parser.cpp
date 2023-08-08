@@ -348,6 +348,9 @@ void statement()
   else if (parser.match(WHILE))
     while_statement();
   // Import statements
+  // Switch Cases
+  else if (parser.match(SWITCH))
+    switch_statement();
   else if (parser.match(INCLUDE))
     include_statement();
   // Block statements

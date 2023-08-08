@@ -151,6 +151,9 @@ static TokenKind perfect_hash_lookup(const char* keyword) {
     if (strcmp(keyword, "continue")== 0)   return CONTINUE;
     if (strcmp(keyword, "extends") == 0)   return INHERITANCE;
     if (strcmp(keyword, "break")   == 0)   return BREAK;
+    if (strcmp(keyword, "switch")  == 0)   return SWITCH;
+    if (strcmp(keyword, "case")    == 0)   return CASE;
+    if (strcmp(keyword, "default") == 0)   return DEFAULT;
     // types
     if (strcmp(keyword, "i8")      == 0)    return I8;
     if (strcmp(keyword, "i16")     == 0)    return I16;

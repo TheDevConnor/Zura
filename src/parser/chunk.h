@@ -61,6 +61,7 @@ enum OpCode {
   // Class operations
   OP_INHERIT,
   // Statements
+  OP_DUP,
   OP_METHOD,
   OP_IMPORT,
   OP_SLEEP,

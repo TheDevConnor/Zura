@@ -170,6 +170,72 @@ void break_statement() {
   parser.consume(SEMICOLON, "Expect ';' after 'break'.");
 }
 
+void switch_statement() {
+  expression();
+  parser.consume(LEFT_BRACE, "Expect '{' before switch cases.");
+
+  int state = 0; // 0: before all cases, 1: before default, 2: after default
+  int case_ends[UINT8_COUNT];
+  int case_count = 0;
+  int previous_case_skip = -1;
+
+  while(!parser.match(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
+    if (parser.match(CASE) || parser.match(DEFAULT)) {
+      TokenKind case_type = parser.previous.kind;
+      if (state == 2) {
+        parser.error("Cannot have a case or default after the default case.");
+      }
+
+      if (state == 1) {
+        // at the end of the previous case, jump to the end of the switch
+        case_ends[case_count++] = emit_jump(OP_JUMP);
+        // patch the previous case to jump to the end of the previous case
+        patch_jump(previous_case_skip);
+        emit_byte(OP_POP);
+      }
+
+      if (case_type == CASE) {
+        state = 1;
+
+        // See if the case is equal to the value
+        emit_byte(OP_DUP);
+        expression();
+
+        parser.consume(COLON, "Expect ':' after case value.");
+
+        emit_byte(OP_EQUAL);
+        previous_case_skip = emit_jump(OP_JUMP_IF_FALSE);
+
+        // pop the comparison result
+        emit_byte(OP_POP);
+      } else {
+        state = 2;
+        parser.consume(COLON, "Expect ':' after default.");
+        previous_case_skip = -1;
+      }
+    } else {
+      // Otherwise, it's a statement inside the current case
+      if (state == 0) {
+        parser.error("Expect 'case' or 'default' before switch body.");
+      }
+      statement();
+    }
+  }
+
+  // If we eneded without a default case, we need to patch the last case
+  if (state == 1) {
+    patch_jump(previous_case_skip);
+    emit_byte(OP_POP);
+  }
+
+  // Patch all the case jumps to the end of the switch
+  for (int i = 0; i < case_count; i++) {
+    patch_jump(case_ends[i]);
+  }
+
+  emit_byte(OP_POP); // pop the switch value
+}
+
 void include_statement() {
   parser.consume(STRING, "Expect string after 'using'.");
   ObjString *moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);

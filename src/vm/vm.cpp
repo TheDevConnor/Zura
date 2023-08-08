@@ -874,7 +874,7 @@ static InterpretResult run()
       cout << "\n";
       break;
     }
-
+    case OP_DUP: push(peek(0)); break;
     case OP_RETURN:
     {
       Value result = pop();
