@@ -1,4 +1,5 @@
 bin/
+zbin/
 obj/
 .vscode/settings.json
 *.swp
@@ -7,4 +8,5 @@ obj/
 *.exe
 *.pdb
 *.obj
+zura
 edit
