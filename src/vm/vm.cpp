@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include "../lib/colorize.hpp"
+#include "../helper/errors.h"
 #include "../parser/parser.h"
 #include "../compiler/object.h"
 #include "../memory/memory.h"
@@ -42,35 +43,6 @@ inline ObjFunction *get_frame_function(CallFrame *frame)
     return ((ObjClosure *)frame->function)->function;
 }
 
-void runtimeError(const char *format, ...)
-{
-  size_t instruction = vm.frames->ip - vm.frames->closure->function->chunk.code - 1;
-  int line = vm.frames->closure->function->chunk.lines[instruction];
-  if (vm.frames->closure->function->name != nullptr)
-  {
-    cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
-         << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-         << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
-         << termcolor::reset << "][" << termcolor::red << "func" << termcolor::reset
-         << " -> " << termcolor::red << vm.frames->closure->function->name->chars
-         << termcolor::reset << "] in script \n";
-  }
-  else
-  {
-    cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
-         << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-         << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
-         << termcolor::reset << "] in script \n";
-  }
-
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  fputs("\n", stderr);
-
-  reset_stack();
-}
 
 void init_vm()
 {
@@ -499,13 +471,15 @@ static InterpretResult run()
     case OP_SET_GLOBAL:
     {
       ObjString *name = AS_STRING(read_constant());
-      if (!table_set(&vm.statics, name, peek(0)))
+      
+      if (table_get(&vm.statics, name, nullptr))
       {
-        string message = "Can not redefine a static variable -> ";
+        string message = "Cannot assign to static variable -> ";
         message += string(name->chars, name->length);
         runtimeError(message.c_str());
         return INTERPRET_RUNTIME_ERROR;
       }
+
       if (table_set(&vm.globals, name, peek(0)))
       {
         table_delete(&vm.globals, name);
@@ -872,6 +846,14 @@ static InterpretResult run()
     {
       print_value(pop());
       cout << "\n";
+      break;
+    }
+    case OP_INPUT: {
+      print_value(pop());
+      cout << " ";
+      string value;
+      getline(cin, value);
+      push(OBJ_VAL(copy_string(value.c_str(), value.length())));
       break;
     }
     case OP_DUP: push(peek(0)); break;

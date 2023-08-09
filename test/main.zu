@@ -1,19 +1,2 @@
-include "std";
-
-fn getDayName(day_number) {
-    switch day_number {
-        case 1: return "Sunday";
-        case 2: return "Monday";
-        case 3: return "Tuesday";
-        case 4: return "Wednesday";
-        case 5: return "Thursday";
-        case 6: return "Friday";
-        case 7: return "Saturday";
-    default:
-        return "Invalid day number" + toString(day_number);
-    }
-}
-
-while (have i := 1; i <= 7) : (i = ++i) {
-    info "Day " + toString(i) + " is " + getDayName(i);
-}
+have name := input("What is your name?");
+info name + " is a cool name!";

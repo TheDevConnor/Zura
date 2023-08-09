@@ -94,6 +94,13 @@ void while_statement() {
   expression();
   parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
 
+  if (parser.match(COLON)) {
+    parser.consume(LEFT_PAREN, "Expect '(' after ':'.");
+    expression();
+    parser.consume(RIGHT_PAREN, "Expect ')' after increment.");
+    emit_byte(OP_POP);
+  }
+
   int exit_jump = emit_jump(OP_JUMP_IF_FALSE);
   emit_byte(OP_POP);
   statement();
@@ -124,7 +131,10 @@ void if_statement() {
 
 void input_statement(bool can_assign) {
   (void)can_assign;
+  parser.consume(LEFT_PAREN, "Expect '(' after 'input'.");
+  // get everything inside of the string
   expression();
+  parser.consume(RIGHT_PAREN, "Expect ')' after 'input'.");
   emit_byte(OP_INPUT);
 }
 
