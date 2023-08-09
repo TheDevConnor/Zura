@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include "../lib/colorize.hpp"
+#include "../helper/errors.h"
 #include "../parser/parser.h"
 #include "../compiler/object.h"
 #include "../memory/memory.h"
@@ -42,35 +43,6 @@ inline ObjFunction *get_frame_function(CallFrame *frame)
     return ((ObjClosure *)frame->function)->function;
 }
 
-void runtimeError(const char *format, ...)
-{
-  size_t instruction = vm.frames->ip - vm.frames->closure->function->chunk.code - 1;
-  int line = vm.frames->closure->function->chunk.lines[instruction];
-  if (vm.frames->closure->function->name != nullptr)
-  {
-    cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
-         << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-         << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
-         << termcolor::reset << "][" << termcolor::red << "func" << termcolor::reset
-         << " -> " << termcolor::red << vm.frames->closure->function->name->chars
-         << termcolor::reset << "] in script \n";
-  }
-  else
-  {
-    cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
-         << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-         << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
-         << termcolor::reset << "] in script \n";
-  }
-
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  fputs("\n", stderr);
-
-  reset_stack();
-}
 
 void init_vm()
 {
