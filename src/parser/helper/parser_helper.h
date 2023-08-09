@@ -5,6 +5,7 @@
 #include "../../compiler/object.h"
 #include "../lexer/lexer.h"
 #include "../../common.h"
+#include "../../helper/errors.h"
 
 using namespace std;
 
@@ -18,45 +19,10 @@ public:
 
   Parser() : had_error(false), panic_mode(false) {}
 
-  void error_parser(Token *token, const char *message)
-  {
-    if (panic_mode)
-      return;
-    panic_mode = true;
+ 
 
-    cout << "\n[" << termcolor::yellow << "line: " << termcolor::cyan << token->line << termcolor::reset << "] "
-         << "[" << termcolor::yellow << "pos: " << termcolor::cyan << token->column - 1 << termcolor::reset << "] Error: ";
-
-    if (token->kind == EOF_TOKEN)
-      printf("at end \n");
-    else if (token->kind == ERROR_TOKEN)
-    {
-    } // Nothing
-    else
-      cout << "at " << termcolor::red << "'" << termcolor::reset << termcolor::cyan << token->length << termcolor::reset << termcolor::red << "'" << termcolor::reset << "\n";
-
-    // iterator over the tokens in the current line
-    const char *line_start = get_source_line_start(token->line);
-    const char *line_end = line_start;
-    while (*line_end != '\n' && *line_end != '\0')
-      line_end++;
-
-    // Print the line
-    cout << termcolor::magenta << string(line_start - 1, line_end - line_start) << termcolor::reset << "\n";
-
-    // Print to the error
-    int num_spaces = token->column - 2;
-    for (int i = 0; i < num_spaces; i++)
-      cout << " ";
-    cout << termcolor::red << "^" << termcolor::reset << " ";
-
-    // Print the error message
-    cout << message << "\n";
-    had_error = true;
-  }
-
-  void error_at_current(const char *message) { error_parser(&current, message); }
-  void error(const char *message) { error_parser(&previous, message); }
+  void error_at_current(const char *message) { error_parser(current, current.column, message); }
+  void error(const char *message) { error_parser(previous, previous.column, message); }
 
   bool check(TokenKind kind) { return current.kind == kind; }
 
