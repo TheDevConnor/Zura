@@ -117,7 +117,11 @@ ObjString* copy_string(const char* chars, int length) {
     memcpy(heap_chars, chars, length);
     heap_chars[length] = '\0';
 
-    return allocate_string(heap_chars, length, hash);
+    ObjString* string = allocate_string(heap_chars, length, hash);
+
+    free(heap_chars);
+
+    return string;
 }
 
 ObjUpvalue* new_upvalue(Value* slot) {

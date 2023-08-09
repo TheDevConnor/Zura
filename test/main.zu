@@ -1,8 +1,8 @@
-include "std";
+fn fib(n) {
+  if (n <= 1) return n;
+  return fib(n - 1) + fib(n - 2);
+}
 
-while (have x := 0; x < 10) : (x = ++x) {
-    while (have j := 0; j < 10) : (j = ++j) {
-        info "j = " + toString(j);
-    }
-    info "x = " + toString(x);
+while (have i := 0; i <= 30) : (i = ++i) {
+  info fib(i);
 }

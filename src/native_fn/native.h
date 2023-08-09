@@ -6,13 +6,8 @@
 #include "std/logger.h"
 #include "std/filesystem.h"
 #include "std/std.h"
-#include "std/os.h"
-
 
 void define_native(std::string native_name) {
-    if (native_name == "os") {
-        Os::define_os_natives();
-    }
     if (native_name == "fs") {
         Fs::define_filesystem_natives();
     }
