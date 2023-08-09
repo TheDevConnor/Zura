@@ -499,13 +499,15 @@ static InterpretResult run()
     case OP_SET_GLOBAL:
     {
       ObjString *name = AS_STRING(read_constant());
-      // if (!table_set(&vm.statics, name, peek(0)))
-      // {
-      //   string message = "Can not redefine a static variable -> ";
-      //   message += string(name->chars, name->length);
-      //   runtimeError(message.c_str());
-      //   return INTERPRET_RUNTIME_ERROR;
-      // }
+      
+      if (table_get(&vm.statics, name, nullptr))
+      {
+        string message = "Cannot assign to static variable -> ";
+        message += string(name->chars, name->length);
+        runtimeError(message.c_str());
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
       if (table_set(&vm.globals, name, peek(0)))
       {
         table_delete(&vm.globals, name);
