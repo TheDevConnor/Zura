@@ -98,6 +98,7 @@ void while_statement() {
     parser.consume(LEFT_PAREN, "Expect '(' after ':'.");
     expression();
     parser.consume(RIGHT_PAREN, "Expect ')' after increment.");
+    emit_byte(OP_POP);
   }
 
   int exit_jump = emit_jump(OP_JUMP_IF_FALSE);

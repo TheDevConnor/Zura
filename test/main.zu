@@ -1,4 +1,4 @@
 have i := 0;
-while (true) : (i = i + 1) {
+while (i <= 1050) : (i = i + 1) {
     info i;
 }
