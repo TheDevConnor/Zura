@@ -131,7 +131,10 @@ void if_statement() {
 
 void input_statement(bool can_assign) {
   (void)can_assign;
+  parser.consume(LEFT_PAREN, "Expect '(' after 'input'.");
+  // get everything inside of the string
   expression();
+  parser.consume(RIGHT_PAREN, "Expect ')' after 'input'.");
   emit_byte(OP_INPUT);
 }
 
