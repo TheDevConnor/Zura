@@ -166,6 +166,10 @@ void parse_precedence(Precedence prec) {
     parser.error("Invalid assignment target.");
   }
 
+  if (can_assign && match(TK_INPUT)) {
+    input_statement(true);
+  }
+
   // Check for the array literal
   if (can_assign && parser.match(LEFT_BRACKET)) {
     array_literal(can_assign);

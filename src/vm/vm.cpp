@@ -848,6 +848,14 @@ static InterpretResult run()
       cout << "\n";
       break;
     }
+    case OP_INPUT: {
+      ObjString *input = AS_STRING(pop());
+      cout << input->chars << " ";
+      string value;
+      getline(cin, value);
+      push(OBJ_VAL(copy_string(value.c_str(), value.length())));
+      break;
+    }
     case OP_DUP: push(peek(0)); break;
     case OP_RETURN:
     {

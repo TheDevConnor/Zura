@@ -1,4 +1,2 @@
-have i := 0;
-while (i <= 1050) : (i = i + 1) {
-    info i;
-}
+have name := input("What is your name?");
+info name + " is a cool name!";
