@@ -1,2 +1,8 @@
-have name := input("What is your name?");
-info name + " is a cool name!";
+include "std";
+
+while (have x := 0; x < 10) : (x = ++x) {
+    while (have j := 0; j < 10) : (j = ++j) {
+        info "j = " + toString(j);
+    }
+    info "x = " + toString(x);
+}
