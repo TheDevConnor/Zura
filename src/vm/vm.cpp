@@ -849,8 +849,8 @@ static InterpretResult run()
       break;
     }
     case OP_INPUT: {
-      ObjString *input = AS_STRING(pop());
-      cout << input->chars << " ";
+      print_value(pop());
+      cout << " ";
       string value;
       getline(cin, value);
       push(OBJ_VAL(copy_string(value.c_str(), value.length())));
