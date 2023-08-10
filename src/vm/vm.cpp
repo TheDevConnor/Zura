@@ -27,6 +27,7 @@
 using namespace std;
 
 VM vm;
+ObjString* cpy_str = nullptr;
 
 void reset_stack()
 {
@@ -72,7 +73,7 @@ void free_vm()
   free_table(&vm.strings);
   free_table(&vm.arrays);
 
-  vm.init_string = nullptr;
+  delete vm.init_string;
 
   free_objects();
 }
@@ -896,8 +897,11 @@ static InterpretResult run()
 InterpretResult interpret(const char *source)
 {
   ObjFunction *function = compile(source);
-  if (function == nullptr)
+  if (function == nullptr) {
+    delete function;
+
     return INTERPRET_COMPILE_ERROR;
+  }
 
   push(OBJ_VAL(function));
   ObjClosure *closure = new_closure(function);

@@ -1,0 +1,1342 @@
+==26827== Memcheck, a memory error detector
+==26827== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==26827== Using Valgrind-3.21.0-d97fed7c3e-20230428 and LibVEX; rerun with -h for copyright info
+==26827== Command: zbin/zura test/main.zu
+==26827== Parent PID: 19032
+==26827== 
+--26827-- 
+--26827-- Valgrind options:
+--26827--    --leak-check=full
+--26827--    --show-leak-kinds=all
+--26827--    --track-origins=yes
+--26827--    --verbose
+--26827--    --log-file=valgrind-out.txt
+--26827-- Contents of /proc/version:
+--26827--   Linux version 6.1.42-0-virt (buildozer@build-edge-aarch64) (gcc (Alpine 13.1.1_git20230722) 13.1.1 20230722, GNU ld (GNU Binutils) 2.40) #1-Alpine SMP Thu, 27 Jul 2023 12:26:23 +0000
+--26827-- 
+--26827-- Arch and hwcaps: ARM64, LittleEndian, v8-dpcvap-rdm-atomics-fp16-vfp16
+--26827-- Page sizes: currently 4096, max supported 65536
+--26827-- Valgrind library directory: /usr/libexec/valgrind
+--26827-- Reading syms from /home/bear/Zura-v2/zbin/zura
+--26827-- Reading syms from /lib/ld-musl-aarch64.so.1
+--26827--    object doesn't have a symbol table
+--26827-- Reading syms from /usr/libexec/valgrind/memcheck-arm64-linux
+--26827--    object doesn't have a dynamic symbol table
+--26827-- Scheduler: using generic scheduler lock implementation.
+--26827-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==26827== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-26827-by-bear-on-???
+==26827== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-26827-by-bear-on-???
+==26827== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-26827-by-bear-on-???
+==26827== 
+==26827== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==26827== don't want to do, unless you know exactly what you're doing,
+==26827== or are doing some strange experiment):
+==26827==   /usr/libexec/valgrind/../../bin/vgdb --pid=26827 ...command...
+==26827== 
+==26827== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==26827==   /path/to/gdb zbin/zura
+==26827== and then give GDB the following command
+==26827==   target remote | /usr/libexec/valgrind/../../bin/vgdb --pid=26827
+==26827== --pid is optional if only one valgrind process is running
+==26827== 
+--26827-- Reading syms from /usr/libexec/valgrind/vgpreload_core-arm64-linux.so
+--26827--    object doesn't have a symbol table
+--26827-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so
+--26827--    object doesn't have a symbol table
+--26827-- REDIR: 0x4013df0 (libc.musl-aarch64.so.1:memset) redirected to 0x48f1fc4 (memset)
+--26827-- REDIR: 0x405e8dc (libc.musl-aarch64.so.1:strlen) redirected to 0x48ef028 (strlen)
+--26827-- REDIR: 0x4013c60 (libc.musl-aarch64.so.1:memcpy) redirected to 0x48f0438 (memcpy)
+--26827-- REDIR: 0x405e60c (libc.musl-aarch64.so.1:strcpy) redirected to 0x48ef0ec (strcpy)
+--26827-- REDIR: 0x405e510 (libc.musl-aarch64.so.1:strchr) redirected to 0x48eec4c (strchr)
+--26827-- REDIR: 0x405ea40 (libc.musl-aarch64.so.1:strncmp) redirected to 0x48ef5b4 (strncmp)
+--26827-- REDIR: 0x405eb04 (libc.musl-aarch64.so.1:strnlen) redirected to 0x48eefe0 (strnlen)
+--26827-- REDIR: 0x405ec18 (libc.musl-aarch64.so.1:strspn) redirected to 0x48f30f8 (strspn)
+--26827-- REDIR: 0x405e630 (libc.musl-aarch64.so.1:strcspn) redirected to 0x48f3058 (strcspn)
+--26827-- Reading syms from /usr/lib/libstdc++.so.6.0.32
+--26827--    object doesn't have a symbol table
+--26827-- REDIR: 0x405eb6c (libc.musl-aarch64.so.1:strrchr) redirected to 0x48eeb34 (strrchr)
+--26827-- Reading syms from /usr/lib/libgcc_s.so.1
+--26827--    object doesn't have a symbol table
+--26827-- REDIR: 0x4028bac (libc.musl-aarch64.so.1:malloc) redirected to 0x48e9410 (malloc)
+--26827-- REDIR: 0x405e5e4 (libc.musl-aarch64.so.1:strcmp) redirected to 0x48efd60 (strcmp)
+--26827-- REDIR: 0x405e11c (libc.musl-aarch64.so.1:memmove) redirected to 0x48f2068 (memmove)
+--26827-- REDIR: 0x405e53c (libc.musl-aarch64.so.1:strchrnul) redirected to 0x48f2874 (strchrnul)
+--26827-- REDIR: 0x49d9480 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x48e9af0 (operator new(unsigned long))
+--26827-- REDIR: 0x49d72b0 (libstdc++.so.6:operator delete(void*)) redirected to 0x48ebe1c (operator delete(void*))
+--26827-- REDIR: 0x402ad40 (libc.musl-aarch64.so.1:realloc) redirected to 0x48ede20 (realloc)
+--26827-- REDIR: 0x4028ac0 (libc.musl-aarch64.so.1:free) redirected to 0x48eb8c4 (free)
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+--26827-- REDIR: 0x49d9520 (libstdc++.so.6:operator new[](unsigned long)) redirected to 0x48eab68 (operator new[](unsigned long))
+--26827-- REDIR: 0x49d72e0 (libstdc++.so.6:operator delete[](void*)) redirected to 0x48ece2c (operator delete[](void*))
+--26827-- REDIR: 0x405db04 (libc.musl-aarch64.so.1:bcmp) redirected to 0x48f1940 (bcmp)
+==26827== Invalid read of size 1
+==26827==    at 0x48F198C: bcmp (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F0F3: table_find_string(Table*, char const*, int, unsigned int) (src/compiler/table.cpp:136)
+==26827==    by 0x11022F: copy_string(char const*, int) (src/compiler/object.cpp:113)
+==26827==    by 0x1162B3: init_compiler (src/parser/parser.cpp:24)
+==26827==    by 0x1162B3: function(FunctionType) (declaration.h:9)
+==26827==    by 0x1133C3: func_declaration (declaration.h:97)
+==26827==    by 0x1133C3: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befc40 is 0 bytes inside a block of size 4 free'd
+==26827==    at 0x48EB948: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x11030F: copy_string(char const*, int) (src/compiler/object.cpp:122)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x11025F: copy_string(char const*, int) (src/compiler/object.cpp:116)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 1
+==26827==    at 0x48F198C: bcmp (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F0F3: table_find_string(Table*, char const*, int, unsigned int) (src/compiler/table.cpp:136)
+==26827==    by 0x11022F: copy_string(char const*, int) (src/compiler/object.cpp:113)
+==26827==    by 0x11758F: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x11758F: named_variable(Token, bool) (???:393)
+==26827==    by 0x112463: _variable(bool) (expr.h:42)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827==    by 0x11655B: function(FunctionType) (declaration.h:26)
+==26827==    by 0x1133C3: func_declaration (declaration.h:97)
+==26827==    by 0x1133C3: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==  Address 0x4befc40 is 0 bytes inside a block of size 4 free'd
+==26827==    at 0x48EB948: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x11030F: copy_string(char const*, int) (src/compiler/object.cpp:122)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x11025F: copy_string(char const*, int) (src/compiler/object.cpp:116)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbb0 is 0 bytes inside a block of size 80 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10D0E4: run (src/vm/vm.cpp:755)
+==26827==    by 0x10D0E4: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10CEE8: run (src/vm/vm.cpp:0)
+==26827==    by 0x10CEE8: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10CD48: run (src/vm/vm.cpp:457)
+==26827==    by 0x10CD48: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10CD6C: run (src/vm/vm.cpp:500)
+==26827==    by 0x10CD6C: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+--26827-- REDIR: 0x405dcb8 (libc.musl-aarch64.so.1:memcmp) redirected to 0x48f17b0 (memcmp)
+--26827-- REDIR: 0x405dc00 (libc.musl-aarch64.so.1:memchr) redirected to 0x48efe68 (memchr)
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10EA83: free_table(Table*) (src/compiler/table.cpp:18)
+==26827==    by 0x10B18F: free_vm() (src/vm/vm.cpp:74)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf08b0 is 0 bytes inside a block of size 192 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10EC2B: adjust_capacity(Table*, int) (src/compiler/table.cpp:68)
+==26827==    by 0x10ED8B: table_set(Table*, ObjString*, Value) (src/compiler/table.cpp:92)
+==26827==    by 0x10CF07: run (src/vm/vm.cpp:0)
+==26827==    by 0x10CF07: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10EA83: free_table(Table*) (src/compiler/table.cpp:18)
+==26827==    by 0x10B197: free_vm() (src/vm/vm.cpp:75)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef070 is 0 bytes inside a block of size 192 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10EC2B: adjust_capacity(Table*, int) (src/compiler/table.cpp:68)
+==26827==    by 0x10ED8B: table_set(Table*, ObjString*, Value) (src/compiler/table.cpp:92)
+==26827==    by 0x110303: allocate_string (src/compiler/object.cpp:82)
+==26827==    by 0x110303: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== Invalid free() / delete / delete[] / realloc()
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10B1AB: free_vm() (src/vm/vm.cpp:78)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== Invalid free() / delete / delete[] / realloc()
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10B1C3: free_vm() (src/vm/vm.cpp:80)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10E92F: free_chunk(Chunk*) (src/parser/chunk.cpp:17)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf02f0 is 0 bytes inside a block of size 64 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10E9D7: write_chunk(Chunk*, unsigned char, int) (src/parser/chunk.cpp:28)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x117C6F: expression (parser_helper.h:175)
+==26827==    by 0x117C6F: argument_list() (???:221)
+==26827==    by 0x111DC3: call(bool) (expr.h:110)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827== 
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10E93B: free_chunk(Chunk*) (src/parser/chunk.cpp:18)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf01b0 is 0 bytes inside a block of size 256 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10E9BF: write_chunk(Chunk*, unsigned char, int) (src/parser/chunk.cpp:27)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x117C6F: expression (parser_helper.h:175)
+==26827==    by 0x117C6F: argument_list() (???:221)
+==26827==    by 0x111DC3: call(bool) (expr.h:110)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827== 
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F3EB: free_value_array(ValueArray*) (src/compiler/value.cpp:65)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4beff00 is 0 bytes inside a block of size 128 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10F3A3: write_value_array(ValueArray*, Value) (src/compiler/value.cpp:58)
+==26827==    by 0x10EA43: add_constant(Chunk*, Value) (src/parser/chunk.cpp:37)
+==26827==    by 0x1125D3: make_constant (parser_helper.h:213)
+==26827==    by 0x1125D3: emit_constant (parser_helper.h:232)
+==26827==    by 0x1125D3: _number(bool) (expr.h:9)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114AA3: expression (parser_helper.h:175)
+==26827==    by 0x114AA3: if_statement() (stmt.h:125)
+==26827==    by 0x11436B: statement() (src/parser/parser.cpp:342)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827==    by 0x11655B: function(FunctionType) (declaration.h:26)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x110710: free_objects() (src/memory/memory.cpp:82)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbb8 is 8 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 4
+==26827==    at 0x110740: free_obj(Obj*) (src/memory/memory.cpp:33)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbb0 is 0 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10E924: free_chunk(Chunk*) (src/parser/chunk.cpp:17)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbc8 is 24 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10E930: free_chunk(Chunk*) (src/parser/chunk.cpp:18)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd8 is 40 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 8
+==26827==    at 0x10F3E0: free_value_array(ValueArray*) (src/compiler/value.cpp:65)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 8
+==26827==    at 0x10F3EC: init_value_array (src/compiler/value.cpp:50)
+==26827==    by 0x10F3EC: free_value_array(ValueArray*) (???:66)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe8 is 56 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 8
+==26827==    at 0x10E948: init_chunk (src/parser/chunk.cpp:8)
+==26827==    by 0x10E948: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd8 is 40 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 8
+==26827==    at 0x10E950: init_chunk (src/parser/chunk.cpp:9)
+==26827==    by 0x10E950: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbc8 is 24 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 4
+==26827==    at 0x10E954: init_chunk (src/parser/chunk.cpp:10)
+==26827==    by 0x10E954: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd0 is 32 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 4
+==26827==    at 0x10E958: init_chunk (src/parser/chunk.cpp:11)
+==26827==    by 0x10E958: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe0 is 48 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid write of size 8
+==26827==    at 0x10E964: init_chunk (src/parser/chunk.cpp:13)
+==26827==    by 0x10E964: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe8 is 56 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== Invalid read of size 4
+==26827==    at 0x1107F4: free_obj(Obj*) (src/memory/memory.cpp:67)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef010 is 16 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== HEAP SUMMARY:
+==26827==     in use at exit: 74,062 bytes in 6 blocks
+==26827==   total heap usage: 97 allocs, 93 frees, 81,695 bytes allocated
+==26827== 
+==26827== Searching for pointers to 6 not-freed blocks
+==26827== Checked 318,048 bytes
+==26827== 
+==26827== 40 bytes in 1 blocks are still reachable in loss record 1 of 6
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 40 bytes in 1 blocks are still reachable in loss record 2 of 6
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FE7F: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FE7F: new_closure(ObjFunction*) (???:46)
+==26827==    by 0x10C6F3: interpret(char const*) (src/vm/vm.cpp:900)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 40 bytes in 1 blocks are still reachable in loss record 3 of 6
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FE7F: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FE7F: new_closure(ObjFunction*) (???:46)
+==26827==    by 0x10D0FB: run (src/vm/vm.cpp:756)
+==26827==    by 0x10D0FB: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 80 bytes in 1 blocks are still reachable in loss record 4 of 6
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x116283: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x116283: function(FunctionType) (declaration.h:9)
+==26827==    by 0x1133C3: func_declaration (declaration.h:97)
+==26827==    by 0x1133C3: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 134 bytes in 1 blocks are still reachable in loss record 5 of 6
+==26827==    at 0x48EABF0: operator new[](unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F7B7: read_file (flags.h:30)
+==26827==    by 0x10F7B7: run_file(char const*) (flags.h:39)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 73,728 bytes in 1 blocks are still reachable in loss record 6 of 6
+==26827==    at 0x48E949C: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x49D4E5F: ??? (in /usr/lib/libstdc++.so.6.0.32)
+==26827==    by 0x406AF9B: ??? (in /lib/ld-musl-aarch64.so.1)
+==26827== 
+==26827== LEAK SUMMARY:
+==26827==    definitely lost: 0 bytes in 0 blocks
+==26827==    indirectly lost: 0 bytes in 0 blocks
+==26827==      possibly lost: 0 bytes in 0 blocks
+==26827==    still reachable: 74,062 bytes in 6 blocks
+==26827==         suppressed: 0 bytes in 0 blocks
+==26827== 
+==26827== ERROR SUMMARY: 137 errors from 27 contexts (suppressed: 0 from 0)
+==26827== 
+==26827== 1 errors in context 1 of 27:
+==26827== Invalid read of size 4
+==26827==    at 0x1107F4: free_obj(Obj*) (src/memory/memory.cpp:67)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef010 is 16 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== 1 errors in context 2 of 27:
+==26827== Invalid write of size 4
+==26827==    at 0x10E958: init_chunk (src/parser/chunk.cpp:11)
+==26827==    by 0x10E958: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe0 is 48 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 3 of 27:
+==26827== Invalid write of size 4
+==26827==    at 0x10E954: init_chunk (src/parser/chunk.cpp:10)
+==26827==    by 0x10E954: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd0 is 32 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 4 of 27:
+==26827== Invalid write of size 8
+==26827==    at 0x10E950: init_chunk (src/parser/chunk.cpp:9)
+==26827==    by 0x10E950: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbc8 is 24 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 5 of 27:
+==26827== Invalid write of size 8
+==26827==    at 0x10E948: init_chunk (src/parser/chunk.cpp:8)
+==26827==    by 0x10E948: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd8 is 40 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 6 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10F3E0: free_value_array(ValueArray*) (src/compiler/value.cpp:65)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 7 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10E930: free_chunk(Chunk*) (src/parser/chunk.cpp:18)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbd8 is 40 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 8 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10E924: free_chunk(Chunk*) (src/parser/chunk.cpp:17)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbc8 is 24 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 9 of 27:
+==26827== Invalid free() / delete / delete[] / realloc()
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10B1C3: free_vm() (src/vm/vm.cpp:80)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== 1 errors in context 10 of 27:
+==26827== Invalid free() / delete / delete[] / realloc()
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10B1AB: free_vm() (src/vm/vm.cpp:78)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== 1 errors in context 11 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10EA83: free_table(Table*) (src/compiler/table.cpp:18)
+==26827==    by 0x10B197: free_vm() (src/vm/vm.cpp:75)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bef070 is 0 bytes inside a block of size 192 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10EC2B: adjust_capacity(Table*, int) (src/compiler/table.cpp:68)
+==26827==    by 0x10ED8B: table_set(Table*, ObjString*, Value) (src/compiler/table.cpp:92)
+==26827==    by 0x110303: allocate_string (src/compiler/object.cpp:82)
+==26827==    by 0x110303: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== 1 errors in context 12 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10EA83: free_table(Table*) (src/compiler/table.cpp:18)
+==26827==    by 0x10B18F: free_vm() (src/vm/vm.cpp:74)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf08b0 is 0 bytes inside a block of size 192 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10EC2B: adjust_capacity(Table*, int) (src/compiler/table.cpp:68)
+==26827==    by 0x10ED8B: table_set(Table*, ObjString*, Value) (src/compiler/table.cpp:92)
+==26827==    by 0x10CF07: run (src/vm/vm.cpp:0)
+==26827==    by 0x10CF07: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 13 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10CEE8: run (src/vm/vm.cpp:0)
+==26827==    by 0x10CEE8: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 14 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10D0E4: run (src/vm/vm.cpp:755)
+==26827==    by 0x10D0E4: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 15 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbb0 is 0 bytes inside a block of size 80 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 1 errors in context 16 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827==  Address 0x4bef000 is 0 bytes inside a block of size 40 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x1102B3: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x1102B3: allocate_string (???:76)
+==26827==    by 0x1102B3: copy_string(char const*, int) (???:120)
+==26827==    by 0x10B14B: init_vm() (src/vm/vm.cpp:67)
+==26827==    by 0x10F497: main (src/main.cpp:35)
+==26827== 
+==26827== 
+==26827== 2 errors in context 17 of 27:
+==26827== Invalid read of size 4
+==26827==    at 0x110740: free_obj(Obj*) (src/memory/memory.cpp:33)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbb0 is 0 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 2 errors in context 18 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x110710: free_objects() (src/memory/memory.cpp:82)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbb8 is 8 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 2 errors in context 19 of 27:
+==26827== Invalid write of size 8
+==26827==    at 0x10E964: init_chunk (src/parser/chunk.cpp:13)
+==26827==    by 0x10E964: free_chunk(Chunk*) (???:20)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe8 is 56 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 2 errors in context 20 of 27:
+==26827== Invalid write of size 8
+==26827==    at 0x10F3EC: init_value_array (src/compiler/value.cpp:50)
+==26827==    by 0x10F3EC: free_value_array(ValueArray*) (???:66)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4befbe8 is 56 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 2 errors in context 21 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F3EB: free_value_array(ValueArray*) (src/compiler/value.cpp:65)
+==26827==    by 0x10E947: free_chunk(Chunk*) (src/parser/chunk.cpp:19)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4beff00 is 0 bytes inside a block of size 128 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10F3A3: write_value_array(ValueArray*, Value) (src/compiler/value.cpp:58)
+==26827==    by 0x10EA43: add_constant(Chunk*, Value) (src/parser/chunk.cpp:37)
+==26827==    by 0x1125D3: make_constant (parser_helper.h:213)
+==26827==    by 0x1125D3: emit_constant (parser_helper.h:232)
+==26827==    by 0x1125D3: _number(bool) (expr.h:9)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114AA3: expression (parser_helper.h:175)
+==26827==    by 0x114AA3: if_statement() (stmt.h:125)
+==26827==    by 0x11436B: statement() (src/parser/parser.cpp:342)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827==    by 0x11655B: function(FunctionType) (declaration.h:26)
+==26827== 
+==26827== 
+==26827== 2 errors in context 22 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10E93B: free_chunk(Chunk*) (src/parser/chunk.cpp:18)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf01b0 is 0 bytes inside a block of size 256 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10E9BF: write_chunk(Chunk*, unsigned char, int) (src/parser/chunk.cpp:27)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x117C6F: expression (parser_helper.h:175)
+==26827==    by 0x117C6F: argument_list() (???:221)
+==26827==    by 0x111DC3: call(bool) (expr.h:110)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827== 
+==26827== 
+==26827== 2 errors in context 23 of 27:
+==26827== Mismatched free() / delete / delete []
+==26827==    at 0x48ECEB0: operator delete[](void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10E92F: free_chunk(Chunk*) (src/parser/chunk.cpp:17)
+==26827==    by 0x1107AB: free_obj(Obj*) (src/memory/memory.cpp:51)
+==26827==    by 0x110717: free_objects() (src/memory/memory.cpp:83)
+==26827==    by 0x10F4A3: main (src/main.cpp:41)
+==26827==  Address 0x4bf02f0 is 0 bytes inside a block of size 64 alloc'd
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10E9D7: write_chunk(Chunk*, unsigned char, int) (src/parser/chunk.cpp:28)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x117C6F: expression (parser_helper.h:175)
+==26827==    by 0x117C6F: argument_list() (???:221)
+==26827==    by 0x111DC3: call(bool) (expr.h:110)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x112343: binary(bool) (src/parser/parser.cpp:239)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827== 
+==26827== 
+==26827== 3 errors in context 24 of 27:
+==26827== Invalid read of size 1
+==26827==    at 0x48F198C: bcmp (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F0F3: table_find_string(Table*, char const*, int, unsigned int) (src/compiler/table.cpp:136)
+==26827==    by 0x11022F: copy_string(char const*, int) (src/compiler/object.cpp:113)
+==26827==    by 0x1162B3: init_compiler (src/parser/parser.cpp:24)
+==26827==    by 0x1162B3: function(FunctionType) (declaration.h:9)
+==26827==    by 0x1133C3: func_declaration (declaration.h:97)
+==26827==    by 0x1133C3: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befc40 is 0 bytes inside a block of size 4 free'd
+==26827==    at 0x48EB948: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x11030F: copy_string(char const*, int) (src/compiler/object.cpp:122)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x11025F: copy_string(char const*, int) (src/compiler/object.cpp:116)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 9 errors in context 25 of 27:
+==26827== Invalid read of size 1
+==26827==    at 0x48F198C: bcmp (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10F0F3: table_find_string(Table*, char const*, int, unsigned int) (src/compiler/table.cpp:136)
+==26827==    by 0x11022F: copy_string(char const*, int) (src/compiler/object.cpp:113)
+==26827==    by 0x11758F: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x11758F: named_variable(Token, bool) (???:393)
+==26827==    by 0x112463: _variable(bool) (expr.h:42)
+==26827==    by 0x1114D3: parse_precedence(Precedence) (expr.h:0)
+==26827==    by 0x114E6F: expression (parser_helper.h:175)
+==26827==    by 0x114E6F: return_statement() (stmt.h:159)
+==26827==    by 0x11437B: statement() (src/parser/parser.cpp:339)
+==26827==    by 0x1130F3: block() (stmt.h:17)
+==26827==    by 0x11655B: function(FunctionType) (declaration.h:26)
+==26827==    by 0x1133C3: func_declaration (declaration.h:97)
+==26827==    by 0x1133C3: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==  Address 0x4befc40 is 0 bytes inside a block of size 4 free'd
+==26827==    at 0x48EB948: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x11030F: copy_string(char const*, int) (src/compiler/object.cpp:122)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x11025F: copy_string(char const*, int) (src/compiler/object.cpp:116)
+==26827==    by 0x1167F7: identifier_constant (src/parser/parser.cpp:76)
+==26827==    by 0x1167F7: parser_variable(char const*) (???:184)
+==26827==    by 0x113397: func_declaration (declaration.h:95)
+==26827==    by 0x113397: declaration() (???:317)
+==26827==    by 0x1183EB: compile(char const*) (src/parser/parser.cpp:433)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 31 errors in context 26 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10CD6C: run (src/vm/vm.cpp:500)
+==26827==    by 0x10CD6C: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== 
+==26827== 64 errors in context 27 of 27:
+==26827== Invalid read of size 8
+==26827==    at 0x10CD48: run (src/vm/vm.cpp:457)
+==26827==    by 0x10CD48: interpret(char const*) (???:907)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Address 0x4befbf0 is 64 bytes inside a block of size 80 free'd
+==26827==    at 0x48EBEA0: operator delete(void*) (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x10C727: interpret(char const*) (src/vm/vm.cpp:905)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827==  Block was alloc'd at
+==26827==    at 0x48EDEB8: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==26827==    by 0x1106CB: reallocate(void*, unsigned long, unsigned long) (src/memory/memory.cpp:22)
+==26827==    by 0x10FED7: allocate_object (src/compiler/object.cpp:14)
+==26827==    by 0x10FED7: new_function() (???:54)
+==26827==    by 0x11835F: init_compiler (src/parser/parser.cpp:19)
+==26827==    by 0x11835F: compile(char const*) (???:424)
+==26827==    by 0x10C6BF: interpret(char const*) (src/vm/vm.cpp:892)
+==26827==    by 0x10F82B: run_file(char const*) (flags.h:46)
+==26827==    by 0x10F49F: main (src/main.cpp:38)
+==26827== 
+==26827== ERROR SUMMARY: 137 errors from 27 contexts (suppressed: 0 from 0)

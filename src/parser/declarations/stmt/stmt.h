@@ -66,9 +66,19 @@ void for_statement() {
     emit_loop(inner_most_loop_start);
     inner_most_loop_start = increment_start;
     patch_jump(body_jump);
-  }
+  } 
 
   statement();
+
+  int inner_var = -1;
+  if (loop_variable != -1 ) {
+    add_local(loop_variable_name);
+    inner_var = current->local_count - 1;
+    define_variable(loop_variable);
+    
+    emit_bytes(OP_GET_LOCAL, (uint8_t)inner_var);
+    emit_bytes(OP_CONSTANT, (uint8_t)loop_variable);
+  }
 
   emit_loop(inner_most_loop_start);
 

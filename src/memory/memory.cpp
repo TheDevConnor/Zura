@@ -16,14 +16,14 @@ void* reallocate(void* pointer, size_t old_size, size_t new_size) {
         #endif
     }
     if (new_size == 0) {
-        free(pointer);
+        // free(pointer);
         return nullptr;
     }
 
     void* new_pointer = realloc(pointer, new_size);
     if (new_pointer == nullptr) exit(1);
+    // free(pointer);
     return new_pointer;
-    free(pointer);
 }
 
 static void free_obj(Obj* object) {
