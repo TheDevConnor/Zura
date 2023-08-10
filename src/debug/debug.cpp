@@ -2,9 +2,9 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../parser/chunk.h"
 #include "../compiler/object.h"
 #include "../compiler/value.h"
+#include "../parser/chunk.h"
 #include "debug.h"
 
 using namespace std;
@@ -74,7 +74,7 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
   case OP_DEFINE_STATIC:
     return constant_instruction("OP_DEFINE_STATIC", chunk, offset);
-    
+
   case OP_GET_LOCAL:
     return byte_instruction("OP_GET_LOCAL", chunk, offset);
   case OP_SET_LOCAL:
