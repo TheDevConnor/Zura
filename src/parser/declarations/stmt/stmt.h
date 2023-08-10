@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../helper/parser_helper.h"
-#include "../../chunk.h"
-#include "../../../native_fn/native.h"
 #include "../../../native_fn/define_native.h"
+#include "../../../native_fn/native.h"
+#include "../../chunk.h"
+#include "../../helper/parser_helper.h"
 #include <string>
 
 void expression_statement() {
@@ -49,7 +49,8 @@ void for_statement() {
     exit_jump = emit_jump(OP_JUMP_IF_FALSE);
     emit_byte(OP_POP); // Condition
   }
-  parser.consume(RIGHT_PAREN, "Expect ')' after the conditions of the for loop.");
+  parser.consume(RIGHT_PAREN,
+                 "Expect ')' after the conditions of the for loop.");
 
   parser.consume(COLON, "Expect ':' after the conditions of the for loop.");
 
@@ -61,21 +62,22 @@ void for_statement() {
     int increment_start = compiling_chunk()->count;
     expression();
     emit_byte(OP_POP);
-    parser.consume(RIGHT_PAREN, "Expect ')' after the increment of the for loop.");
+    parser.consume(RIGHT_PAREN,
+                   "Expect ')' after the increment of the for loop.");
 
     emit_loop(inner_most_loop_start);
     inner_most_loop_start = increment_start;
     patch_jump(body_jump);
-  } 
+  }
 
   statement();
 
   int inner_var = -1;
-  if (loop_variable != -1 ) {
+  if (loop_variable != -1) {
     add_local(loop_variable_name);
     inner_var = current->local_count - 1;
     define_variable(loop_variable);
-    
+
     emit_bytes(OP_GET_LOCAL, (uint8_t)inner_var);
     emit_bytes(OP_CONSTANT, (uint8_t)loop_variable);
   }
@@ -199,7 +201,7 @@ void switch_statement() {
   int case_count = 0;
   int previous_case_skip = -1;
 
-  while(!parser.match(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
+  while (!parser.match(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
     if (parser.match(CASE) || parser.match(DEFAULT)) {
       TokenKind case_type = parser.previous.kind;
       if (state == 2) {
@@ -258,7 +260,8 @@ void switch_statement() {
 
 void include_statement() {
   parser.consume(STRING, "Expect string after 'using'.");
-  ObjString *moduleName = copy_string(parser.previous.start + 1, parser.previous.length - 2);
+  ObjString *moduleName =
+      copy_string(parser.previous.start + 1, parser.previous.length - 2);
 
   if (string(moduleName->chars).find("std") != string::npos) {
     parser.consume(SEMICOLON, "Expect ';' after value.");
@@ -274,7 +277,7 @@ void include_statement() {
       define_native("math");
       return;
     }
-    if (string(moduleName->chars).find("/logger") != string::npos) { 
+    if (string(moduleName->chars).find("/logger") != string::npos) {
       define_native("logger");
       return;
     }
@@ -287,16 +290,16 @@ void include_statement() {
   emit_byte(OP_IMPORT);
 }
 
-void sleep_statment(){ 
-  parser.consume(LEFT_PAREN, "Expect '(' after 'sleep'."); 
+void sleep_statment() {
+  parser.consume(LEFT_PAREN, "Expect '(' after 'sleep'.");
   expression();
   parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
   parser.consume(SEMICOLON, "Expect ';' after value.");
   emit_byte(OP_SLEEP);
 }
 
-void exit_statement(){
-  parser.consume(LEFT_PAREN, "Expect '(' after 'exit'."); 
+void exit_statement() {
+  parser.consume(LEFT_PAREN, "Expect '(' after 'exit'.");
   expression();
   parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
   parser.consume(SEMICOLON, "Expect ';' after value.");

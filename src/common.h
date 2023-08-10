@@ -6,7 +6,7 @@
  * the Free Software Foundation, of version 3 of the License, or
  * (at your option) any later version.
  *
- * Zura is distributed, WITHOUT ANY WARRANTY "AS IS" 
+ * Zura is distributed, WITHOUT ANY WARRANTY "AS IS"
  * without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -16,9 +16,8 @@
  *****************************************************************************/
 #pragma once
 
-#include <stdint.h>
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define DEBUG_STRESS_GC
 #define DEBUG_LOG_GC

@@ -1,16 +1,15 @@
 #pragma once
 
 // #include "../../terminal_colors/terminal_color.h"
-#include "../../lib/colorize.hpp"
-#include "../../compiler/object.h"
-#include "../lexer/lexer.h"
 #include "../../common.h"
+#include "../../compiler/object.h"
 #include "../../helper/errors.h"
+#include "../../lib/colorize.hpp"
+#include "../lexer/lexer.h"
 
 using namespace std;
 
-class Parser
-{
+class Parser {
 public:
   Token current;
   Token previous;
@@ -19,18 +18,18 @@ public:
 
   Parser() : had_error(false), panic_mode(false) {}
 
- 
-
-  void error_at_current(const char *message) { error_parser(current, current.column, message); }
-  void error(const char *message) { error_parser(previous, previous.column, message); }
+  void error_at_current(const char *message) {
+    error_parser(current, current.column, message);
+  }
+  void error(const char *message) {
+    error_parser(previous, previous.column, message);
+  }
 
   bool check(TokenKind kind) { return current.kind == kind; }
 
-  void advance()
-  {
+  void advance() {
     previous = current;
-    for (;;)
-    {
+    for (;;) {
       current = scan_token();
       if (current.kind != ERROR_TOKEN)
         break;
@@ -38,10 +37,8 @@ public:
     }
   }
 
-  void consume(TokenKind kind, const char *message)
-  {
-    if (current.kind == kind)
-    {
+  void consume(TokenKind kind, const char *message) {
+    if (current.kind == kind) {
       advance();
       return;
     }
@@ -49,8 +46,7 @@ public:
     error_at_current(message);
   }
 
-  bool match(TokenKind kind)
-  {
+  bool match(TokenKind kind) {
     if (!check(kind))
       return false;
     advance();
@@ -60,8 +56,7 @@ public:
 
 typedef void (*parse_fn)(bool can_assign);
 
-enum Precedence
-{
+enum Precedence {
   PREC_NONE,
   PREC_ASSIGNMENT, // :=
   PREC_OR,         // or
@@ -75,36 +70,31 @@ enum Precedence
   PREC_PRIMARY
 };
 
-struct ParseRule
-{
+struct ParseRule {
   parse_fn prefix;
   parse_fn infix;
   Precedence precedence;
 };
 
-struct Local
-{
+struct Local {
   Token name;
   int depth;
   bool is_captured;
 };
 
-enum FunctionType
-{
+enum FunctionType {
   TYPE_FUNCTION,
   TYPE_INITIALIZER,
   TYPE_METHOD,
   TYPE_SCRIPT,
 };
 
-struct Upvalue
-{
+struct Upvalue {
   uint8_t index;
   bool is_local;
 };
 
-struct Compiler
-{
+struct Compiler {
   struct Compiler *enclosing;
   ObjFunction *function;
   FunctionType type;
@@ -115,8 +105,7 @@ struct Compiler
   int scope_depth;
 };
 
-struct ClassCompiler
-{
+struct ClassCompiler {
   struct ClassCompiler *enclosing;
   bool has_superclass;
 };
@@ -177,19 +166,16 @@ void expression() { parse_precedence(PREC_ASSIGNMENT); }
 int inner_most_loop_start = -1;
 int inner_most_loop_scope_depth = 0;
 
-void emit_byte(uint8_t byte)
-{
+void emit_byte(uint8_t byte) {
   write_chunk(compiling_chunk(), byte, parser.previous.line);
 }
 
-void emit_bytes(uint8_t byte1, uint8_t byte2)
-{
+void emit_bytes(uint8_t byte1, uint8_t byte2) {
   emit_byte(byte1);
   emit_byte(byte2);
 }
 
-void emit_loop(int loop_start)
-{
+void emit_loop(int loop_start) {
   emit_byte(OP_LOOP);
 
   int offset = compiling_chunk()->count - loop_start + 2;
@@ -200,19 +186,16 @@ void emit_loop(int loop_start)
   emit_byte(offset & 0xff);
 }
 
-int emit_jump(uint8_t instruction)
-{
+int emit_jump(uint8_t instruction) {
   emit_byte(instruction);
   emit_byte(0xff);
   emit_byte(0xff);
   return compiling_chunk()->count - 2;
 }
 
-uint8_t make_constant(Value value)
-{
+uint8_t make_constant(Value value) {
   int constant = add_constant(compiling_chunk(), value);
-  if (constant > UINT8_MAX)
-  {
+  if (constant > UINT8_MAX) {
     parser.error("Too many constants in one chunk.");
     return 0;
   }
@@ -220,8 +203,7 @@ uint8_t make_constant(Value value)
   return static_cast<uint8_t>(constant);
 }
 
-void emit_return()
-{
+void emit_return() {
   if (current->type == TYPE_INITIALIZER)
     emit_bytes(OP_GET_LOCAL, 0);
   else
@@ -231,13 +213,11 @@ void emit_return()
 
 void emit_constant(Value v) { emit_bytes(OP_CONSTANT, make_constant(v)); }
 
-void patch_jump(int offset)
-{
+void patch_jump(int offset) {
   // -2 to adjust for the bytecode for the jump offset itself.
   int jump = compiling_chunk()->count - offset - 2;
 
-  if (jump > UINT16_MAX)
-  {
+  if (jump > UINT16_MAX) {
     parser.error("Too much code to jump over.");
   }
 
@@ -303,11 +283,5 @@ unordered_map<TokenKind, ParseRule> rules = {
 };
 
 const unordered_map<TokenKind, bool> return_context = {
-    {CLASS, true},
-    {FUNC, true},
-    {VAR, true},
-    {FOR, true},
-    {IF, true},
-    {WHILE, true},
-    {INFO, true},
-    {RETURN, true}};
+    {CLASS, true}, {FUNC, true},  {VAR, true},  {FOR, true},
+    {IF, true},    {WHILE, true}, {INFO, true}, {RETURN, true}};

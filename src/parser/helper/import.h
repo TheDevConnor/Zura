@@ -1,10 +1,10 @@
+#include <cctype>
 #include <cstdio>
 #include <cstring>
-#include <cctype>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <vector>
-#include <memory>
 
 #include <cstring>
 #include <string>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../helper/parser_helper.h"
 #include "../../chunk.h"
+#include "../../helper/parser_helper.h"
 
 void _number(bool can_assign) {
   (void)can_assign;
@@ -51,15 +51,17 @@ Token synthetic_token(const char *text) {
 
 void super_(bool can_assign) {
   (void)can_assign;
-  if(current_class == nullptr) parser.error("Cannot use 'super' outside of a class.");
-  else if(!current_class->has_superclass) parser.error("Cannot use 'super' in a class with no superclass.");
+  if (current_class == nullptr)
+    parser.error("Cannot use 'super' outside of a class.");
+  else if (!current_class->has_superclass)
+    parser.error("Cannot use 'super' in a class with no superclass.");
 
   parser.consume(DOT, "Expect '.' after 'super'.");
   parser.consume(IDENTIFIER, "Expect superclass method name.");
   uint8_t name = identifier_constant(&parser.previous);
 
   named_variable(synthetic_token("this"), false);
-  if(parser.match(LEFT_PAREN)) {
+  if (parser.match(LEFT_PAREN)) {
     uint8_t arg_count = argument_list();
     named_variable(synthetic_token("super"), false);
     emit_bytes(OP_SUPER_INVOKE, name);
