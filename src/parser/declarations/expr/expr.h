@@ -164,11 +164,11 @@ void parse_precedence(Precedence prec) {
     infix_rule(can_assign);
   }
 
-  if (can_assign && match(EQUAL)) {
+  if (can_assign && parser.match(EQUAL)) {
     parser.error("Invalid assignment target.");
   }
 
-  if (can_assign && match(TK_INPUT)) {
+  if (can_assign && parser.match(TK_INPUT)) {
     input_statement(true);
   }
 

@@ -1,11 +1,12 @@
 #pragma once
 
-// #include "../../terminal_colors/terminal_color.h"
+#include <unordered_map>
+
 #include "../../common.h"
 #include "../../compiler/object.h"
 #include "../../helper/errors.h"
 #include "../../lib/colorize.hpp"
-#include "../lexer/lexer.h"
+#include "../lexer/tokens.h"
 
 using namespace std;
 
