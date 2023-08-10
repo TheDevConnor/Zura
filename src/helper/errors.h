@@ -6,7 +6,7 @@
 
 inline void error_parser(Token line_no, int pos, const char *msg){
     cout << "\n[" << termcolor::yellow << "line: " << termcolor::cyan << line_no.line << termcolor::reset << "] "
-         << "[" << termcolor::yellow << "🅿️" << "os: " << termcolor::cyan << pos - 1 << termcolor::reset << "] Error: ";
+         << "[" << termcolor::yellow << "pos: " << termcolor::cyan << pos - 1 << termcolor::reset << "] Error: ";
 
     if (line_no.kind == EOF_TOKEN)
         printf("at end \n");
@@ -42,7 +42,7 @@ inline void runtimeError(const char *format, ...){
     {
         cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
              << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-             << "🅿️os" << termcolor::reset << " -> " << termcolor::red << instruction
+             << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
              << termcolor::reset << "][" << termcolor::red << "func" << termcolor::reset
              << " -> " << termcolor::red << vm.frames->closure->function->name->chars
              << termcolor::reset << "] in script \n";
@@ -51,7 +51,7 @@ inline void runtimeError(const char *format, ...){
     {
         cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "
              << termcolor::red << line << termcolor::reset << "][" << termcolor::yellow
-             << "🅿️os" << termcolor::reset << " -> " << termcolor::red << instruction
+             << "pos" << termcolor::reset << " -> " << termcolor::red << instruction
              << termcolor::reset << "] in script \n";
     }
     va_list args;
