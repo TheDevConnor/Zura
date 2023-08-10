@@ -467,6 +467,17 @@ static InterpretResult run()
       table_add_all(&vm.globals, &vm.arrays);
       break;
     }
+    
+    case OP_EXIT: 
+    { 
+      Value exit_code = peek(0);
+      if (!IS_NUMBER(exit_code))
+      {
+        runtimeError("Exit code must be a number\n");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+      exit(AS_NUMBER(exit_code));
+    }
 
     // Global variable operation codes
     case OP_SET_GLOBAL:
