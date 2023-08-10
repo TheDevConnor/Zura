@@ -64,9 +64,7 @@ void init_vm()
   init_value_array(&vm.array_values);
 
   vm.init_string = nullptr;
-  cpy_str = copy_string("init", 4);
-  vm.init_string = cpy_str;
-  delete cpy_str;
+  vm.init_string = copy_string("init", 4);
 }
 
 void free_vm()
@@ -76,8 +74,6 @@ void free_vm()
   free_table(&vm.arrays);
 
   delete vm.init_string;
-  vm.init_string = nullptr;
-  delete cpy_str;
 
   free_objects();
 }
@@ -901,8 +897,6 @@ InterpretResult interpret(const char *source)
   pop();
   push(OBJ_VAL(closure));
   call_value(OBJ_VAL(closure), 0);
-
-  delete function;
 
   return run();
 }
