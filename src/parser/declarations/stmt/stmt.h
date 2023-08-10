@@ -284,3 +284,11 @@ void sleep_statment(){
   parser.consume(SEMICOLON, "Expect ';' after value.");
   emit_byte(OP_SLEEP);
 }
+
+void exit_statement(){
+  parser.consume(LEFT_PAREN, "Expect '(' after 'exit'."); 
+  expression();
+  parser.consume(RIGHT_PAREN, "Expect ')' after condition.");
+  parser.consume(SEMICOLON, "Expect ';' after value.");
+  emit_byte(OP_EXIT);
+}

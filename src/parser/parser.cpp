@@ -356,6 +356,8 @@ void statement()
   // Block statements
   else if (parser.match(SLEEP))
     sleep_statment();
+  else if (parser.match(EXIT))
+    exit_statement();
   else if (parser.match(LEFT_BRACE))
   {
     begin_scope();

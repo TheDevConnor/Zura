@@ -27,14 +27,6 @@ class StdFunc {
         return NUMBER_VAL(number_length);
     }
 
-    static Value exit_native(int arg_count, Value* args) {
-        if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
-        if (arg_count != 1) return BOOL_VAL(false);
-
-        exit((int)AS_NUMBER(args[0]));
-        return NIL_VAL;
-    }
-
     static Value to_string_native(int arg_count, Value* args) {
         if (arg_count != 1) return BOOL_VAL(false);
         if (!IS_NUMBER(args[0])) return BOOL_VAL(false);
@@ -62,7 +54,6 @@ class StdFunc {
     static void define_std_natives() {
         Natives::define_native("len", len_native);
         Natives::define_native("clock", clock_native);
-        Natives::define_native("exit", exit_native);
         Natives::define_native("toString", to_string_native);
         Natives::define_native("toNumber", to_number_native);
     }

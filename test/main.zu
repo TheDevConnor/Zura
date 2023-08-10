@@ -1,2 +1,8 @@
-have name := input("What is your name?");
-info name + " is a cool name!";
+
+while (have i := 0; i <= 30) : (i = ++i) {
+    info i;
+    if(i == 29) { 
+        exit(1);
+    }
+}
+
