@@ -1,1 +1,3 @@
-bin/
+# keep bin folder 
+
+/bin
