@@ -12,3 +12,5 @@ while (have i := 0; i <= 30) : (i = ++i) {
 }
 
 info "Time taken -> " + toString(clock() - start);
+
+weer;
