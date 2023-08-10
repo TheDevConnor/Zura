@@ -119,7 +119,7 @@ ObjString* copy_string(const char* chars, int length) {
 
     ObjString* string = allocate_string(heap_chars, length, hash);
 
-    free(heap_chars);
+    // free(heap_chars);
 
     return string;
 }

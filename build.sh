@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Variables
-CXX="clang++"
+CXX="g++"
 CXXFLAGS="-O3 -std=c++17 -Wall -Wextra -ggdb3 -g"
 CXXFLAGS_DEBUG="-O0 -g -std=c++11 -Wall -ggdb3"
 VALGRIND="valgrind"
