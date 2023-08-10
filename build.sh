@@ -15,6 +15,7 @@ DEBUG_PATH="src/debug"
 GC_PATH="src/garbage_collector"
 MEMORY_PATH="src/memory"
 SRC_PARSER_PATH="src/parser"
+SRC_LEXER_PATH="src/parser/lexer"
 TYPE_PATH="src/types"
 VM_PATH="src/vm"
 
