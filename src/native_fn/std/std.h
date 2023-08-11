@@ -48,7 +48,7 @@ private:
     char *string = AS_CSTRING(args[0]);
     char *end;
     errno = 0;
-    double number = strtoll(string, &end, 10);
+    double number = (double)strtoll(string, &end, 10);
     if (errno == ERANGE) {
       return BOOL_VAL(false);
     }

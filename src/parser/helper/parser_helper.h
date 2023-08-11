@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class Parser {
+struct Parser {
 public:
   Token current;
   Token previous;

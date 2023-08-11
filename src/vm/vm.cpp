@@ -7,10 +7,23 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <string>
-#include <unistd.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+// Platform-specific Libraries
+
+#if _WIN64
+    // Windows
+    #pragma comment(lib, "Kernel32.lib")
+    #include <windows.h>
+    // #define sleep(x) Sleep(1000 * x)
+    #define sleep(x) Sleep((DWORD)(1000.0 * x))
+#else
+    // Unix-like
+    #include <unistd.h>
+
+#endif
 
 #include "../common.h"
 #include "../compiler/object.h"
@@ -416,7 +429,8 @@ static InterpretResult run() {
         runtimeError("Exit code must be a number\n");
         return INTERPRET_RUNTIME_ERROR;
       }
-      exit(AS_NUMBER(exit_code));
+      // TODO Calls Value's double member variable
+      exit((int)AS_NUMBER(exit_code));
     }
 
     // Global variable operation codes
@@ -755,7 +769,7 @@ static InterpretResult run() {
       cout << " ";
       string value;
       getline(cin, value);
-      push(OBJ_VAL(copy_string(value.c_str(), value.length())));
+      push(OBJ_VAL(copy_string(value.c_str(), (int)value.length())));
       break;
     }
     case OP_DUP:
