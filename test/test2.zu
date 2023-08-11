@@ -1,7 +1,0 @@
-include "test/test";
-
-fn main(){
-    main();
-}
-
-main();

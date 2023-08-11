@@ -32,7 +32,7 @@ endif
 SOURCE_FILES := $(wildcard $(SRC_PATH)/*.cpp) $(wildcard $(GC_PATH)/*.cpp) $(wildcard $(SRC_PARSER_PATH)/*.cpp) $(wildcard $(DEBUG_PATH)/*.cpp) $(wildcard $(MEMORY_PATH)/*.cpp) $(wildcard $(VM_PATH)/*.cpp) $(wildcard $(COMPILER_PATH)/*.cpp) $(wildcard $(NATIVEFN_PATH)/*.cpp) $(wildcard $(TYPE_PATH)/*.cpp) $(wildcard $(SRC_PARSER_LEXER_PATH)/*.cpp)
 
 windows: 
-	@$(CXX) -o $(TARGET)/zura.exe $(SOURCE_FILES) $(CXXFLAGS)
+	@$(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
 linux:
 	@$(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
 
