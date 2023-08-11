@@ -16,7 +16,7 @@ private:
     if (arg_count != 0)
       return BOOL_VAL(false);
 
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     double random = (double)rand() / RAND_MAX;
     return NUMBER_VAL(random);
   }

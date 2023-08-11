@@ -769,7 +769,7 @@ static InterpretResult run() {
       cout << " ";
       string value;
       getline(cin, value);
-      push(OBJ_VAL(copy_string(value.c_str(), value.length())));
+      push(OBJ_VAL(copy_string(value.c_str(), (int)value.length())));
       break;
     }
     case OP_DUP:
