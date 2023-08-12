@@ -49,8 +49,6 @@ enum InterpretResult {
 
 extern VM vm;
 
-extern ObjString *cpy_str;
-
 void init_vm();
 void free_vm();
 

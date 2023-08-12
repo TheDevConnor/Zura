@@ -38,7 +38,6 @@
 using namespace std;
 
 VM vm;
-ObjString *cpy_str = nullptr;
 
 void reset_stack() {
   vm.stack_top = vm.stack;
@@ -78,8 +77,6 @@ void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
   free_table(&vm.arrays);
-
-  delete vm.init_string;
 
   free_objects();
 }
@@ -315,14 +312,6 @@ ObjModule *load_module(ObjString *name) {
   fclose(file);
 
   string source(buffer.begin(), buffer.end());
-
-  // ObjFunction* result = compile(source.c_str());
-  // if (!result) {
-  //     // Handle the error appropriately, such as returning an error value or
-  //     // throwing an exception.
-  //     runtimeError("Error loading module!");
-  //     exit(1);
-  // }
 
   InterpretResult result = interpret(source.c_str());
   if (result != INTERPRET_OK) {

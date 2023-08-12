@@ -139,10 +139,10 @@ ObjUpvalue *new_upvalue(Value *slot) {
 
 void print_function(ObjFunction *function) {
   if (function->name == nullptr) {
-    cout << "<script>";
+    cout << "<script " << function->name << ">";
     return;
   }
-  cout << "<fn " << function->name->chars;
+  cout << "<fn " << function->name->chars << ">";
 }
 
 void print_object(Value value) {
