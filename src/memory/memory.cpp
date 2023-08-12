@@ -21,9 +21,12 @@ void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   }
 
   void *new_pointer = realloc(pointer, new_size);
-  if (new_pointer == nullptr)
+  if (new_pointer == nullptr){
+    cerr << "ERROR: Failed to reallocate memory.\n";
     exit(1);
+  }
   // free(pointer);
+  
   return new_pointer;
 }
 
@@ -80,14 +83,12 @@ static void free_obj(Obj *object) {
 }
 
 void free_objects() {
-  Obj *object = vm.objects;
-  while (object != nullptr) {
-    Obj *next = object->next;
-    free_obj(object);
-    object = next;
-  }
+    
+    for(Obj* i = vm.objects; i; i = i->next){
+        free_obj(i);
+    }
 
-  free(vm.gray_stack);
+   free(vm.gray_stack);
 }
 
 void sweep() {
