@@ -36,14 +36,16 @@ typedef uint64_t Value;
 #define NUMBER_VAL(num) num_to_value(num)
 #define OBJ_VAL(obj) (Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)(obj))
 
-inline Value value_to_num(Value value) {
+inline Value value_to_num(Value value)
+{
   double num;
   memcpy(&num, &value, sizeof(Value));
   // std::cout << " " << num << std::endl;
   return num;
 }
 
-inline Value num_to_value(double num) {
+inline Value num_to_value(double num)
+{
   Value value;
   memcpy(&value, &num, sizeof(double));
   // std::cout << " "<< num << std::endl;
@@ -51,56 +53,62 @@ inline Value num_to_value(double num) {
 }
 #else
 
-enum ValueType { VAL_BOOL, VAL_NIL, VAL_NUMBER, VAL_OBJ };
+enum ValueType
+{
+  VAL_BOOL,
+  VAL_NIL,
+  VAL_NUMBER,
+  VAL_OBJ
+};
 
-struct Value {
+struct Value
+{
   ValueType type;
-  union {
+  union
+  {
     bool boolean;
     double number;
     Obj *obj;
   } as;
 };
 
-// Original
-#if 0
-
-#define IS_BOOL(value) ((value).type == VAL_BOOL)
-#define IS_NIL(value) ((value).type == VAL_NIL)
-#define IS_NUMBER(value) ((value).type == VAL_NUMBER)
-#define IS_OBJ(value) ((value).type == VAL_OBJ)
-
-#define AS_BOOL(value) ((value).as.boolean)
-#define AS_NUMBER(value) ((value).as.number)
-#define AS_OBJ(value) ((value).as.obj)
-
-#define BOOL_VAL(value) ((Value){VAL_BOOL, {.boolean = value}})
-#define NIL_VAL ((Value){VAL_NIL, {.number = 0}})
-#define NUMBER_VAL(value) ((Value){VAL_NUMBER, {.number = value}})
-#define OBJ_VAL(object) ((Value){VAL_OBJ, {.obj = (Obj *)object}})
-
-#else
-
 // Edited
 #define IS_BOOL(value) ((value).type == VAL_BOOL)
 #define IS_NIL(value) ((value).type == VAL_NIL)
-#define IS_NUMBER(value) ((value).type == VAL_NUMBER)
+#define IS_INTEGER(value) ((value).type == VAL_NUMBER && (int)(value).as.number == (value).as.number)
+#define IS_DOUBLE(value) ((value).type == VAL_NUMBER && (int)(value).as.number != (value).as.number)
 #define IS_OBJ(value) ((value).type == VAL_OBJ)
 
 #define AS_BOOL(value) ((value).as.boolean)
-#define AS_NUMBER(value) ((value).as.number)
+#define AS_INTEGER(value) ((int)(value).as.number)
+#define AS_DOUBLE(value) ((value).as.number)
 #define AS_OBJ(value) ((value).as.obj)
 
-#define BOOL_VAL(value)   Value{VAL_BOOL, {.boolean = value}}
-#define NIL_VAL           Value{VAL_NIL, {.number = 0}}
-#define NUMBER_VAL(value) Value{VAL_NUMBER, {.number = value}}
-#define OBJ_VAL(object)   Value{VAL_OBJ, {.obj = (Obj *)object}}
+#define BOOL_VAL(value)            \
+  Value                            \
+  {                                \
+    VAL_BOOL, { .boolean = value } \
+  }
+#define NIL_VAL              \
+  Value                      \
+  {                          \
+    VAL_NIL, { .number = 0 } \
+  }
+#define NUMBER_VAL(value)           \
+  Value                             \
+  {                                 \
+    VAL_NUMBER, { .number = value } \
+  }
+#define OBJ_VAL(object)               \
+  Value                               \
+  {                                   \
+    VAL_OBJ, { .obj = (Obj *)object } \
+  }
 
 #endif // Macro switch
 
-#endif
-
-struct ValueArray {
+struct ValueArray
+{
   int capacity;
   int count;
   Value *values;

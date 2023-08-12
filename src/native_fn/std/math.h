@@ -9,9 +9,11 @@
 #include "../../vm/vm.h"
 #include "../define_native.h"
 
-class Math {
+class Math
+{
 private:
-  static Value random_native(int arg_count, Value *args) {
+  static Value random_native(int arg_count, Value *args)
+  {
     (void)args;
     if (arg_count != 0)
       return BOOL_VAL(false);
@@ -20,188 +22,206 @@ private:
     double random = (double)rand() / RAND_MAX;
     return NUMBER_VAL(random);
   }
-  static Value random_range_native(int arg_count, Value *args) {
+  static Value random_range_native(int arg_count, Value *args)
+  {
     if (arg_count != 2)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]) || !IS_NUMBER(args[1]))
+    if (!IS_DOUBLE(args[0]) || !IS_DOUBLE(args[1]))
       return BOOL_VAL(false);
 
-    double min = AS_NUMBER(args[0]);
-    double max = AS_NUMBER(args[1]);
+    double min = AS_DOUBLE(args[0]);
+    double max = AS_DOUBLE(args[1]);
 
     double random = min + (rand() % (int)(max - min + 1));
     return NUMBER_VAL(random);
   }
 
-  static Value round_native(int arg_count, Value *args) {
+  static Value round_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_round = round(number);
     return NUMBER_VAL(number_round);
   }
-  static Value floor_native(int arg_count, Value *args) {
+  static Value floor_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_floor = floor(number);
     return NUMBER_VAL(number_floor);
   }
-  static Value ceil_native(int arg_count, Value *args) {
+  static Value ceil_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_ceil = ceil(number);
     return NUMBER_VAL(number_ceil);
   }
-  static Value abs_native(int arg_count, Value *args) {
+  static Value abs_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_abs = abs(number);
     return NUMBER_VAL(number_abs);
   }
 
-  static Value sqrt_native(int arg_count, Value *args) {
+  static Value sqrt_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_squrt = sqrt(number);
     return NUMBER_VAL(number_squrt);
   }
 
-  static Value log_native(int arg_count, Value *args) {
+  static Value log_native(int arg_count, Value *args)
+  {
     if (arg_count != 2)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]) || !IS_NUMBER(args[1]))
+    if (!IS_DOUBLE(args[0]) || !IS_DOUBLE(args[1]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
-    double base = AS_NUMBER(args[1]);
+    double number = AS_DOUBLE(args[0]);
+    double base = AS_DOUBLE(args[1]);
     double number_log = log(number) / log(base);
     return NUMBER_VAL(number_log);
   }
-  static Value log10_native(int arg_count, Value *args) {
+  static Value log10_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_log10 = log10(number);
     return NUMBER_VAL(number_log10);
   }
 
-  static Value sin_native(int arg_count, Value *args) {
+  static Value sin_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_sin = sin(number);
     return NUMBER_VAL(number_sin);
   }
-  static Value cos_native(int arg_count, Value *args) {
+  static Value cos_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_cos = cos(number);
     return NUMBER_VAL(number_cos);
   }
-  static Value tan_native(int arg_count, Value *args) {
+  static Value tan_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_tan = tan(number);
     return NUMBER_VAL(number_tan);
   }
 
-  static Value csc_native(int arg_count, Value *args) {
+  static Value csc_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_csc = 1 / sin(number);
     return NUMBER_VAL(number_csc);
   }
-  static Value sec_native(int arg_count, Value *args) {
+  static Value sec_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_sec = 1 / cos(number);
     return NUMBER_VAL(number_sec);
   }
-  static Value cot_native(int arg_count, Value *args) {
+  static Value cot_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_cot = 1 / tan(number);
     return NUMBER_VAL(number_cot);
   }
 
-  static Value asin_native(int arg_count, Value *args) {
+  static Value asin_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_asin = asin(number);
     return NUMBER_VAL(number_asin);
   }
-  static Value acos_native(int arg_count, Value *args) {
+  static Value acos_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_acos = acos(number);
     return NUMBER_VAL(number_acos);
   }
-  static Value atan_native(int arg_count, Value *args) {
+  static Value atan_native(int arg_count, Value *args)
+  {
     if (arg_count != 1)
       return BOOL_VAL(false);
-    if (!IS_NUMBER(args[0]))
+    if (!IS_DOUBLE(args[0]))
       return BOOL_VAL(false);
 
-    double number = AS_NUMBER(args[0]);
+    double number = AS_DOUBLE(args[0]);
     double number_atan = atan(number);
     return NUMBER_VAL(number_atan);
   }
 
 public:
-  static void define_math_natives() {
+  static void define_math_natives()
+  {
     Natives::define_native("mathRandom", random_native);
     Natives::define_native("mathRandomRange", random_range_native);
 
