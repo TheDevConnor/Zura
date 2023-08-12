@@ -77,6 +77,7 @@ void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
   free_table(&vm.arrays);
+  free_value_array(&vm.array_values);
 
   free_objects();
 }

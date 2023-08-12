@@ -1,5 +1,2 @@
-fn main() {
-    info "Hello, world!";
-}
-
-main();
+have x := 40;
+info x;

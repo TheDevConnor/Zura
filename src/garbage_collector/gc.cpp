@@ -16,7 +16,7 @@ void mark_object(Obj* object) {
     if(object->is_marked) return;
 
     #ifndef DEBUG_LOG_GC
-        cout << (void*)object << " mark ";
+        cout<< "\n" << (void*)object << " mark ";
         print_value(OBJ_VAL(object));
         cout << endl;
     #endif
