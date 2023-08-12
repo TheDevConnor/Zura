@@ -15,9 +15,7 @@
 
 #if _WIN64
     // Windows
-    #pragma comment(lib, "Kernel32.lib")
     #include <windows.h>
-    // #define sleep(x) Sleep(1000 * x)
     #define sleep(x) Sleep((DWORD)(1000.0 * x))
 #else
     // Unix-like
