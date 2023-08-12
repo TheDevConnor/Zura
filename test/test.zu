@@ -1,2 +1,0 @@
-have x := 45;
-have y := "hello " + toString(x);

@@ -5,4 +5,3 @@ while (have i := 0; i <= 30) : (i = ++i) {
         exit(1);
     }
 }
-
