@@ -106,6 +106,8 @@ void blacken_object(Obj* object) {
           break;
       case OBJ_NATIVE:
       case OBJ_STRING:
+          ObjString* string = (ObjString*)object;
+          mark_object((Obj*)string->chars);
           break;
     }
 }

@@ -11,7 +11,7 @@ using namespace std;
 void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   vm.bytes_allocated += new_size - old_size;
   if (new_size > old_size) {
-    // collect_garbage();
+    mark_roots();
   }
 
   if (new_size == 0) {
