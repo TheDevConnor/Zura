@@ -185,6 +185,8 @@ int disassemble_instruction(Chunk *chunk, int offset) {
 
   case OP_SLEEP:
     return simple_instruction("OP_SLEEP", offset);
+  case OP_EXIT:
+    return simple_instruction("OP_EXIT", offset);
 
   case OP_DUP:
     return simple_instruction("OP_DUP", offset);

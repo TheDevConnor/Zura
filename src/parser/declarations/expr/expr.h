@@ -117,7 +117,7 @@ void dot(bool can_assign) {
   parser.consume(IDENTIFIER, "Exactly property name after '.'");
   uint8_t name = identifier_constant(&parser.previous);
 
-  if (can_assign && parser.match(EQUAL)) {
+  if (can_assign && parser.match(WALRUS)) {
     expression();
     emit_bytes(OP_SET_PROPERTY, name);
   } else if (parser.match(LEFT_PAREN)) {
@@ -164,7 +164,7 @@ void parse_precedence(Precedence prec) {
     infix_rule(can_assign);
   }
 
-  if (can_assign && parser.match(EQUAL)) {
+  if (can_assign && parser.match(WALRUS)) {
     parser.error("Invalid assignment target.");
   }
 

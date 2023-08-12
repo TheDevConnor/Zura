@@ -231,7 +231,7 @@ void binary(bool can_assign) {
   case BANG_EQUAL:
     emit_bytes(OP_EQUAL, OP_NOT);
     break; // !=
-  case EQUAL_EQUAL:
+  case EQUAL:
     emit_byte(OP_EQUAL);
     break; // ==
   case GREATER:
@@ -349,7 +349,7 @@ void named_variable(Token name, bool can_assign) {
     return;
   }
 
-  if (parser.match(EQUAL) && can_assign) {
+  if (parser.match(WALRUS) && can_assign) {
     expression();
     emit_bytes(set_op, (uint8_t)arg);
   } else {
