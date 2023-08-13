@@ -1,5 +1,5 @@
-CXX := g++
-CXXFLAGS := -O2 -std=c++17 -Wall -Wextra
+CXX := clang++
+CXXFLAGS := -O3 -std=c++17 -Wall -Wextra
 CXXFLAGS_DEBUG := -O0 -g -std=c++17 -Wall
 
 VALGRIND := valgrind
