@@ -220,4 +220,4 @@ zura Lang is licensed under the GNU GPLv3 License. Feel free to use, modify, and
 
 We hope you find zura Lang useful and enjoyable to work with. If you have any questions or need further assistance, please don't hesitate to reach out.
 
-Happy coding from the zura Lang team! 
+Happy coding from the zura Lang team!
