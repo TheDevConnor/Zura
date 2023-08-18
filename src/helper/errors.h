@@ -41,7 +41,7 @@ inline void error_parser(Token line_no, int pos, const char *msg) {
 // runtime error
 inline void runtimeError(const char *format, ...) {
   size_t instruction =
-      vm.frames->ip - vm.frames->closure->function->chunk.code - 1;
+      reinterpret_cast<uint8_t*>(vm.frames->ip) - vm.frames->closure->function->chunk.code - 1;
   int line = vm.frames->closure->function->chunk.lines[instruction];
   if (vm.frames->closure->function->name != nullptr) {
     cout << "[" << termcolor::yellow << "line" << termcolor::reset << " -> "

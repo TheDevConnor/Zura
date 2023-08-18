@@ -3,7 +3,7 @@
 #include "../common.h"
 #include "../compiler/value.h"
 
-enum OpCode {
+enum OpCode : uint8_t {
   OP_CONSTANT,
   // Global operations
   OP_GET_GLOBAL,
