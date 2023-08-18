@@ -5,10 +5,11 @@
 #include "chunk.h"
 
 void init_chunk(Chunk *chunk) {
-  chunk->lines = nullptr;
-  chunk->code = nullptr;
+
+  chunk->lines    = nullptr;
+  chunk->code     = nullptr;
   chunk->capacity = 0;
-  chunk->count = 0;
+  chunk->count    = 0;
 
   init_value_array(&chunk->constants);
 }
