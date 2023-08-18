@@ -63,5 +63,5 @@ inline void runtimeError(const char *format, ...) {
   vfprintf(stderr, format, args);
   va_end(args);
   fputs("\n", stderr);
-  exit(1);
+  ZuraExit(RUNTIME_ERROR);
 }

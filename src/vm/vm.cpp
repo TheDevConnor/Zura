@@ -286,7 +286,7 @@ ObjModule *load_module(ObjString *name) {
     }
     errorMessage += "'";
     runtimeError(errorMessage.c_str(), circularDependence.size());
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   loadedModules.insert(name);
@@ -303,7 +303,7 @@ ObjModule *load_module(ObjString *name) {
     errorMessage += moduleFileName;
     errorMessage += "'";
     runtimeError(errorMessage.c_str());
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   std::vector<char> buffer;
@@ -318,7 +318,7 @@ ObjModule *load_module(ObjString *name) {
   InterpretResult result = interpret(source.c_str());
   if (result != INTERPRET_OK) {
     runtime_error("Error loading module!");
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   // Finished loading the module, remove it from loadingModules

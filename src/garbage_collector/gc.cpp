@@ -27,8 +27,9 @@ void mark_object(Obj* object) {
         vm.gray_capacity = GROW_CAPACITY(vm.gray_capacity);
         vm.gray_stack = (Obj**)realloc(vm.gray_stack, sizeof(Obj*) + vm.gray_capacity);
 
-        if
-        (vm.gray_stack == nullptr) exit(1);
+        if(vm.gray_stack == nullptr){
+            ZuraExit(BAD_GRAY_STACK);
+        }
     }
     vm.gray_stack[vm.gray_count++] = object;
 }

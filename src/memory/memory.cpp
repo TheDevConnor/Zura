@@ -21,7 +21,7 @@ void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   void *new_pointer = realloc(pointer, new_size);
   if (new_pointer == nullptr){
     cerr << "ERROR: Failed to reallocate memory.\n";
-    exit(1);
+    ZuraExit(MEMORY_FAILURE);
   }
   return new_pointer;
 }
