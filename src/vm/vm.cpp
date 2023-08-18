@@ -111,7 +111,7 @@ bool call(Obj *callee, ObjFunction *function, int arg_count) {
 
   CallFrame *frame = &vm.frames[vm.frame_count++];
   frame->closure = (ObjClosure *)callee;
-  frame->ip = function->chunk.code;
+  frame->ip = reinterpret_cast<OpCode*>(function->chunk.code);
 
   frame->slots = vm.stack_top - arg_count - 1;
   return true;
@@ -392,7 +392,7 @@ static InterpretResult run() {
         (int)(frame->ip - frame->closure->function->chunk.code));
 #endif
 
-    uint8_t instruction;
+    OpCode instruction;
     switch (instruction = read_byte()) {
     case OP_CONSTANT: {
       Value constant = read_constant();

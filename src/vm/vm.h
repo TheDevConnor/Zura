@@ -11,7 +11,7 @@
 struct CallFrame {
   Obj *function;
   ObjClosure *closure;
-  uint8_t *ip;
+  OpCode *ip;
   Value *slots;
 };
 
