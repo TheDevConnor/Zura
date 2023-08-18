@@ -63,7 +63,7 @@ inline void flags(int argc, char *argv[]) {
   }
 
   if (argc == 2 && strcmp(argv[1], "--version") == 0) {
-    cout << version() << "(" << getCurrentTime() << ")" << endl;
+    cout << get_Zura_version_string() << "(" << getCurrentTime() << ")" << endl;
     exit(0);
   }
   if (argc == 2 && strcmp(argv[1], "--license") == 0) {
