@@ -77,7 +77,8 @@ void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
   free_table(&vm.arrays);
-  free_value_array(&vm.array_values);
+ 
+  vm.init_string = nullptr;
 
   free_objects();
 }
@@ -389,7 +390,7 @@ static InterpretResult run() {
     print_stack();
     disassemble_instruction(
         &frame->closure->function->chunk,
-        (int)(frame->ip - frame->closure->function->chunk.code));
+        (int)(reinterpret_cast<uint8_t*>(frame->ip) - frame->closure->function->chunk.code));
 #endif
 
     OpCode instruction;
