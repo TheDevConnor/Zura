@@ -2,7 +2,7 @@
 #include "./getCurrentTime.h"
 #include "./repl.h"
 #include "./version.h"
-#include "common.h"
+#include "../common.h"
 
 #include <cstring>
 #include <fstream>
