@@ -46,6 +46,8 @@ Token scan_token() {
     return make_token(HASHTAG);
   case '~':
     return make_token(TILDE);
+  case '@':
+    return make_token(AT);
   case '+':
     return make_token(match('+') ? INCREMENT : PLUS);
   case '-': {

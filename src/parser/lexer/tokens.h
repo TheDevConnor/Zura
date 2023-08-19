@@ -4,25 +4,26 @@ using namespace std;
 
 typedef enum {
   // Single-character Tokens!
-  LEFT_PAREN,
-  RIGHT_PAREN, // ( )
-  LEFT_BRACE,
-  RIGHT_BRACE, // { }
-  LEFT_BRACKET,
-  RIGHT_BRACKET, // [ ]
-  COMMA,
-  DOT,
-  MINUS,
-  PLUS, // , . - +
-  SEMICOLON,
-  SLASH,
-  STAR, // ; / *
-  HASHTAG,
-  COLON,
-  MODULO, // # : %
-  DOLLAR,
-  POWER,
-  TILDE, // $ ^
+  LEFT_PAREN,    // (
+  RIGHT_PAREN,   // )
+  LEFT_BRACE,    // {
+  RIGHT_BRACE,   // }
+  LEFT_BRACKET,  // [
+  RIGHT_BRACKET, // ]
+  COMMA,    // ,
+  DOT,      // .
+  MINUS,    // -
+  PLUS,     // +
+  SEMICOLON,// ;
+  SLASH,    // /
+  STAR,     // *
+  HASHTAG,  // #
+  COLON,    // :
+  MODULO,   // %
+  DOLLAR,   // $
+  POWER,    // **
+  TILDE,    // ~
+  AT,       // @
 
   // One or two character tokens!
   BANG,

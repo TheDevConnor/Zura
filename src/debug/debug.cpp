@@ -99,6 +99,8 @@ int disassemble_instruction(Chunk *chunk, int offset) {
     return byte_instruction("OP_ARRAY", chunk, offset);
   case OP_INDEX:
     return simple_instruction("OP_INDEX", offset);
+  case OP_ADD_ELEM: 
+    return simple_instruction("OP_ADD_ELEM", offset);
   case OP_REMOVE_ELEM: 
     return simple_instruction("OP_REMOVE_ELEM", offset);
 

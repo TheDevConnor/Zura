@@ -152,6 +152,17 @@ void _removeElem(bool can_assign) {
   emit_byte(OP_REMOVE_ELEM);
 }
 
+void _addElem(bool can_assign) {
+  (void)can_assign;
+  // x -> 4 @ 0;
+  // means: add 4 to the array at index 0
+  expression();
+  parser.consume(AT, "Expect '@' after array index.");
+  expression();
+
+  emit_byte(OP_ADD_ELEM);
+}
+
 void parse_precedence(Precedence prec) {
   parser.advance(); // Consume the operator
   parse_fn prefix_rule = get_rule(parser.previous.kind)->prefix;
@@ -169,9 +180,8 @@ void parse_precedence(Precedence prec) {
     infix_rule(can_assign);
   }
 
-  if (can_assign && parser.match(ARROW_L)) {
-    _removeElem(can_assign);
-  }
+  if (can_assign && parser.match(ARROW_L)) _removeElem(can_assign);
+  if (can_assign && parser.match(ARROW_R)) _addElem(can_assign);
 
   if (can_assign && parser.match(WALRUS)) {
     parser.error("Invalid assignment target.");

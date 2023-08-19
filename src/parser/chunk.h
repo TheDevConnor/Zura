@@ -27,6 +27,7 @@ enum OpCode : uint8_t {
   // Array operations
   OP_ARRAY,
   OP_INDEX,
+  OP_ADD_ELEM,
   OP_REMOVE_ELEM,
   // Binary operations
   OP_ADD,

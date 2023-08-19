@@ -607,6 +607,43 @@ static InterpretResult run() {
       push(arr->values[idx]);
       break;
     }
+    case OP_ADD_ELEM: {
+      double value = AS_NUMBER(peek(1));
+      double index = AS_NUMBER(peek(0));
+
+      if (!IS_ARRAY(peek(2))) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(peek(2));
+
+      if (!IS_NUMBER(peek(0))) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = static_cast<int>(index);
+
+      if (idx < 0 || idx > arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      // Shift elements to the right to make space for the new element
+      for (int i = arr->count; i > idx; i--) {
+        arr->values[i] = arr->values[i - 1];
+      }
+
+      arr->values[idx] = NUMBER_VAL(value);
+      arr->count++;
+
+      pop();
+      pop();
+      pop();
+      push(ARRAY_VAL(arr));
+      break;
+    }
     case OP_REMOVE_ELEM: {
       Value index = peek(0);
       Value array = peek(1);
