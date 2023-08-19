@@ -568,6 +568,10 @@ static InterpretResult run() {
       ObjArray* array = new_array();
 
       for (int i = 0; i < count; i++) {
+        if (IS_STRING(peek(count - i - 1)) && IS_NUMBER(peek(count - i - 2))) {
+          runtimeError("Cannot mix strings and numbers in an array");
+          return INTERPRET_RUNTIME_ERROR;
+        }
         array_write(array, i, peek(count - i - 1));
       }
 
@@ -591,7 +595,7 @@ static InterpretResult run() {
         return INTERPRET_RUNTIME_ERROR;
       }
 
-      int idx = AS_NUMBER(index);
+      int idx = static_cast<int>(AS_NUMBER(index));
 
       if (idx < 0 || idx >= arr->count) {
         runtimeError("Index out of bounds");
@@ -639,6 +643,20 @@ static InterpretResult run() {
         double b = AS_NUMBER(pop());
         double a = AS_NUMBER(pop());
         push(NUMBER_VAL(a + b));
+      } else if (IS_ARRAY(peek(0)) && IS_ARRAY(peek(1))) {
+        ObjArray* b = AS_ARRAY(pop());
+        ObjArray* a = AS_ARRAY(pop());
+        ObjArray* array = new_array();
+
+        for (int i = 0; i < a->count; i++) {
+          array_write(array, i, a->values[i]);
+        }
+
+        for (int i = 0; i < b->count; i++) {
+          array_write(array, a->count + i, b->values[i]);
+        }
+
+        push(ARRAY_VAL(array));
       } else {
         runtimeError("Operands must be two numbers or two strings\n");
         return INTERPRET_RUNTIME_ERROR;

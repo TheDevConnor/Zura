@@ -1,4 +1,4 @@
 have x := [1, 7, 8];
-while (have i := 0; i < 3) : (i := i + 1) {
-    info x[i];
-}
+have y := [1, 10];
+
+info x + y;
