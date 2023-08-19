@@ -1,8 +1,4 @@
-
-have i := 0;
-while (true) : (i := ++i) {
-    if (i = 10) {
-        exit(1);
-    }
-    info i;
+have x := [1, 7, 8];
+while (have i := 0; i < 3) : (i := i + 1) {
+    info x[i];
 }

@@ -564,14 +564,43 @@ static InterpretResult run() {
     }
     // Array operation codes
     case OP_ARRAY: {
-      uint8_t num_elements = read_byte();
-      Value elements = peek(0);
-      ValueArray array;
-      init_value_array(&array);
-      for (int i = 0; i < num_elements; i++) {
-        write_value_array(&array, elements);
+      int count = read_byte();
+      ObjArray* array = new_array();
+
+      for (int i = 0; i < count; i++) {
+        array_write(array, i, peek(count - i - 1));
       }
-      push(OBJ_VAL(&array));
+
+      for (int i = 0; i < count; i++) { pop(); }
+      push(ARRAY_VAL(array));
+      break;
+    }
+    case OP_INDEX: {
+      Value index = peek(0);
+      Value array = peek(1);
+
+      if (!IS_ARRAY(array)) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(array);
+
+      if (!IS_NUMBER(index)) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = AS_NUMBER(index);
+
+      if (idx < 0 || idx >= arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      pop();
+      pop();
+      push(arr->values[idx]);
       break;
     }
     // Bool operation codes

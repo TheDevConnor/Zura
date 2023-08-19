@@ -6,6 +6,7 @@
 #include "../memory/memory.h"
 
 typedef struct Obj obj;
+typedef struct ObjArray obj_array;
 typedef struct ObjString obj_string;
 
 #ifdef NAN_BOXING
@@ -51,13 +52,14 @@ inline Value num_to_value(double num) {
 }
 #else
 
-enum ValueType { VAL_BOOL, VAL_NIL, VAL_NUMBER, VAL_OBJ };
+enum ValueType { VAL_BOOL, VAL_NIL, VAL_NUMBER, VAL_OBJ, VAL_ARRAY };
 
 struct Value {
   ValueType type;
   union {
-    bool boolean;
+    obj_array *array;
     double number;
+    bool boolean;
     Obj *obj;
   } as;
 };
@@ -66,15 +68,18 @@ struct Value {
 #define IS_NIL(value)     ((value).type == VAL_NIL)
 #define IS_NUMBER(value)  ((value).type == VAL_NUMBER)
 #define IS_OBJ(value)     ((value).type == VAL_OBJ)
+#define IS_ARRAY(value)   ((value).type == VAL_ARRAY)
 
 #define AS_BOOL(value)   ((value).as.boolean)
 #define AS_NUMBER(value) ((value).as.number)
 #define AS_OBJ(value)    ((value).as.obj)
+#define AS_ARRAY(value)  ((value).as.array)
 
 #define BOOL_VAL(value)   Value{VAL_BOOL, {.boolean = value}}
 #define NIL_VAL           Value{VAL_NIL, {.number = 0}}
 #define NUMBER_VAL(value) Value{VAL_NUMBER, {.number = value}}
 #define OBJ_VAL(object)   Value{VAL_OBJ, {.obj = (Obj *)object}}
+#define ARRAY_VAL(object) Value{VAL_ARRAY, {.obj = (Obj *)object}}
 
 #endif
 

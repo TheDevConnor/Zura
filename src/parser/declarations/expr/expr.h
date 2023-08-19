@@ -132,19 +132,18 @@ void array_literal(bool can_assign) {
   (void)can_assign;
   int num_elements = 0;
 
-  while (!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
+  while(!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
     expression();
-    if (num_elements > 255) {
+    if(num_elements > 255) {
       parser.error("Cannot have more than 255 elements in an array.");
     }
     num_elements++;
-    if (!parser.match(COMMA)) {
+    if(!parser.match(COMMA)) {
       break;
     }
   }
   parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
-  emit_byte(OP_ARRAY);
-  emit_byte((uint8_t)num_elements);
+  emit_bytes(OP_ARRAY, (uint8_t)num_elements);
 }
 
 void parse_precedence(Precedence prec) {
@@ -174,6 +173,8 @@ void parse_precedence(Precedence prec) {
 
   // Check for the array literal
   if (can_assign && parser.match(LEFT_BRACKET)) {
-    array_literal(can_assign);
+    expression();
+    parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
+    emit_byte(OP_INDEX);
   }
 }

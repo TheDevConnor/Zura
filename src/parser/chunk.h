@@ -26,6 +26,7 @@ enum OpCode : uint8_t {
   OP_SUPER_INVOKE,
   // Array operations
   OP_ARRAY,
+  OP_INDEX,
   // Binary operations
   OP_ADD,
   OP_SUBTRACT,

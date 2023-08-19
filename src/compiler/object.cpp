@@ -129,6 +129,30 @@ ObjString *copy_string(const char *chars, int length) {
   return string;
 }
 
+ObjArray* new_array() {
+  ObjArray* array = ALLOCATE(ObjArray, 1);
+  array->values = nullptr;
+  array->capacity = 0;
+  array->count = 0;
+  return array;
+}
+
+Value array_read(ObjArray* array, int val) {
+  if (val >= array->count) return NIL_VAL;
+  return array->values[val];
+}
+
+ObjArray* array_write(ObjArray* array, int val, Value value) {
+  if (array->capacity < val + 1) {
+    int old_capacity = array->capacity;
+    array->capacity = GROW_CAPACITY(old_capacity);
+    array->values = GROW_ARRAY(Value, array->values, old_capacity, array->capacity);
+  }
+  array->values[val] = value;
+  array->count = val + 1;
+  return array;
+}
+
 ObjUpvalue *new_upvalue(Value *slot) {
   ObjUpvalue *upvalue = ALLOCATE_OBJ(ObjUpvalue, OBJ_UPVALUE);
   upvalue->closed = NIL_VAL;
