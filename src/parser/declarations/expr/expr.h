@@ -146,6 +146,12 @@ void array_literal(bool can_assign) {
   emit_bytes(OP_ARRAY, (uint8_t)num_elements);
 }
 
+void _removeElem(bool can_assign) {
+  (void)can_assign;
+  expression();
+  emit_byte(OP_REMOVE_ELEM);
+}
+
 void parse_precedence(Precedence prec) {
   parser.advance(); // Consume the operator
   parse_fn prefix_rule = get_rule(parser.previous.kind)->prefix;
@@ -161,6 +167,10 @@ void parse_precedence(Precedence prec) {
     parser.advance();
     parse_fn infix_rule = get_rule(parser.previous.kind)->infix;
     infix_rule(can_assign);
+  }
+
+  if (can_assign && parser.match(ARROW_L)) {
+    _removeElem(can_assign);
   }
 
   if (can_assign && parser.match(WALRUS)) {

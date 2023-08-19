@@ -607,6 +607,40 @@ static InterpretResult run() {
       push(arr->values[idx]);
       break;
     }
+    case OP_REMOVE_ELEM: {
+      Value index = peek(0);
+      Value array = peek(1);
+
+      if (!IS_ARRAY(array)) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(array);
+
+      if (!IS_NUMBER(index)) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = static_cast<int>(AS_NUMBER(index));
+
+      if (idx < 0 || idx >= arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      pop();
+      pop();
+
+      for (int i = idx; i < arr->count - 1; i++) {
+        arr->values[i] = arr->values[i + 1];
+      }
+
+      arr->count--;
+      push(ARRAY_VAL(arr));
+      break;
+    }
     // Bool operation codes
     case OP_TRUE:
       push(BOOL_VAL(true));

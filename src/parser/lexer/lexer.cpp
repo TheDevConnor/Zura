@@ -48,8 +48,11 @@ Token scan_token() {
     return make_token(TILDE);
   case '+':
     return make_token(match('+') ? INCREMENT : PLUS);
-  case '-':
-    return make_token(match('-') ? DECREMENT : MINUS);
+  case '-': {
+    if (match('>')) return make_token(ARROW_R);
+    else if (match('-')) return make_token(DECREMENT);
+    else return make_token(MINUS);
+  }
   case '&':
     return make_token(match('&') ? AND : BIT_AND);
   case '|':
@@ -64,8 +67,11 @@ Token scan_token() {
     return make_token(match('=') ? WALRUS : COLON);
   case '>':
     return make_token(match('=') ? GREATER_EQUAL : GREATER);
-  case '<':
-    return make_token(match('=') ? LESS_EQUAL : LESS);
+  case '<': {
+    if (match('=')) return make_token(LESS_EQUAL);
+    else if (match('-')) return make_token(ARROW_L);
+    else return make_token(LESS);
+  }
   case '"':
     return _string();
   }

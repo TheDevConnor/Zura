@@ -37,6 +37,8 @@ typedef enum {
   INHERITANCE, // := extends
   INCREMENT,
   DECREMENT, // ++ --
+  ARROW_L,   // <-
+  ARROW_R,   // ->
 
   // Literals!
   IDENTIFIER,
