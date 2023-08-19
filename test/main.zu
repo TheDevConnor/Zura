@@ -1,4 +1,21 @@
-have x := [1, 7, 8];
-have y := [1, 10];
+// This is my solution for doing the climbing stairs problem from leetcode
+// https://leetcode.com/problems/climbing-stairs/
 
-info x + y;
+class Solutions {
+    climbStrais(n) {
+        if (n <= 2) return n;
+
+        have p1 := 1; have p2 := 2;
+        have current := 0;
+
+        while (have i := 0; i < n - 2) : (i := i + 1) {
+            current := p1 + p2;
+            p1 := p2;
+            p2 := current;
+        }
+        
+        return current;
+    }
+}
+
+info Solutions().climbStrais(10);
