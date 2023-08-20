@@ -186,8 +186,8 @@ void parse_precedence(Precedence prec) {
   if (can_assign && parser.match(ARROW_R)) _addElem(can_assign);
 
   // Lets check to see if after the var-name we have a ++ or --
-  if (can_assign && (parser.match(INCREMENT) || parser.match(DECREMENT)))
-    emit_byte(parser.previous.kind == INCREMENT ? OP_INCREMENT : OP_DECREMENT);
+  // if (can_assign && (parser.match(INCREMENT) || parser.match(DECREMENT)))
+  //   emit_byte(parser.previous.kind == INCREMENT ? OP_INCREMENT : OP_DECREMENT);
 
   if (can_assign && parser.match(WALRUS)) {
     parser.error("Invalid assignment target.");

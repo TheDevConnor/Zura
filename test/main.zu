@@ -1,3 +1,7 @@
-while (have i := 1; i < 10) : (i := i++) {
+while (have i := 10; i > 0) : (i--) {
+    info i;
+}
+info "";
+while (have i := 0; i < 10) : (i++) {
     info i;
 }

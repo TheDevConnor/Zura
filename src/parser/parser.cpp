@@ -352,6 +352,11 @@ void named_variable(Token name, bool can_assign) {
   if (parser.match(WALRUS) && can_assign) {
     expression();
     emit_bytes(set_op, (uint8_t)arg);
+  } else if (can_assign && (parser.match(INCREMENT) || parser.match(DECREMENT))) {
+    TokenKind op = parser.previous.kind;
+    emit_bytes(get_op, (uint8_t)arg);
+    emit_byte(op == INCREMENT ? OP_INCREMENT : OP_DECREMENT);
+    emit_bytes(set_op, (uint8_t)arg);
   } else {
     emit_bytes(get_op, (uint8_t)arg);
   }
