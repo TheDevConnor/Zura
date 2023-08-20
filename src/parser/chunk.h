@@ -69,7 +69,6 @@ enum OpCode : uint8_t {
   OP_IMPORT,
   OP_SLEEP,
   OP_EXIT,
-  OP_STD,
   OP_CLASS,
   OP_INPUT,
   OP_INFO,

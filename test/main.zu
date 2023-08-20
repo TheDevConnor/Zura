@@ -1,17 +1,3 @@
-
-fn addTwoArrays(x, y)   { return x + y; }
-fn popFromArray(x, y)   { return x <- y; }
-fn pushToArray(x, y, z) { return x -> y @ z; }
-
-have x := [1, 3, 2];
-info addTwoArrays(x, [2, 4]); // [1, 3, 2, 2, 4]
-info popFromArray(x, 1);      // [1, 2]
-info pushToArray(x, 4, 1);    // [1, 4, 2]
-
-
-// TODO: fix this it doesn't work yet
-// have x := [];
-// while (have i := 0; i < 10) : (i := i + 1) {
-//     info x -> i @ i;
-// }
-// info x; // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+while (have i := 1; i < 10) : (i := i++) {
+    info i;
+}

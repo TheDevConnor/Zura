@@ -750,7 +750,6 @@ static InterpretResult run() {
       POW_OP(NUMBER_VAL, **);
       break;
     case OP_INCREMENT: {
-      // ++2 and we have the value pushed on the stack
       double a = AS_NUMBER(pop());
       push(NUMBER_VAL(a + 1));
       break;
@@ -858,12 +857,6 @@ static InterpretResult run() {
       ObjModule *module = load_module(module_name);
       loadedModules.insert(module_name);
       table_add_all(&module->variables, &vm.globals);
-      break;
-    }
-    case OP_STD: {
-      cout << "Standard library loaded\n";
-      ObjString *std_name = AS_STRING(pop()); // std/math -> math
-      std_name->chars += 4;                   // math
       break;
     }
     case OP_INFO: {

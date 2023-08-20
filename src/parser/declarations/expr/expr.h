@@ -96,12 +96,6 @@ void unary(bool can_assign) {
   case MINUS:
     emit_byte(OP_NEGATE);
     break;
-  case INCREMENT:
-    emit_byte(OP_INCREMENT);
-    break;
-  case DECREMENT:
-    emit_byte(OP_DECREMENT);
-    break;
   default:
     return; // Unreachable
   }
@@ -180,8 +174,20 @@ void parse_precedence(Precedence prec) {
     infix_rule(can_assign);
   }
 
+  // This code here is checking for a left bracket after an expression
+  // If there is one we know that we are dealing with the index operator
+  if (can_assign && parser.match(LEFT_BRACKET)) {
+    expression();
+    parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
+    emit_byte(OP_INDEX);
+  }
+  // the next two lines are for array pop and push
   if (can_assign && parser.match(ARROW_L)) _removeElem(can_assign);
   if (can_assign && parser.match(ARROW_R)) _addElem(can_assign);
+
+  // Lets check to see if after the var-name we have a ++ or --
+  if (can_assign && (parser.match(INCREMENT) || parser.match(DECREMENT)))
+    emit_byte(parser.previous.kind == INCREMENT ? OP_INCREMENT : OP_DECREMENT);
 
   if (can_assign && parser.match(WALRUS)) {
     parser.error("Invalid assignment target.");
@@ -189,12 +195,5 @@ void parse_precedence(Precedence prec) {
 
   if (can_assign && parser.match(TK_INPUT)) {
     input_statement(true);
-  }
-
-  // Check for the array literal
-  if (can_assign && parser.match(LEFT_BRACKET)) {
-    expression();
-    parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
-    emit_byte(OP_INDEX);
   }
 }

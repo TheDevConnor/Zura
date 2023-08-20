@@ -11,7 +11,10 @@ using namespace std;
 void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   vm.bytes_allocated += new_size - old_size;
   if (new_size > old_size) {
-    mark_roots();
+#ifndef DEBUG_LOG_GC
+    cout << "Allocating " << new_size - old_size << " bytes.\n";
+    collect_garbage();
+#endif
   }
 
   if (new_size == 0) {
@@ -79,8 +82,6 @@ static void free_obj(Obj *object) {
 }
 
 void free_objects() {
-  // call garbage collector
-  collect_garbage();
   // free memory
   for(Obj* i = vm.objects; i; i = i->next){
       free_obj(i);
