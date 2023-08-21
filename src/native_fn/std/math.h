@@ -4,6 +4,7 @@
 #include <cstring>
 #include <ctime>
 #include <iostream>
+#include <stdint.h>
 
 #include "../../compiler/object.h"
 #include "../../vm/vm.h"
@@ -199,6 +200,29 @@ private:
     double number_atan = atan(number);
     return NUMBER_VAL(number_atan);
   }
+  static double fastPow(__int128_t a, __int128_t b) {
+    union {
+      double d;
+      int x[2];
+    } u = { a };
+    u.x[1] = (__int128_t)(b * (u.x[1] - 1072632447) + 1072632447);
+    u.x[0] = 0;
+    return u.d;
+  }
+  static __int128_t fib(__int128_t input) {
+    __int128_t sqrt5 = sqrt(5);
+    return (fastPow(1 + sqrt5, input) - fastPow(1 - sqrt5, input)) / fastPow(2, input) / sqrt5;
+  }
+  static Value fib_native(int arg_count, Value *args) {
+    if (arg_count != 1)
+      return BOOL_VAL(false);
+    if (!IS_NUMBER(args[0]))
+      return BOOL_VAL(false);
+
+    __int128_t number = AS_NUMBER(args[0]);
+    __int128_t number_fib = fib(number);
+    return NUMBER_VAL(static_cast<double>(number_fib));
+  }
 
 public:
   static void define_math_natives() {
@@ -226,5 +250,6 @@ public:
     Natives::define_native("mathAsin", asin_native); // Arch Sine
     Natives::define_native("mathAcos", acos_native); // Arch Cosine
     Natives::define_native("mathAtan", atan_native); // Arch Tangent
+    Natives::define_native("mathFastFib", fib_native);
   }
 };

@@ -1,7 +1,10 @@
-while (have i := 10; i > 0) : (i--) {
-    info i;
+include "std";
+include "std/math";
+
+have start := clock();
+
+while (have i := 0; i <= 400) : (i++) {
+    info toString(mathFib(i));
 }
-info "";
-while (have i := 0; i < 10) : (i++) {
-    info i;
-}
+
+info (clock() - start);
