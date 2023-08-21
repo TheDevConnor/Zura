@@ -204,7 +204,7 @@ private:
     union {
       double d;
       int x[2];
-    } u = { a };
+    } u = { static_cast<double>(a) };
     u.x[1] = (__int128_t)(b * (u.x[1] - 1072632447) + 1072632447);
     u.x[0] = 0;
     return u.d;

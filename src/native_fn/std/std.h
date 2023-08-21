@@ -34,7 +34,7 @@ private:
     if (!IS_NUMBER(args[0]))
       return BOOL_VAL(false);
 
-    char buffer[100];
+    char buffer[3000];
     sprintf(buffer, "%f", AS_NUMBER(args[0]));
     return OBJ_VAL(copy_string(buffer, (int)strlen(buffer)));
   }
