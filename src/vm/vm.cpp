@@ -861,7 +861,6 @@ static InterpretResult run() {
     }
     case OP_INFO: {
       print_value(pop());
-      cout << "\n";
       break;
     }
     case OP_INPUT: {

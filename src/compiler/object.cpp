@@ -190,7 +190,27 @@ void print_object(Value value) {
     cout << "<native fn>";
     break;
   case OBJ_STRING:
-    printf("%s", AS_CSTRING(value));
+    for (int i = 0; i < AS_STRING(value)->length; i++) {
+      if (AS_STRING(value)->chars[i] == '\\') {
+        switch (AS_STRING(value)->chars[i + 1]) {
+        case 'n': // newline
+          cout << '\n';
+          break;
+        case 't': // tab
+          cout << '\t';
+          break;
+        case 'r': // carriage return
+          cout << '\r';
+          break;
+        default:
+          cout << AS_STRING(value)->chars[i + 1];
+          break;
+        }
+        i++;
+      } else {
+        cout << AS_STRING(value)->chars[i];
+      }
+    }
     break;
   case OBJ_UPVALUE:
     cout << "upvalue";
