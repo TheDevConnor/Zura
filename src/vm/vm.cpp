@@ -583,6 +583,29 @@ static InterpretResult run() {
       Value index = peek(0);
       Value array = peek(1);
 
+      // Check to whether we are index a string or an array
+      if (IS_STRING(array)) {
+        ObjString* str = AS_STRING(array);
+
+        if (!IS_NUMBER(index)) {
+          runtimeError("Only numbers can be used as indexes");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+
+        // print the character at the index
+        int idx = static_cast<int>(AS_NUMBER(index));
+
+        if (idx < 0 || idx >= str->length) {
+          runtimeError("Index out of bounds");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+
+        pop();
+        pop();
+        push(OBJ_VAL(copy_string(&str->chars[idx], 1)));
+        break;
+      }
+
       if (!IS_ARRAY(array)) {
         runtimeError("Only arrays have indexes");
         return INTERPRET_RUNTIME_ERROR;
