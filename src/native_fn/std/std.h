@@ -25,6 +25,9 @@ private:
 
     ObjString *string = AS_STRING(args[0]);
     double number_length = string->length;
+
+    delete string;
+
     return NUMBER_VAL(number_length);
   }
 
