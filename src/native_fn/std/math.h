@@ -200,17 +200,17 @@ private:
     double number_atan = atan(number);
     return NUMBER_VAL(number_atan);
   }
-  static double fastPow(__int128_t a, __int128_t b) {
+  static double fastPow(int32_t a, int32_t b) {
     union {
       double d;
       int x[2];
     } u = { static_cast<double>(a) };
-    u.x[1] = (__int128_t)(b * (u.x[1] - 1072632447) + 1072632447);
+    u.x[1] = (int32_t)(b * (u.x[1] - 1072632447) + 1072632447);
     u.x[0] = 0;
     return u.d;
   }
-  static __int128_t fib(__int128_t input) {
-    __int128_t sqrt5 = sqrt(5);
+  static int32_t fib(int32_t input) {
+    int32_t sqrt5 = sqrt(5);
     return (fastPow(1 + sqrt5, input) - fastPow(1 - sqrt5, input)) / fastPow(2, input) / sqrt5;
   }
   static Value fib_native(int arg_count, Value *args) {
@@ -219,8 +219,8 @@ private:
     if (!IS_NUMBER(args[0]))
       return BOOL_VAL(false);
 
-    __int128_t number = AS_NUMBER(args[0]);
-    __int128_t number_fib = fib(number);
+    int32_t number = AS_NUMBER(args[0]);
+    int32_t number_fib = fib(number);
     return NUMBER_VAL(static_cast<double>(number_fib));
   }
 
