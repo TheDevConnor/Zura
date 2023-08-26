@@ -41,11 +41,12 @@ CXX          = g++ --std=c++20
 CXX_EMIT_OBJ = -c -o
 CXX_EMIT_EXE = -o
 CXX_INC      = -I
-CXX_LIB      = -L
+CXX_LIB      = 
 
-LIBS         = -lglfw -X11
+LIBS         = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
 
-RM           = rm
+RM   = rm
+ECHO = echo
 
 
 # -----------------------------------------------------------------------------
@@ -86,29 +87,29 @@ endif
 # Append using the += operator as seen below.
 # -----------------------------------------------------------------------------
 
-SRC_FILES  = src\compiler\object.cpp 
-SRC_FILES += src\compiler\table.cpp 
-SRC_FILES += src\compiler\value.cpp
-SRC_FILES += src\debug\debug.cpp
-SRC_FILES += src\garbage_collector\gc.cpp 
-SRC_FILES += src\memory\memory.cpp 
-SRC_FILES += src\parser\lexer\lexer.cpp 
-SRC_FILES += src\parser\chunk.cpp 
-SRC_FILES += src\parser\parser.cpp
-SRC_FILES += src\types\type.cpp
-SRC_FILES += src\vm\vm.cpp 
-SRC_FILES += src\common.cpp
-SRC_FILES += src\main.cpp
+SRC_FILES  = src/compiler/object.cpp 
+SRC_FILES += src/compiler/table.cpp 
+SRC_FILES += src/compiler/value.cpp
+SRC_FILES += src/debug/debug.cpp
+SRC_FILES += src/garbage_collector/gc.cpp 
+SRC_FILES += src/memory/memory.cpp 
+SRC_FILES += src/parser/lexer/lexer.cpp 
+SRC_FILES += src/parser/chunk.cpp 
+SRC_FILES += src/parser/parser.cpp
+SRC_FILES += src/types/type.cpp
+SRC_FILES += src/vm/vm.cpp 
+SRC_FILES += src/common.cpp
+SRC_FILES += src/main.cpp
 
-IMGUI_DEMO_SRC   = inc\imgui\opengl_demo_main.cpp 
+IMGUI_DEMO_SRC   = inc/imgui/opengl_demo_main.cpp 
 
-IMGUI_SRC_FILES  = inc\imgui\imgui.cpp 
-IMGUI_SRC_FILES += inc\imgui\imgui_demo.cpp
-IMGUI_SRC_FILES += inc\imgui\imgui_draw.cpp 
-IMGUI_SRC_FILES += inc\imgui\imgui_impl_glfw.cpp 
-IMGUI_SRC_FILES += inc\imgui\imgui_impl_opengl3.cpp 
-IMGUI_SRC_FILES += inc\imgui\imgui_tables.cpp
-IMGUI_SRC_FILES += inc\imgui\imgui_widgets.cpp 
+IMGUI_SRC_FILES  = inc/imgui/imgui.cpp 
+IMGUI_SRC_FILES += inc/imgui/imgui_demo.cpp
+IMGUI_SRC_FILES += inc/imgui/imgui_draw.cpp 
+IMGUI_SRC_FILES += inc/imgui/imgui_impl_glfw.cpp 
+IMGUI_SRC_FILES += inc/imgui/imgui_impl_opengl3.cpp 
+IMGUI_SRC_FILES += inc/imgui/imgui_tables.cpp
+IMGUI_SRC_FILES += inc/imgui/imgui_widgets.cpp 
 
 ifeq ($(ZURA_GUI),1)
 
@@ -146,7 +147,7 @@ clean_zura:
 	$(RM) $(OBJ_FILES)
 
 clean_bin:
-	$(RM) $(BIN_DIR)\*.exe
+	$(RM) $(BIN_DIR)/*.exe
 
 clean: clean_imgui_obj clean_zura clean_bin
 
@@ -156,5 +157,7 @@ echo_OS:
 echo_IMGUI: 
 	@echo $(IMGUI_DEMO_OBJ)
 
+echo_OBJ: 
+	@echo $(OBJ_FILES)
 
 
