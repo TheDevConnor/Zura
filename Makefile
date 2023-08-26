@@ -31,7 +31,7 @@
 # Default build 
 # -----------------------------------------------------------------------------
 
-CXX 		 = g++ --std=c++20
+CXX 		 =  g++ --std=c++20
 CXX_EMIT_OBJ = -c -o
 CXX_EMIT_EXE = -o
 CXX_INC      = -I
