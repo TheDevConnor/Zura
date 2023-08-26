@@ -1,3 +1,11 @@
+// Define ZURA_GUI with compiler invocation.
+#if ZURA_GUI
+
+#include <imgui/imgui.h>
+#include <GLFW/glfw3.h> 
+    
+#endif
+
 // Including necessary C standard libraries
 #include <stdio.h>  // Standard input/output functions
 #include <stdlib.h> // Standard library functions, e.g., memory allocation
@@ -8,6 +16,7 @@
 #include "helper/flags.h" // Command-line flags parsing
 #include "parser/chunk.h" // Chunk data structure and parsing functions
 #include "vm/vm.h"        // Virtual machine implementation
+
 
 int main(int argc, char *argv[]) {
   // Parsing command-line arguments using custom 'flags' function
@@ -25,4 +34,5 @@ int main(int argc, char *argv[]) {
 
   // The main function should return 0 to indicate successful execution
   return 0;
+
 }

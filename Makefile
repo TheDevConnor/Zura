@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# 								Zura Makefile
+#                             Zura Makefile
 #
 # =============================================================================
 # This Makefile supports the Zura project. It can build on Linux using GCC,
@@ -9,16 +9,22 @@
 # Building for Linux and Windows with GCC is straightforward.
 #
 # 	Example:
-# 				make clean
-# 				make zura
+#               make clean
+#               make zura
 #
 # 
 # Building for Windows with MSVC requires an addtional flag.
 #
 # 	Example:
-# 				make clean
-# 				make zura MSVC=1
+#               make clean
+#               make zura MSVC=1
 #
+#
+# Building for Windows with MSVC with Dear ImGui using multiple jobs.
+#
+# 	Example:
+#               make clean
+#               make zura MSVC=1 ZURA_GUI=1 -j 12
 #
 # It is recommended you run `make clean` before changing your build type,
 # ie. do not run `make zura` then `make debug` while modifying the source
@@ -31,21 +37,23 @@
 # Default build 
 # -----------------------------------------------------------------------------
 
-CXX 		 = g++ --std=c++20
+CXX          = g++ --std=c++20
 CXX_EMIT_OBJ = -c -o
 CXX_EMIT_EXE = -o
 CXX_INC      = -I
 CXX_LIB      = -L
 
-LIBS 		 = -lglfw -X11
+LIBS         = -lglfw -X11
 
-RM			 = rm
+RM           = rm
 
 
 # -----------------------------------------------------------------------------
 # Windows-specific variable-reassignment
 # -----------------------------------------------------------------------------
 ifeq ($(OS), Windows_NT)
+
+CXX     += -D_CRT_SECURE_NO_WARNINGS
 
 LIB_DIR = .\lib\win\mingw-w64
 LIBS    = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
@@ -59,7 +67,7 @@ endif
 # -----------------------------------------------------------------------------
 ifeq ($(MSVC), 1)
 
-CXX 		 = cl.exe /std:c++20 /EHsc /nologo /MD
+CXX          = cl.exe /std:c++20 /EHsc /nologo /MD
 CXX_INC      = /I
 CXX_EMIT_OBJ = /c /Fo:
 CXX_EMIT_EXE = /Fe:
