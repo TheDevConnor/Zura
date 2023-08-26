@@ -105,6 +105,13 @@ struct ObjBoundMethod {
   ObjClosure *method;
 };
 
+struct ObjArray {
+  Obj obj;
+  int count;
+  int capacity;
+  Value *values;
+};
+
 ObjBoundMethod *new_bound_method(Value receiver, ObjClosure *method);
 
 ObjClass *new_class(ObjString *name);
@@ -118,6 +125,10 @@ ObjInstance *new_instance(ObjClass *klass);
 ObjNative *new_native(NativeFn function);
 ObjString *take_string(char *chars, int length);
 ObjString *copy_string(const char *chars, int length);
+
+ObjArray* new_array();
+Value array_read(ObjArray* array, int index);
+ObjArray* array_write(ObjArray* array, int val, Value value);
 
 ObjUpvalue *new_upvalue(Value *slot);
 

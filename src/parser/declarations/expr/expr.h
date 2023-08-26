@@ -96,12 +96,6 @@ void unary(bool can_assign) {
   case MINUS:
     emit_byte(OP_NEGATE);
     break;
-  case INCREMENT:
-    emit_byte(OP_INCREMENT);
-    break;
-  case DECREMENT:
-    emit_byte(OP_DECREMENT);
-    break;
   default:
     return; // Unreachable
   }
@@ -117,7 +111,7 @@ void dot(bool can_assign) {
   parser.consume(IDENTIFIER, "Exactly property name after '.'");
   uint8_t name = identifier_constant(&parser.previous);
 
-  if (can_assign && parser.match(EQUAL)) {
+  if (can_assign && parser.match(WALRUS)) {
     expression();
     emit_bytes(OP_SET_PROPERTY, name);
   } else if (parser.match(LEFT_PAREN)) {
@@ -132,19 +126,35 @@ void array_literal(bool can_assign) {
   (void)can_assign;
   int num_elements = 0;
 
-  while (!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
+  while(!parser.check(RIGHT_BRACKET) && !parser.check(EOF_TOKEN)) {
     expression();
-    if (num_elements > 255) {
+    if(num_elements > 255) {
       parser.error("Cannot have more than 255 elements in an array.");
     }
     num_elements++;
-    if (!parser.match(COMMA)) {
+    if(!parser.match(COMMA)) {
       break;
     }
   }
   parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
-  emit_byte(OP_ARRAY);
-  emit_byte((uint8_t)num_elements);
+  emit_bytes(OP_ARRAY, (uint8_t)num_elements);
+}
+
+void _removeElem(bool can_assign) {
+  (void)can_assign;
+  expression();
+  emit_byte(OP_REMOVE_ELEM);
+}
+
+void _addElem(bool can_assign) {
+  (void)can_assign;
+  // x -> 4 @ 0;
+  // means: add 4 to the array at index 0
+  expression();
+  parser.consume(AT, "Expect '@' after array index.");
+  expression();
+
+  emit_byte(OP_ADD_ELEM);
 }
 
 void parse_precedence(Precedence prec) {
@@ -164,16 +174,26 @@ void parse_precedence(Precedence prec) {
     infix_rule(can_assign);
   }
 
-  if (can_assign && parser.match(EQUAL)) {
+  // This code here is checking for a left bracket after an expression
+  // If there is one we know that we are dealing with the index operator
+  if (can_assign && parser.match(LEFT_BRACKET)) {
+    expression();
+    parser.consume(RIGHT_BRACKET, "Expect ']' after array elements.");
+    emit_byte(OP_INDEX);
+  }
+  // the next two lines are for array pop and push
+  if (can_assign && parser.match(ARROW_L)) _removeElem(can_assign);
+  if (can_assign && parser.match(ARROW_R)) _addElem(can_assign);
+
+  // Lets check to see if after the var-name we have a ++ or --
+  // if (can_assign && (parser.match(INCREMENT) || parser.match(DECREMENT)))
+  //   emit_byte(parser.previous.kind == INCREMENT ? OP_INCREMENT : OP_DECREMENT);
+
+  if (can_assign && parser.match(WALRUS)) {
     parser.error("Invalid assignment target.");
   }
 
   if (can_assign && parser.match(TK_INPUT)) {
     input_statement(true);
-  }
-
-  // Check for the array literal
-  if (can_assign && parser.match(LEFT_BRACKET)) {
-    array_literal(can_assign);
   }
 }

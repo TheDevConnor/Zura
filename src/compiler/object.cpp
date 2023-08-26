@@ -129,6 +129,30 @@ ObjString *copy_string(const char *chars, int length) {
   return string;
 }
 
+ObjArray* new_array() {
+  ObjArray* array = ALLOCATE(ObjArray, 1);
+  array->values = nullptr;
+  array->capacity = 0;
+  array->count = 0;
+  return array;
+}
+
+Value array_read(ObjArray* array, int val) {
+  if (val >= array->count) return NIL_VAL;
+  return array->values[val];
+}
+
+ObjArray* array_write(ObjArray* array, int val, Value value) {
+  if (array->capacity < val + 1) {
+    int old_capacity = array->capacity;
+    array->capacity = GROW_CAPACITY(old_capacity);
+    array->values = GROW_ARRAY(Value, array->values, old_capacity, array->capacity);
+  }
+  array->values[val] = value;
+  array->count = val + 1;
+  return array;
+}
+
 ObjUpvalue *new_upvalue(Value *slot) {
   ObjUpvalue *upvalue = ALLOCATE_OBJ(ObjUpvalue, OBJ_UPVALUE);
   upvalue->closed = NIL_VAL;
@@ -139,10 +163,10 @@ ObjUpvalue *new_upvalue(Value *slot) {
 
 void print_function(ObjFunction *function) {
   if (function->name == nullptr) {
-    cout << "<script>";
+    cout << "<script " << function->name << ">";
     return;
   }
-  cout << "<fn " << function->name->chars;
+  cout << "<fn " << function->name->chars << ">";
 }
 
 void print_object(Value value) {
@@ -166,7 +190,27 @@ void print_object(Value value) {
     cout << "<native fn>";
     break;
   case OBJ_STRING:
-    printf("%s", AS_CSTRING(value));
+    for (int i = 0; i < AS_STRING(value)->length; i++) {
+      if (AS_STRING(value)->chars[i] == '\\') {
+        switch (AS_STRING(value)->chars[i + 1]) {
+        case 'n': // newline
+          cout << '\n';
+          break;
+        case 't': // tab
+          cout << '\t';
+          break;
+        case 'r': // carriage return
+          cout << '\r';
+          break;
+        default:
+          cout << AS_STRING(value)->chars[i + 1];
+          break;
+        }
+        i++;
+      } else {
+        cout << AS_STRING(value)->chars[i];
+      }
+    }
     break;
   case OBJ_UPVALUE:
     cout << "upvalue";

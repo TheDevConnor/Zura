@@ -3,7 +3,7 @@
 #include "../common.h"
 #include "../compiler/value.h"
 
-enum OpCode {
+enum OpCode : uint8_t {
   OP_CONSTANT,
   // Global operations
   OP_GET_GLOBAL,
@@ -26,6 +26,9 @@ enum OpCode {
   OP_SUPER_INVOKE,
   // Array operations
   OP_ARRAY,
+  OP_INDEX,
+  OP_ADD_ELEM,
+  OP_REMOVE_ELEM,
   // Binary operations
   OP_ADD,
   OP_SUBTRACT,
@@ -66,7 +69,6 @@ enum OpCode {
   OP_IMPORT,
   OP_SLEEP,
   OP_EXIT,
-  OP_STD,
   OP_CLASS,
   OP_INPUT,
   OP_INFO,

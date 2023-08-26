@@ -17,7 +17,7 @@ Switch ($args[0])
         Write-Host "== Building Debug =="
         # Compile
         # /MDd gives linker warnings if you don't build dependancies with it.
-        CL.exe /D _CRT_SECURE_NO_WARNINGS /std:c++20 /Z7 /nologo /W3 /MDd /Od /EHsc /I.\inc\ /Fe:.\bin\zura_debug.exe $src_files /link /SUBSYSTEM:console
+        CL.exe /D _CRT_SECURE_NO_WARNINGS /std:c++20 /Z7 /nologo /W3 /MDd /Od /EHsc /I.\inc\ /Fe:.\bin\zura_debug.exe $src_files kernel32.lib /link /SUBSYSTEM:console
 
         # Don't separate Linking step yet
         # Link
@@ -43,7 +43,7 @@ Switch ($args[0])
 
 
     'edit' {
-        gvim.exe $src_files
+        gvim.exe $all_files build.ps1
     }
 
     'format'{
