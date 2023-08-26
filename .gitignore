@@ -5,7 +5,5 @@
 *.exe
 *.pdb
 *.obj
-*.dll
-*.lib
 *.ini
 *.a

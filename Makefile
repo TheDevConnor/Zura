@@ -13,7 +13,7 @@
 # 				make zura
 #
 # 
-# Building for Windows with MSVC requires an addtional flag.
+# Building for Windows with MSVC requires an additional flag.
 #
 # 	Example:
 # 				make clean
