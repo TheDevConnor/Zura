@@ -38,7 +38,6 @@
 using namespace std;
 
 VM vm;
-ObjString *cpy_str = nullptr;
 
 void reset_stack() {
   vm.stack_top = vm.stack;
@@ -78,8 +77,8 @@ void free_vm() {
   free_table(&vm.globals);
   free_table(&vm.strings);
   free_table(&vm.arrays);
-
-  delete vm.init_string;
+ 
+  vm.init_string = nullptr;
 
   free_objects();
 }
@@ -113,7 +112,7 @@ bool call(Obj *callee, ObjFunction *function, int arg_count) {
 
   CallFrame *frame = &vm.frames[vm.frame_count++];
   frame->closure = (ObjClosure *)callee;
-  frame->ip = function->chunk.code;
+  frame->ip = reinterpret_cast<OpCode*>(function->chunk.code);
 
   frame->slots = vm.stack_top - arg_count - 1;
   return true;
@@ -287,7 +286,7 @@ ObjModule *load_module(ObjString *name) {
     }
     errorMessage += "'";
     runtimeError(errorMessage.c_str(), circularDependence.size());
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   loadedModules.insert(name);
@@ -304,7 +303,7 @@ ObjModule *load_module(ObjString *name) {
     errorMessage += moduleFileName;
     errorMessage += "'";
     runtimeError(errorMessage.c_str());
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   std::vector<char> buffer;
@@ -316,18 +315,10 @@ ObjModule *load_module(ObjString *name) {
 
   string source(buffer.begin(), buffer.end());
 
-  // ObjFunction* result = compile(source.c_str());
-  // if (!result) {
-  //     // Handle the error appropriately, such as returning an error value or
-  //     // throwing an exception.
-  //     runtimeError("Error loading module!");
-  //     exit(1);
-  // }
-
   InterpretResult result = interpret(source.c_str());
   if (result != INTERPRET_OK) {
     runtime_error("Error loading module!");
-    exit(1);
+    ZuraExit(VM_ERROR);
   }
 
   // Finished loading the module, remove it from loadingModules
@@ -399,10 +390,10 @@ static InterpretResult run() {
     print_stack();
     disassemble_instruction(
         &frame->closure->function->chunk,
-        (int)(frame->ip - frame->closure->function->chunk.code));
+        (int)(reinterpret_cast<uint8_t*>(frame->ip) - frame->closure->function->chunk.code));
 #endif
 
-    uint8_t instruction;
+    OpCode instruction;
     switch (instruction = read_byte()) {
     case OP_CONSTANT: {
       Value constant = read_constant();
@@ -573,14 +564,141 @@ static InterpretResult run() {
     }
     // Array operation codes
     case OP_ARRAY: {
-      uint8_t num_elements = read_byte();
-      Value elements = peek(0);
-      ValueArray array;
-      init_value_array(&array);
-      for (int i = 0; i < num_elements; i++) {
-        write_value_array(&array, elements);
+      int count = read_byte();
+      ObjArray* array = new_array();
+
+      for (int i = 0; i < count; i++) {
+        if (IS_STRING(peek(count - i - 1)) && IS_NUMBER(peek(count - i - 2))) {
+          runtimeError("Cannot mix strings and numbers in an array");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+        array_write(array, i, peek(count - i - 1));
       }
-      push(OBJ_VAL(&array));
+
+      for (int i = 0; i < count; i++) { pop(); }
+      push(ARRAY_VAL(array));
+      break;
+    }
+    case OP_INDEX: {
+      Value index = peek(0);
+      Value array = peek(1);
+
+      // Check to whether we are index a string or an array
+      if (IS_STRING(array)) {
+        ObjString* str = AS_STRING(array);
+
+        if (!IS_NUMBER(index)) {
+          runtimeError("Only numbers can be used as indexes");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+
+        // print the character at the index
+        int idx = static_cast<int>(AS_NUMBER(index));
+
+        if (idx < 0 || idx >= str->length) {
+          runtimeError("Index out of bounds");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+
+        pop();
+        pop();
+        push(OBJ_VAL(copy_string(&str->chars[idx], 1)));
+        break;
+      }
+
+      if (!IS_ARRAY(array)) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(array);
+
+      if (!IS_NUMBER(index)) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = static_cast<int>(AS_NUMBER(index));
+
+      if (idx < 0 || idx >= arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      pop();
+      pop();
+      push(arr->values[idx]);
+      break;
+    }
+    case OP_ADD_ELEM: {
+      double value = AS_NUMBER(peek(1));
+      double index = AS_NUMBER(peek(0));
+
+      if (!IS_ARRAY(peek(2))) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(peek(2));
+
+      if (!IS_NUMBER(peek(0))) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = static_cast<int>(index);
+
+      if (idx < 0 || idx > arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      // Shift elements to the right to make space for the new element
+      for (int i = arr->count; i > idx; i--) {
+        arr->values[i] = arr->values[i - 1];
+      }
+
+      arr->values[idx] = NUMBER_VAL(value);
+      arr->count++;
+
+      pop();
+      pop();
+      pop();
+      push(ARRAY_VAL(arr));
+      break;
+    }
+    case OP_REMOVE_ELEM: {
+      Value index = peek(0);
+      Value array = peek(1);
+
+      if (!IS_ARRAY(array)) {
+        runtimeError("Only arrays have indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      ObjArray* arr = AS_ARRAY(array);
+
+      if (!IS_NUMBER(index)) {
+        runtimeError("Only numbers can be used as indexes");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      int idx = static_cast<int>(AS_NUMBER(index));
+
+      if (idx < 0 || idx >= arr->count) {
+        runtimeError("Index out of bounds");
+        return INTERPRET_RUNTIME_ERROR;
+      }
+
+      pop();
+      pop();
+
+      for (int i = idx; i < arr->count - 1; i++) {
+        arr->values[i] = arr->values[i + 1];
+      }
+
+      arr->count--;
+      push(ARRAY_VAL(arr));
       break;
     }
     // Bool operation codes
@@ -619,6 +737,20 @@ static InterpretResult run() {
         double b = AS_NUMBER(pop());
         double a = AS_NUMBER(pop());
         push(NUMBER_VAL(a + b));
+      } else if (IS_ARRAY(peek(0)) && IS_ARRAY(peek(1))) {
+        ObjArray* b = AS_ARRAY(pop());
+        ObjArray* a = AS_ARRAY(pop());
+        ObjArray* array = new_array();
+
+        for (int i = 0; i < a->count; i++) {
+          array_write(array, i, a->values[i]);
+        }
+
+        for (int i = 0; i < b->count; i++) {
+          array_write(array, a->count + i, b->values[i]);
+        }
+
+        push(ARRAY_VAL(array));
       } else {
         runtimeError("Operands must be two numbers or two strings\n");
         return INTERPRET_RUNTIME_ERROR;
@@ -641,7 +773,6 @@ static InterpretResult run() {
       POW_OP(NUMBER_VAL, **);
       break;
     case OP_INCREMENT: {
-      // ++2 and we have the value pushed on the stack
       double a = AS_NUMBER(pop());
       push(NUMBER_VAL(a + 1));
       break;
@@ -751,15 +882,8 @@ static InterpretResult run() {
       table_add_all(&module->variables, &vm.globals);
       break;
     }
-    case OP_STD: {
-      cout << "Standard library loaded\n";
-      ObjString *std_name = AS_STRING(pop()); // std/math -> math
-      std_name->chars += 4;                   // math
-      break;
-    }
     case OP_INFO: {
       print_value(pop());
-      cout << "\n";
       break;
     }
     case OP_INPUT: {

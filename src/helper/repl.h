@@ -15,7 +15,7 @@ inline int repl(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  std::cout << "Zura Lang REPL " << version() << " "
+  std::cout << "Zura Lang REPL " << get_Zura_version_string() << " "
             << "(" << getCurrentTime() << ")" << std::endl;
   char line[1024];
   for (;;) {

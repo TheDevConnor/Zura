@@ -11,7 +11,7 @@
 struct CallFrame {
   Obj *function;
   ObjClosure *closure;
-  uint8_t *ip;
+  OpCode *ip;
   Value *slots;
 };
 
@@ -48,8 +48,6 @@ enum InterpretResult {
 };
 
 extern VM vm;
-
-extern ObjString *cpy_str;
 
 void init_vm();
 void free_vm();

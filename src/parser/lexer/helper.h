@@ -173,7 +173,7 @@ static TokenKind perfect_hash_lookup(const char *keyword) {
     return VAR;
   if (strcmp(keyword, "static") == 0)
     return STATIC;
-  if (strcmp(keyword, "while") == 0)
+  if (strcmp(keyword, "loop") == 0)
     return WHILE;
   if (strcmp(keyword, "include") == 0)
     return INCLUDE;

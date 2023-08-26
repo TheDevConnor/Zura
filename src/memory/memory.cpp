@@ -11,84 +11,81 @@ using namespace std;
 void *reallocate(void *pointer, size_t old_size, size_t new_size) {
   vm.bytes_allocated += new_size - old_size;
   if (new_size > old_size) {
-#ifndef DEBUG_STRESS_GC
+#ifndef DEBUG_LOG_GC
+    cout << "Allocating " << new_size - old_size << " bytes.\n";
     collect_garbage();
 #endif
   }
+
   if (new_size == 0) {
-    // free(pointer);
     return nullptr;
   }
 
   void *new_pointer = realloc(pointer, new_size);
   if (new_pointer == nullptr){
     cerr << "ERROR: Failed to reallocate memory.\n";
-    exit(1);
+    ZuraExit(MEMORY_FAILURE);
   }
-  // free(pointer);
-  
   return new_pointer;
 }
 
 static void free_obj(Obj *object) {
-
 #ifndef DEBUG_LOG_GC
   cout << (void *)object << " free type " << object->type << endl;
 #endif
 
   switch (object->type) {
-  case OBJ_BOUND_METHOD: {
-    FREE(ObjBoundMethod, object);
-    break;
-  }
-  case OBJ_CLASS: {
-    ObjClass *klass = (ObjClass *)object;
-    free_table(&klass->methods);
-    break;
-  }
-  case OBJ_CLOSURE: {
-    ObjClosure *closure = (ObjClosure *)object;
-    FREE_ARRAY(ObjUpvalue *, closure->upvalues, closure->upvalue_count);
-    FREE(ObjClosure, object);
-    break;
-  }
-  case OBJ_FUNCTION: {
-    ObjFunction *function = (ObjFunction *)object;
-    free_chunk(&function->chunk);
-    FREE(ObjFunction, object);
-    break;
-  }
-  case OBJ_INSTANCE: {
-    ObjInstance *instance = (ObjInstance *)object;
-    free_table(&instance->fields);
-    FREE(ObjInstance, object);
-    break;
-  }
-  case OBJ_NATIVE: {
-    FREE(ObjNative, object);
-    break;
-  }
-  case OBJ_STRING: {
-    ObjString *string = reinterpret_cast<ObjString *>(object);
-    reallocate(string, sizeof(ObjString) + string->length + 1, 0);
-    break;
-  }
-  case OBJ_UPVALUE: {
-    ObjClosure *closure = (ObjClosure *)object;
-    FREE_ARRAY(ObjUpvalue *, closure->upvalues, closure->upvalue_count);
-    FREE(ObjUpvalue, object);
-    break;
-  }
+    case OBJ_BOUND_METHOD: {
+      FREE(ObjBoundMethod, object);
+      break;
+    }
+    case OBJ_CLASS: {
+      ObjClass *klass = (ObjClass *)object;
+      free_table(&klass->methods);
+      break;
+    }
+    case OBJ_CLOSURE: {
+      ObjClosure *closure = (ObjClosure *)object;
+      FREE_ARRAY(ObjUpvalue *, closure->upvalues, closure->upvalue_count);
+      FREE(ObjClosure, object);
+      break;
+    }
+    case OBJ_FUNCTION: {
+      ObjFunction *function = (ObjFunction *)object;
+      free_chunk(&function->chunk);
+      FREE(ObjFunction, object);
+      break;
+    }
+    case OBJ_INSTANCE: {
+      ObjInstance *instance = (ObjInstance *)object;
+      free_table(&instance->fields);
+      FREE(ObjInstance, object);
+      break;
+    }
+    case OBJ_NATIVE: {
+      FREE(ObjNative, object);
+      break;
+    }
+    case OBJ_STRING: {
+      ObjString *string = reinterpret_cast<ObjString *>(object);
+      FREE_ARRAY(char, string->chars, string->length + 1);
+      FREE(ObjString, string);
+      break;
+    }
+    case OBJ_UPVALUE: {
+      ObjClosure *closure = (ObjClosure *)object;
+      FREE_ARRAY(ObjUpvalue *, closure->upvalues, closure->upvalue_count);
+      FREE(ObjUpvalue, object);
+      break;
+    }
   }
 }
 
 void free_objects() {
-    
-    for(Obj* i = vm.objects; i; i = i->next){
-        free_obj(i);
-    }
-
-   free(vm.gray_stack);
+  // free memory
+  for(Obj* i = vm.objects; i; i = i->next){
+      free_obj(i);
+  }
 }
 
 void sweep() {

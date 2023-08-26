@@ -159,6 +159,7 @@ void dot(bool can_assign);
 void binary(bool can_assign);
 void literal(bool can_assign);
 void array_literal(bool can_assign);
+void _removeElem(bool can_assign);
 void input_statement(bool can_assign);
 void parse_precedence(Precedence prec);
 
@@ -254,6 +255,8 @@ unordered_map<TokenKind, ParseRule> rules = {
     {GREATER_EQUAL, {nullptr, binary, PREC_COMPARISON}},
     {LESS, {nullptr, binary, PREC_COMPARISON}},
     {LESS_EQUAL, {nullptr, binary, PREC_COMPARISON}},
+      {ARROW_L, {nullptr, nullptr, PREC_NONE}},
+      {ARROW_R, {nullptr, nullptr, PREC_NONE}},
     {IDENTIFIER, {_variable, nullptr, PREC_NONE}},
     {STRING, {_string, nullptr, PREC_NONE}},
     {NUMBER, {_number, nullptr, PREC_NONE}},

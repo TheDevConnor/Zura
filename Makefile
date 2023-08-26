@@ -1,6 +1,6 @@
 CXX := g++
-CXXFLAGS := -O2 -std=c++17 -Wall -Wextra
-CXXFLAGS_DEBUG := -O0 -g -std=c++17 -Wall -ggdb3
+CXXFLAGS := -O3 -std=c++17 -Wall -Wextra -D_CRT_SECURE_NO_WARNINGS
+CXXFLAGS_DEBUG := -O0 -g -std=c++17 -Wall -D_CRT_SECURE_NO_WARNINGS
 
 VALGRIND := valgrind
 
@@ -35,6 +35,8 @@ windows:
 	@$(CXX) -o $(TARGET) $(SOURCE_FILES) $(CXXFLAGS)
 linux:
 	@$(CXX) -o $(TARGET)/zura $(SOURCE_FILES) $(CXXFLAGS)
+debug:
+	@$(CXX) -o $(TARGET_DEBUG)/debug $(SOURCE_FILES) $(CXXFLAGS_DEBUG)
 
 workflow:
 # --> Linux 

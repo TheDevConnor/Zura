@@ -31,6 +31,17 @@ void print_value(Value value) {
   case VAL_OBJ:
     print_object(value);
     break;
+  case VAL_ARRAY:
+    ObjArray *array = AS_ARRAY(value);
+    cout << "[";
+    for (int i = 0; i < array->count; i++) {
+      print_value(array->values[i]);
+      if (i != array->count - 1) {
+        cout << ", ";
+      }
+    }
+    cout << "]";
+    break;
   }
 #endif
 }
