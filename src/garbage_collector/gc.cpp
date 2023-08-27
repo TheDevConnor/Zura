@@ -1,33 +1,33 @@
 #include "../parser/parser.h"
 #include "gc.h"
 
-using namespace std;
-
 #ifndef DEBUG_LOG_GC
-    #include <stdio.h>
-    #include <iostream>
-    #include "../debug/debug.h"
+#include <iostream>
+#include "../debug/debug.h"
 #endif
 
 #define GC_HEAP_GROW_FACTOR 2
 
-void mark_object(Obj* object) {
-    if(object == nullptr) return;
-    if(object->is_marked) return;
+// Forward declarations
+void mark_object(Obj* object);
+void mark_value(Value value);
 
-    #ifndef DEBUG_LOG_GC
-        cout<< "\n" << (void*)object << " mark ";
-        print_value(OBJ_VAL(object));
-        cout << endl;
-    #endif
+void mark_object(Obj* object) {
+    if (object == nullptr || object->is_marked) return;
+
+#ifndef DEBUG_LOG_GC
+    std::cout << "\n" << (void*)object << " mark ";
+    print_value(OBJ_VAL(object));
+    std::cout << std::endl;
+#endif
 
     object->is_marked = true;
 
-    if(vm.gray_capacity < vm.gray_count + 1) {
+    if (vm.gray_capacity <= vm.gray_count) {
         vm.gray_capacity = GROW_CAPACITY(vm.gray_capacity);
-        vm.gray_stack = (Obj**)realloc(vm.gray_stack, sizeof(Obj*) + vm.gray_capacity);
+        vm.gray_stack = (Obj**)realloc(vm.gray_stack, sizeof(Obj*) * vm.gray_capacity);
 
-        if(vm.gray_stack == nullptr){
+        if (vm.gray_stack == nullptr) {
             ZuraExit(BAD_GRAY_STACK);
         }
     }
@@ -35,7 +35,9 @@ void mark_object(Obj* object) {
 }
 
 void mark_value(Value value) {
-    if (IS_OBJ(value)) mark_object(AS_OBJ(value));
+    if (IS_OBJ(value)) {
+        mark_object(AS_OBJ(value));
+    }
 }
 
 void mark_array(ValueArray* array) {
@@ -45,16 +47,21 @@ void mark_array(ValueArray* array) {
 }
 
 void mark_roots() {
+    // Mark objects on the stack
     for (Value* slot = vm.stack; slot < vm.stack_top; slot++) {
         mark_value(*slot);
     }
 
+    // Mark closure objects in frames
     for (int i = 0; i < vm.frame_count; i++) {
         mark_object((Obj*)vm.frames[i].closure);
     }
 
-    for (ObjUpvalue* upvalue = vm.open_upvalues; upvalue != nullptr; upvalue = upvalue->next) {
+    // Mark open upvalues
+    ObjUpvalue* upvalue = vm.open_upvalues;
+    while (upvalue != nullptr) {
         mark_object((Obj*)upvalue);
+        upvalue = upvalue->next;
     }
 
     mark_table(&vm.globals);
@@ -62,69 +69,69 @@ void mark_roots() {
 }
 
 void blacken_object(Obj* object) {
-    #ifndef DEBUG_LOG_GC
-        cout << (void*)object << " blacken ";
-        print_value(OBJ_VAL(object));
-        cout << endl;
-    #endif
+#ifndef DEBUG_LOG_GC
+    std::cout << (void*)object << " blacken ";
+    print_value(OBJ_VAL(object));
+    std::cout << std::endl;
+#endif
 
     switch (object->type) {
-      case OBJ_CLASS: {
-          ObjClass* klass = (ObjClass*)object;
-          mark_object((Obj*)klass->name);
-          mark_table(&klass->methods);
-          break;
-      }
-      case OBJ_INSTANCE: {
-          ObjInstance* instance = (ObjInstance*)object;
-          mark_object((Obj*)instance->klass);
-          mark_table(&instance->fields);
-          break;
-      }
-      case OBJ_BOUND_METHOD: {
-          ObjBoundMethod* bound = (ObjBoundMethod*)object;
-          mark_value(bound->receiver);
-          mark_object((Obj*)bound->method);
-          break;
-      }
-      case OBJ_CLOSURE: {
-          ObjClosure* closure = (ObjClosure*)object;
-          mark_object((Obj*)closure->function);
-          
-          for(int i = 0; i < closure->upvalue_count; i++) {
-              mark_object((Obj*)closure->upvalues[i]);
-          }
-          break;
-      }
-      case OBJ_FUNCTION: {
-          ObjFunction* function = (ObjFunction*)object;
-          mark_object((Obj*)function->name);
-          mark_array(&function->chunk.constants);
-          break;
-      }
-      case OBJ_UPVALUE:
-          mark_value(((ObjUpvalue*)object)->closed);
-          break;
-      case OBJ_NATIVE:
-      case OBJ_STRING:
-          ObjString* string = (ObjString*)object;
-          mark_object((Obj*)string->chars);
-          break;
+        case OBJ_CLASS: {
+            ObjClass* klass = (ObjClass*)object;
+            mark_object((Obj*)klass->name);
+            mark_table(&klass->methods);
+            break;
+        }
+        case OBJ_INSTANCE: {
+            ObjInstance* instance = (ObjInstance*)object;
+            mark_object((Obj*)instance->klass);
+            mark_table(&instance->fields);
+            break;
+        }
+        case OBJ_BOUND_METHOD: {
+            ObjBoundMethod* bound = (ObjBoundMethod*)object;
+            mark_value(bound->receiver);
+            mark_object((Obj*)bound->method);
+            break;
+        }
+        case OBJ_CLOSURE: {
+            ObjClosure* closure = (ObjClosure*)object;
+            mark_object((Obj*)closure->function);
+
+            for (int i = 0; i < closure->upvalue_count; i++) {
+                mark_object((Obj*)closure->upvalues[i]);
+            }
+            break;
+        }
+        case OBJ_FUNCTION: {
+            ObjFunction* function = (ObjFunction*)object;
+            mark_object((Obj*)function->name);
+            mark_array(&function->chunk.constants);
+            break;
+        }
+        case OBJ_UPVALUE:
+            mark_value(((ObjUpvalue*)object)->closed);
+            break;
+        case OBJ_NATIVE:
+        case OBJ_STRING:
+            ObjString* string = (ObjString*)object;
+            mark_object((Obj*)string->chars);
+            break;
     }
 }
 
 void trace_reference() {
-    while(vm.gray_count > 0) {
+    while (vm.gray_count > 0) {
         Obj* object = vm.gray_stack[--vm.gray_count];
         blacken_object(object);
     }
 }
 
 void collect_garbage() {
-    #ifndef DEBUG_LOG_GC
-        cout << "-- gc begins" << endl;
-        size_t before = vm.bytes_allocated;
-    #endif
+#ifndef DEBUG_LOG_GC
+    std::cout << "-- gc begins" << std::endl;
+    size_t before = vm.bytes_allocated;
+#endif
 
     mark_roots();
     trace_reference();
@@ -133,9 +140,9 @@ void collect_garbage() {
 
     vm.next_gc = vm.bytes_allocated * GC_HEAP_GROW_FACTOR;
 
-    #ifndef DEBUG_LOG_GC
-        cout << "-- gc end" << endl;
-        cout << "collected " << before - vm.bytes_allocated << " bytes (from " << before 
-             << " to " << vm.bytes_allocated << ") next at " << vm.next_gc << endl;
-    #endif
+#ifndef DEBUG_LOG_GC
+    std::cout << "-- gc end" << std::endl;
+    std::cout << "collected " << before - vm.bytes_allocated << " bytes (from " << before
+              << " to " << vm.bytes_allocated << ") next at " << vm.next_gc << std::endl;
+#endif
 }
