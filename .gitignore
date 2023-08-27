@@ -5,8 +5,9 @@
 *.exe
 *.pdb
 *.obj
-*.dll
-*.lib
 *.ini
 *.a
+*.lib 
+*.dll
 compile_flags.txt
+edit
