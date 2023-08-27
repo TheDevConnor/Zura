@@ -78,7 +78,7 @@ endif
 # Append using the += operator as seen below.
 # -----------------------------------------------------------------------------
 
-SRC_FILES  = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp)
+SRC_FILES  = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
 
 IMGUI_SRC_FILES  = $(wildcard inc/imgui/*.cpp) $(wildcard inc/imgui/**/*.cpp)
 ifeq ($(ZURA_GUI),1)
