@@ -38,6 +38,7 @@ CXX_INC      = -I
 CXX_LIB      = -L
 
 LIBS 		 = -lglfw -X11
+LIB_DIR      = ./lib/unix
 
 RM			 = rm
 
