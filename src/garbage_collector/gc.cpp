@@ -15,17 +15,17 @@ void mark_value(Value value);
 void mark_object(Obj* object) {
     if (object == nullptr || object->is_marked) return;
 
-    #ifndef DEBUG_LOG_GC
-        std::cout << "\n" << (void*)object << " mark ";
-        print_value(OBJ_VAL(object));
-        std::cout << std::endl;
-    #endif
+#ifndef DEBUG_LOG_GC
+    std::cout << "\n" << (void*)object << " mark ";
+    print_value(OBJ_VAL(object));
+    std::cout << std::endl;
+#endif
 
     object->is_marked = true;
 
-    if (vm.gray_capacity < vm.gray_count + 1) {
+    if (vm.gray_capacity <= vm.gray_count) {
         vm.gray_capacity = GROW_CAPACITY(vm.gray_capacity);
-        vm.gray_stack = (Obj**)realloc(vm.gray_stack, sizeof(Obj*) + vm.gray_capacity);
+        vm.gray_stack = (Obj**)realloc(vm.gray_stack, sizeof(Obj*) * vm.gray_capacity);
 
         if (vm.gray_stack == nullptr) {
             ZuraExit(BAD_GRAY_STACK);
@@ -58,8 +58,10 @@ void mark_roots() {
     }
 
     // Mark open upvalues
-    for (ObjUpvalue* upvalue = vm.open_upvalues; upvalue != nullptr; upvalue = upvalue->next) {
+    ObjUpvalue* upvalue = vm.open_upvalues;
+    while (upvalue != nullptr) {
         mark_object((Obj*)upvalue);
+        upvalue = upvalue->next;
     }
 
     mark_table(&vm.globals);
