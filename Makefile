@@ -37,7 +37,7 @@ CXX_EMIT_EXE = -o
 CXX_INC      = -I
 CXX_LIB      = -L
 
-LIBS 		 = -lglfw -X11
+LIBS 		 = -lglfw -lX11 -lGL
 LIB_DIR      = ./lib/unix
 
 RM			 = rm
