@@ -21,7 +21,18 @@ If you have any suggestions please create an issue, and in the isssue add in the
 ## Installation
 To start using zura Lang, follow the installation instructions below:
 
-If you are on windows and you want to install it using the make command do this:
+If you are on Windows and you want to install it using the ``make`` command do this
+
+To install make on Windows, we recommend using a tool called [scoop](https://scoop.sh/).
+
+You will need to run
+```
+scoop bucket add main
+scoop install main/make
+```
+After, you will need to run ``make workflow`` to build Zura. Then add the Zura folder path into your path enviorment variables. This is a simple thing to do, and you can find out how to do it by searching it up.
+
+You will need WSL to build it with bash on Windows.
 ```
 git clone https://github.com/TheDevConnor/Zura-v2
 cd Zura-v2
