@@ -45,12 +45,6 @@ IMGUI_SRC_FILES  = $(wildcard inc/imgui/*.cpp) $(wildcard inc/imgui/**/*.cpp)
 IMGUI_OBJ_FILES  = $(patsubst %.cpp,%.obj,$(IMGUI_SRC_FILES))
 IMGUI_DEMO_SRC = .\inc\imgui\opengl_demo_main.cxx
 
-ifeq ($(ZURA_GUI),1)
-
-CXX += -DZURA_GUI
-SRC_FILES += $(IMGUI_SRC_FILES)
-
-endif
 
 BIN_DIR   = bin
 INC_DIR   = inc
@@ -68,6 +62,7 @@ CXX_EMIT_OBJ = -c -o
 CXX_EMIT_EXE = -o
 CXX_INC      = -I
 CXX_LIB      = -L
+CXX_MACRO    = -D
 
 LIBS         = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
 
@@ -83,7 +78,7 @@ ECHO = echo
 # -----------------------------------------------------------------------------
 ifeq ($(OS), Windows_NT)
 
-CXX     += -D_CRT_SECURE_NO_WARNINGS
+CXX     += $(CXX_MACRO)_CRT_SECURE_NO_WARNINGS
 
 LIB_DIR = .\lib\win\mingw-w64
 LIBS    = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
@@ -105,12 +100,27 @@ CXX_EMIT_OBJ = /c /Fo:
 CXX_EMIT_EXE = /Fe:
 CXX_LIB      = /link /LIBPATH:
 
+CXX_MACRO    = /D
+
+CXX           += $(CXX_MACRO)_CRT_SECURE_NO_WARNINGS
+
 LIB_DIR = .\lib\win\vc2022
 
 LIBS = opengl32.lib glfw3.lib shell32.lib user32.lib gdi32.lib
 
 endif
 
+# -----------------------------------------------------------------------------
+# Additional Compilation Flags
+# -----------------------------------------------------------------------------
+ifeq ($(ZURA_GUI),1)
+CXX += $(CXX_MACRO)ZURA_GUI
+SRC_FILES += $(IMGUI_SRC_FILES)
+endif
+
+ifeq ($(IMGUI_DEMO_WINDOW),1)
+CXX += $(CXX_MACRO)IMGUI_DEMO_WINDOW
+endif
 
 # -----------------------------------------------------------------------------
 # Build Recipes

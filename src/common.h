@@ -30,7 +30,8 @@ typedef enum {
     RUNTIME_ERROR          = 13,
     BAD_GRAY_STACK         = 14,
     MEMORY_FAILURE         = 15,
-    VM_ERROR               = 16
+    VM_ERROR               = 16,
+    UNABLE_TO_INIT_GUI     = 17
 
 } Zura_Exit_Value;
 
