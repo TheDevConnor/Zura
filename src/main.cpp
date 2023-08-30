@@ -15,8 +15,13 @@
 // Define ZURA_GUI with compiler invocation.
 #if ZURA_GUI
 
+    // TODO Remove the use of these default values, deferring
+    // to using gl or glfw to get the actual pixel dimensions.
     #define SCREEN_WIDTH 400
     #define SCREEN_HEIGHT 600
+   
+    // GL 3.0 + GLSL 130
+    #define ZURA_GLSL_VERSION "#version 130"
 
     #include <GLFW/glfw3.h>
 
@@ -28,10 +33,18 @@ typedef struct {
 
     GLFWwindow* window;
 
-} ZuraWindow;
+    // Physical Monitor, pixels
+    int monitor_w; 
+    int monitor_h;
 
-ZuraWindow zurawindow;
-GLFWwindow* window;
+    // Application Window, pixels
+    int window_w;
+    int window_h;
+
+    // floats
+    ImVec4 clear_color;
+
+} ZuraWindow;
 
 typedef struct ZuraConsole {
     char                  InputBuf[256];
@@ -122,11 +135,11 @@ typedef struct ZuraConsole {
         Items.push_back(Strdup(buf));
     }
 
-    void Draw(const char* title, bool* p_open)
+    void Draw(const char* title, ZuraWindow* zurawindow, bool* p_open)
     {
         int display_w, display_h;
         // TODO Get window size from external variable that is updated in the main loop
-        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glfwGetFramebufferSize(zurawindow->window, &display_w, &display_h);
         ImVec2 window_dims = ImVec2(display_w, display_h);
         ImVec2 window_pos = ImVec2(0,0);
 
@@ -441,32 +454,17 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-static void ShowZuraConsole(bool* p_open)
+static void ShowZuraConsole(ZuraWindow* zurawindow, bool* p_open)
 {
     static ZuraConsole console;
-    console.Draw("Zura Console", p_open);
+    console.Draw("Zura Console", zurawindow, p_open);
 }
 
 #endif // ZURA_GUI
 
-// int zura_console_main(int argc, char* argv[])
-// {
-//   flags(argc, argv);
-//   init_vm();
-//   run_file(argv[1]);
-//   ZuraExit(OK);
-// }
-//
-// int zura_gui_main(int argc, char* argv[])
-// {
-//   flags(argc, argv);
-//   init_vm();
-//   run_file(argv[1]);
-//   ZuraExit(OK);
-// }
-
-int main(int argc, char* argv[])
+ZuraWindow init_zura_window(void)
 {
+    ZuraWindow zurawindow = {};
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
@@ -475,21 +473,18 @@ int main(int argc, char* argv[])
     }
 
     // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     // Create window with graphics context
-    // GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
-    // GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Zura Console", nullptr, nullptr);
-    window = glfwCreateWindow(1280, 720, "Zura Console", nullptr, nullptr);
+    zurawindow.window = glfwCreateWindow(1280, 720, "Zura Console", nullptr, nullptr);
 
-    if (window == nullptr) {
+    if (zurawindow.window == nullptr) {
         fprintf(stderr, "ERROR: GLFW unable to create a window context.\n");
         ZuraExit(UNABLE_TO_INIT_GUI);
     }
 
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(zurawindow.window);
     glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context
@@ -503,19 +498,63 @@ int main(int argc, char* argv[])
     // Dear ImGui style
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsLight();
+    
+    zurawindow.clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplGlfw_InitForOpenGL(zurawindow.window, true);
+    // GL 3.0 + GLSL 130
+    ImGui_ImplOpenGL3_Init(ZURA_GLSL_VERSION);
 
-    bool   show_another_window = false;
-    ImVec4 clear_color         = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
+    return zurawindow;
+}
+
+void zura_render(const ZuraWindow* zurawindow)
+{
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(zurawindow->window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+
+        glClearColor(   zurawindow->clear_color.x * zurawindow->clear_color.w, 
+                        zurawindow->clear_color.y * zurawindow->clear_color.w, 
+                        zurawindow->clear_color.z * zurawindow->clear_color.w, 
+                        zurawindow->clear_color.w
+        );
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glfwSwapBuffers(zurawindow->window);
+}
+
+void cleanup_glfw(GLFWwindow* window)
+{
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+void cleanup_imgui(void)
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+
+
+int main(int argc, char* argv[])
+{
 
     // Init Zura
     flags(argc, argv);
     init_vm();
 
-    while (!glfwWindowShouldClose(window)) {
+    ZuraWindow zurawindow = init_zura_window();
+
+    while (!glfwWindowShouldClose(zurawindow.window)) {
+
         glfwPollEvents();
 
         // Start the Dear ImGui frame
@@ -523,6 +562,8 @@ int main(int argc, char* argv[])
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+// TODO Decide to show this window in same as zura console or make
+// a separate one.
 // ImGui::ShowDemoWindow() is our reference on how to use ImGui features.
 #if IMGUI_DEMO_WINDOW
         bool imgui_show_window = true;
@@ -530,40 +571,23 @@ int main(int argc, char* argv[])
 #endif
 
         bool show_zura_console = true;
-        ShowZuraConsole(&show_zura_console);
-
+        ShowZuraConsole(&zurawindow, &show_zura_console);
 
 
         // Rendering
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
-            clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        glfwSwapBuffers(window);
-
+        zura_render(&zurawindow);
 
     }
     // Run Zura
     run_file(argv[1]);
         
     // Cleanup Zura
-   free_vm();
+    free_vm();
 
-
-    // Cleanup ImGUI
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    // Cleanup GLFW
-    glfwDestroyWindow(window);
-    glfwTerminate();
-
+    cleanup_imgui();
+    cleanup_glfw(zurawindow.window);
+    zurawindow.window = NULL;
 
     ZuraExit(OK);
 }
+
