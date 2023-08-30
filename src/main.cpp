@@ -17,9 +17,9 @@
 
     // TODO Remove the use of these default values, deferring
     // to using gl or glfw to get the actual pixel dimensions.
-    #define SCREEN_WIDTH 400
+    #define SCREEN_WIDTH  400
     #define SCREEN_HEIGHT 600
-   
+
     // GL 3.0 + GLSL 130
     #define ZURA_GLSL_VERSION "#version 130"
 
@@ -34,7 +34,7 @@ typedef struct {
     GLFWwindow* window;
 
     // Physical Monitor, pixels
-    int monitor_w; 
+    int monitor_w;
     int monitor_h;
 
     // Application Window, pixels
@@ -141,13 +141,13 @@ typedef struct ZuraConsole {
         // TODO Get window size from external variable that is updated in the main loop
         glfwGetFramebufferSize(zurawindow->window, &display_w, &display_h);
         ImVec2 window_dims = ImVec2(display_w, display_h);
-        ImVec2 window_pos = ImVec2(0,0);
+        ImVec2 window_pos  = ImVec2(0, 0);
 
         ImGui::SetNextWindowFocus();
-        ImGui::SetWindowPos(title, window_pos, 0);      // set named window position.
-        ImGui::SetWindowSize(title, window_dims, 0);    // set named window size. set axis to 0.0f to force an auto-fit on this axis.
+        ImGui::SetWindowPos(title, window_pos, 0);   // set named window position.
+        ImGui::SetWindowSize(title, window_dims, 0); // set named window size. set axis to 0.0f to force an auto-fit on this axis.
 
-        if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize)){
+        if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize)) {
             ImGui::End();
             return;
         }
@@ -305,7 +305,7 @@ typedef struct ZuraConsole {
 
         // Auto-focus on window apparition
         ImGui::SetItemDefaultFocus();
-        if (reclaim_focus){
+        if (reclaim_focus) {
             ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
         }
 
@@ -498,7 +498,7 @@ ZuraWindow init_zura_window(void)
     // Dear ImGui style
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsLight();
-    
+
     zurawindow.clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Platform/Renderer backends
@@ -506,27 +506,24 @@ ZuraWindow init_zura_window(void)
     // GL 3.0 + GLSL 130
     ImGui_ImplOpenGL3_Init(ZURA_GLSL_VERSION);
 
-
-
     return zurawindow;
 }
 
 void zura_render(const ZuraWindow* zurawindow)
 {
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(zurawindow->window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+    ImGui::Render();
+    int display_w, display_h;
+    glfwGetFramebufferSize(zurawindow->window, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
 
-        glClearColor(   zurawindow->clear_color.x * zurawindow->clear_color.w, 
-                        zurawindow->clear_color.y * zurawindow->clear_color.w, 
-                        zurawindow->clear_color.z * zurawindow->clear_color.w, 
-                        zurawindow->clear_color.w
-        );
+    glClearColor(zurawindow->clear_color.x * zurawindow->clear_color.w,
+        zurawindow->clear_color.y * zurawindow->clear_color.w,
+        zurawindow->clear_color.z * zurawindow->clear_color.w,
+        zurawindow->clear_color.w);
 
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(zurawindow->window);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    glfwSwapBuffers(zurawindow->window);
 }
 
 void cleanup_glfw(GLFWwindow* window)
@@ -541,8 +538,6 @@ void cleanup_imgui(void)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-
-
 
 int main(int argc, char* argv[])
 {
@@ -573,14 +568,12 @@ int main(int argc, char* argv[])
         bool show_zura_console = true;
         ShowZuraConsole(&zurawindow, &show_zura_console);
 
-
         // Rendering
         zura_render(&zurawindow);
-
     }
     // Run Zura
     run_file(argv[1]);
-        
+
     // Cleanup Zura
     free_vm();
 
@@ -590,4 +583,3 @@ int main(int argc, char* argv[])
 
     ZuraExit(OK);
 }
-
