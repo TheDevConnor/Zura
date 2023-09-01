@@ -1,14 +1,6 @@
-include "test/lexer";
-include "std";
+include "std/network";
 
-have testCase := "if (x > 0) return 1; else return 0; ";
-have lex := Lexer(testCase);
+have severIp := "localhost";
+have port := 5555;
 
-have i := 0;
-loop (!lex.isAtEnd()) : (i++) {
-    info "i -> "; info i;
-    info " -> "; info lex.peek(i - 1);
-    info "\n";
-
-    if (i >= lex.sourceLen) exit(10);
-}
+connect(severIp, port);

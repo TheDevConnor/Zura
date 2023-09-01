@@ -281,6 +281,10 @@ void include_statement() {
       define_native("logger");
       return;
     }
+    if (string(moduleName->chars).find("/network") != string::npos) {
+      define_native("network");
+      return;
+    }
     define_native("std");
     return;
   }

@@ -3,6 +3,7 @@
 #include <string>
 
 #include "std/filesystem.h"
+#include "std/network.h"
 #include "std/logger.h"
 #include "std/math.h"
 #include "std/std.h"
@@ -19,5 +20,8 @@ void define_native(std::string native_name) {
   }
   if (native_name == "logger") {
     Logger::define_logger_natives();
+  }
+  if (native_name == "network") {
+    NetworkFunc::define_network_natives();
   }
 }
