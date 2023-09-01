@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -O3 -std=c++17 -Wall -Wextra -D_CRT_SECURE_NO_WARNINGS
+CXXFLAGS := -O3 -std=c++17 -Wall -Wextra -D_CRT_SECURE_NO_WARNINGS  -lws2_32 -lmingw32 -liphlpapi -Wno-missing-field-initializers
 CXXFLAGS_DEBUG := -O0 -g -std=c++17 -Wall -D_CRT_SECURE_NO_WARNINGS
 
 VALGRIND := valgrind
