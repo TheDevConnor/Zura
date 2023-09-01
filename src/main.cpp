@@ -13,9 +13,9 @@
 
 #if ZURA_GUI
 
-// #include <imgui/imgui.h>
-// #include <imgui/imgui_impl_glfw.h>
-// #include <imgui/imgui_impl_opengl3.h>
+    #include <imgui/imgui.h>
+    #include <imgui/imgui_impl_glfw.h>
+    #include <imgui/imgui_impl_opengl3.h>
 
     #include "gui/zura_console.h"
 
@@ -38,8 +38,7 @@ int main(int argc, char* argv[])
 #if IMGUI_DEMO_WINDOW
         ImGui::ShowDemoWindow(&imgui_show_window);
 #endif
-
-        bool show_zura_console = true;
+        
         draw_zura_console(zurawindow);
 
         // Rendering
@@ -52,8 +51,10 @@ int main(int argc, char* argv[])
     // Cleanup Zura
     free_vm();
     cleanup_imgui();
-    cleanup_glfw(zurawindow->window);
+    close_zura_window(zurawindow);
     zurawindow->window = NULL;
+    free(zurawindow);
+    zurawindow = NULL;
 
     ZuraExit(OK);
 }

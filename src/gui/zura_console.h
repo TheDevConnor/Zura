@@ -26,6 +26,7 @@ typedef struct ZuraWindow {
 typedef struct ZuraConsole ZuraConsole;
 
 ZuraWindow* create_zura_window(void);
+void        close_zura_window(ZuraWindow* zurawindow);
 void        zura_render(const ZuraWindow* zurawindow);
 void        draw_zura_console(ZuraWindow* zurawindow);
 void        cleanup_glfw(GLFWwindow* window);

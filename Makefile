@@ -57,12 +57,14 @@ OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 # Default build 
 # -----------------------------------------------------------------------------
 
-CXX          = g++ --std=c++20
-CXX_EMIT_OBJ = -c -o
-CXX_EMIT_EXE = -o
-CXX_INC      = -I
-CXX_LIB      = -L
-CXX_MACRO    = -D
+CXX              = g++
+CXX_FLAGS        = --std=c++20 -O2
+CXX_DEBUG_FLAGS  = --std=c++20 -O0 -g -Wall
+CXX_EMIT_OBJ     = -c -o
+CXX_EMIT_EXE     = -o
+CXX_INC          = -I
+CXX_LIB          = -L
+CXX_MACRO_PREFIX = -D
 
 LIBS         = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
 
@@ -78,7 +80,7 @@ ECHO = echo
 # -----------------------------------------------------------------------------
 ifeq ($(OS), Windows_NT)
 
-CXX     += $(CXX_MACRO)_CRT_SECURE_NO_WARNINGS
+CXX     += $(CXX_MACRO_PREFIX)_CRT_SECURE_NO_WARNINGS
 
 LIB_DIR = .\lib\win\mingw-w64
 LIBS    = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
@@ -94,15 +96,17 @@ endif
 # -----------------------------------------------------------------------------
 ifeq ($(MSVC), 1)
 
-CXX          = cl.exe /std:c++20 /EHsc /nologo /MD
-CXX_INC      = /I
-CXX_EMIT_OBJ = /c /Fo:
-CXX_EMIT_EXE = /Fe:
-CXX_LIB      = /link /LIBPATH:
+CXX          	 = cl.exe 
+CXX_FLAGS        = /std:c++20 /EHsc /nologo /MD /O2
+CXX_DEBUG_FLAGS  = /std:c++20 /EHsc /nologo /MD /W3 /Od
+CXX_INC          = /I
+CXX_EMIT_OBJ     = /c /Fo:
+CXX_EMIT_EXE     = /Fe:
+CXX_LIB          = /link /LIBPATH:
 
-CXX_MACRO    = /D
+CXX_MACRO_PREFIX    = /D
 
-CXX           += $(CXX_MACRO)_CRT_SECURE_NO_WARNINGS
+CXX           += $(CXX_MACRO_PREFIX)_CRT_SECURE_NO_WARNINGS
 
 LIB_DIR = .\lib\win\vc2022
 
@@ -114,12 +118,12 @@ endif
 # Additional Compilation Flags
 # -----------------------------------------------------------------------------
 ifeq ($(ZURA_GUI),1)
-CXX += $(CXX_MACRO)ZURA_GUI
+CXX += $(CXX_MACRO_PREFIX)ZURA_GUI
 SRC_FILES += $(IMGUI_SRC_FILES)
 endif
 
 ifeq ($(IMGUI_DEMO_WINDOW),1)
-CXX += $(CXX_MACRO)IMGUI_DEMO_WINDOW
+CXX += $(CXX_MACRO_PREFIX)IMGUI_DEMO_WINDOW
 endif
 
 # -----------------------------------------------------------------------------
@@ -130,16 +134,22 @@ endif
 .PHONY: zura debug zura_gui zura_gui_debug clean imgui_demo
 
 imgui_demo: $(IMGUI_DEMO_SRC:.cxx=.obj) $(IMGUI_OBJ_FILES)
-	$(CXX) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
 
 zura: $(OBJ_FILES)
-	$(CXX) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+
+debug: $(OBJ_FILES:.obj=-d.obj)
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+
+%-d.obj : %.cpp
+	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 %.obj : %.cpp
-	$(CXX) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 %.obj : %.cxx
-	$(CXX) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 clean: 
 	@$(CLEAN_OBJ)

@@ -541,11 +541,6 @@ void zura_render(const ZuraWindow* zurawindow)
     glfwSwapBuffers(zurawindow->window);
 }
 
-void cleanup_glfw(GLFWwindow* window)
-{
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
 
 void cleanup_imgui(void)
 {
@@ -559,4 +554,10 @@ void start_imgui_frame(void)
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+}
+
+void close_zura_window(ZuraWindow* zw)
+{
+    glfwDestroyWindow(zw->window);
+    glfwTerminate();
 }
