@@ -148,3 +148,7 @@ clean:
 echo_OS: 
 	@echo $(OS)
 
+echo_SRC: 
+	@echo $(SRC_FILES)
+
+

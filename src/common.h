@@ -31,7 +31,8 @@ typedef enum {
     BAD_GRAY_STACK         = 14,
     MEMORY_FAILURE         = 15,
     VM_ERROR               = 16,
-    UNABLE_TO_INIT_GUI     = 17
+    UNABLE_TO_INIT_GUI     = 17,
+    FAILED_TO_START_IMGUI  = 18
 
 } Zura_Exit_Value;
 
