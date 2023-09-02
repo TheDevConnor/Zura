@@ -20,7 +20,7 @@
 /// reason is encountered to do so. 
 ///
 /// @sa ZuraExit
-typedef enum {
+typedef enum : int {
 
     OK = 0,
 

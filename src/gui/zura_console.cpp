@@ -2,13 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
+
 #include <GLFW/glfw3.h>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+
 #include "../common.h"
+#include "../debug/debug.h"  // Debugging utilities
+#include "../helper/flags.h" // Command-line flags parsing
+#include "../parser/chunk.h" // Chunk data structure and parsing functions
+#include "../vm/vm.h"        // Virtual machine implementation
+                          //
 #include "zura_console.h"
 
 // TODO Remove the use of these default values, deferring
@@ -39,6 +48,45 @@ struct ZuraConsole {
 
     int (*pfn_text_edit_callback)(ZuraConsole*, ImGuiInputTextCallbackData*);
 };
+
+int zura_gui_main(int argc, char* argv[])
+{
+    // Init Zura
+    flags(argc, argv);
+    init_vm();
+
+    ZuraWindow* zurawindow = create_zura_window();
+
+    while (!glfwWindowShouldClose(zurawindow->window)) {
+
+        glfwPollEvents();
+        start_imgui_frame();
+
+#if IMGUI_DEMO_WINDOW
+        ImGui::ShowDemoWindow(&imgui_show_window);
+#endif
+        
+        draw_zura_console(zurawindow);
+
+        // Rendering
+        zura_render(zurawindow);
+    }
+
+    // Run Zura
+    run_file(argv[1]);
+
+    // Cleanup Zura
+    free_vm();
+    cleanup_imgui();
+    close_zura_window(zurawindow);
+    zurawindow->window = NULL;
+    free(zurawindow);
+    zurawindow = NULL;
+
+    return int(OK);
+}
+
+
 
 ZuraConsole* init_ZuraConsole()
 {

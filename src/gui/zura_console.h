@@ -1,8 +1,10 @@
 #ifndef ZURA_CONSOLE_H
 #define ZURA_CONSOLE_H
 
-#include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
 
 typedef struct ZuraWindow {
 
@@ -24,6 +26,8 @@ typedef struct ZuraWindow {
 
 // typedef struct ZuraWindow ZuraWindow;
 typedef struct ZuraConsole ZuraConsole;
+
+int zura_gui_main(int argc, char* argv[]);
 
 ZuraWindow* create_zura_window(void);
 void        close_zura_window(ZuraWindow* zurawindow);

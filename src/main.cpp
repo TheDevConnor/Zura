@@ -12,49 +12,34 @@
 #include "vm/vm.h"        // Virtual machine implementation
 
 #if ZURA_GUI
-
-    #include <imgui/imgui.h>
-    #include <imgui/imgui_impl_glfw.h>
-    #include <imgui/imgui_impl_opengl3.h>
-
-    #include "gui/zura_console.h"
-
-#endif
+#include "gui/zura_console.h"
+const bool run_zura_gui = true;
+#else
+const bool run_zura_gui = false;
+#endif // ZURA_GUI
 
 int main(int argc, char* argv[])
 {
+    Zura_Exit_Value status = OK;
+    
+    if(run_zura_gui){
 
-    // Init Zura
-    flags(argc, argv);
-    init_vm();
+        status = (Zura_Exit_Value)zura_gui_main(argc, argv);
 
-    ZuraWindow* zurawindow = create_zura_window();
+    }else{
 
-    while (!glfwWindowShouldClose(zurawindow->window)) {
+        // Init Zura
+        flags(argc, argv);
+        init_vm();
 
-        glfwPollEvents();
-        start_imgui_frame();
+        // Run Zura
+        run_file(argv[1]);
 
-#if IMGUI_DEMO_WINDOW
-        ImGui::ShowDemoWindow(&imgui_show_window);
-#endif
-        
-        draw_zura_console(zurawindow);
-
-        // Rendering
-        zura_render(zurawindow);
+        // Cleanup Zura
+        free_vm();
     }
 
-    // Run Zura
-    run_file(argv[1]);
-
-    // Cleanup Zura
-    free_vm();
-    cleanup_imgui();
-    close_zura_window(zurawindow);
-    zurawindow->window = NULL;
-    free(zurawindow);
-    zurawindow = NULL;
-
-    ZuraExit(OK);
+    return (int)status;
 }
+
+
