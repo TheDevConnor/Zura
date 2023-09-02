@@ -26,6 +26,13 @@
 #               make clean
 #               make zura MSVC=1 ZURA_GUI=1 -j 12
 #
+# Building a debug build for Linux without Dear ImGui using jobs.
+#
+# 	Example:
+#               make clean
+#               make zura-cli-debug -j 12
+#
+#
 # It is recommended you run `make clean` before changing your build type,
 # ie. do not run `make zura` then `make debug` while modifying the source
 # code. This may introduce errors during linking.
@@ -59,7 +66,7 @@ OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 
 CXX              = g++
 CXX_FLAGS        = --std=c++20 -O2
-CXX_DEBUG_FLAGS  = --std=c++20 -O0 -g -Wall
+CXX_DEBUG_FLAGS  = --std=c++20 -O0 -g -pedantic
 CXX_EMIT_OBJ     = -c -o
 CXX_EMIT_EXE     = -o
 CXX_INC          = -I
@@ -117,18 +124,14 @@ endif
 # -----------------------------------------------------------------------------
 # Additional Compilation Flags
 # -----------------------------------------------------------------------------
-ifeq ($(ZURA_GUI),1)
-CXX += $(CXX_MACRO_PREFIX)ZURA_GUI
-SRC_FILES += $(IMGUI_SRC_FILES)
-else
-SRC_GUI = $(wildcard src/gui/*.cpp)
-OBJ_GUI = $(SRC_GUI:.cpp=.obj)
-OBJ_NO_GUI  = $(filter-out $(OBJ_GUI), $(OBJ_FILES))
+
+ifeq ($(ZURA_GUI), 1)
+CXX        += $(CXX_MACRO_PREFIX)ZURA_GUI
 endif
 
-ifeq ($(IMGUI_DEMO_WINDOW),1)
-CXX += $(CXX_MACRO_PREFIX)IMGUI_DEMO_WINDOW
-endif
+SRC_GUI     = $(wildcard src/gui/*.cpp)
+OBJ_GUI     = $(SRC_GUI:.cpp=.obj)
+OBJ_NO_GUI  = $(filter-out $(OBJ_GUI), $(OBJ_FILES))
 
 # -----------------------------------------------------------------------------
 # Build Recipes
@@ -140,14 +143,17 @@ endif
 imgui_demo: $(IMGUI_DEMO_SRC:.cxx=.obj) $(IMGUI_OBJ_FILES)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
 
-zura: $(OBJ_FILES)
+zura-gui: $(OBJ_FILES) $(IMGUI_OBJ_FILES)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
 
-zura-cl: $(OBJ_NO_GUI)
+zura-cli: $(OBJ_NO_GUI)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_EXE)$(BIN_DIR)/$@ 
 
-debug: $(OBJ_FILES:.obj=-d.obj)
-	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+zura-gui-debug: $(OBJ_FILES:.obj=-d.obj) $(IMGUI_OBJ_FILES:.obj=-d.obj)
+	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+
+zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
+	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_EXE)$(BIN_DIR)/$@
 
 %-d.obj : %.cpp
 	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
@@ -171,4 +177,3 @@ echo_SRC:
 echo_SRC_GUI:
 	@echo $(SRC_GUI)
 	@echo $(OBJ_NO_GUI)
-
