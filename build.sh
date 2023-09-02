@@ -2,7 +2,7 @@
 
 # Variables
 CXX="g++"
-CXXFLAGS="-O3 -std=c++17 -Wall -Wextra -ggdb3 -g"
+CXXFLAGS="-O3 -std=c++17 -Wall -Wextra -D_CRT_SECURE_NO_WARNINGS -Wno-missing-field-initializers"
 CXXFLAGS_DEBUG="-O0 -g -std=c++11 -Wall -ggdb3"
 VALGRIND="valgrind"
 UNIX_BIN_PATH="zbin"
@@ -90,7 +90,7 @@ windows() {
 
     # Collect all object files and specify them for linking
     OBJECT_FILES=$(find "$OBJ_PATH" -name "*.o")
-    $CXX -o "$TARGET" $OBJECT_FILES $CXXFLAGS
+    $CXX -o "$TARGET" $OBJECT_FILES $CXXFLAGS -lws2_32 -lmingw32 -liphlpapi
 
     echo -e "\nBuild for Windows completed."
 }
