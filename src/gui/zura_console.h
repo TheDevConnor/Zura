@@ -6,25 +6,8 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 
-typedef struct ZuraWindow {
 
-    GLFWwindow* window;
-
-    // Physical Monitor, pixels
-    int monitor_w;
-    int monitor_h;
-
-    // Application Window, pixels
-    int window_w;
-    int window_h;
-
-    ImVec4 clear_color; // four floats
-
-    // ZuraConsole console;
-
-} ZuraWindow;
-
-// typedef struct ZuraWindow ZuraWindow;
+typedef struct ZuraWindow ZuraWindow;
 typedef struct ZuraConsole ZuraConsole;
 
 int zura_gui_main(int argc, char* argv[]);

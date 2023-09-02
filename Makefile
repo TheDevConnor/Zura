@@ -120,6 +120,10 @@ endif
 ifeq ($(ZURA_GUI),1)
 CXX += $(CXX_MACRO_PREFIX)ZURA_GUI
 SRC_FILES += $(IMGUI_SRC_FILES)
+else
+SRC_GUI = $(wildcard src/gui/*.cpp)
+OBJ_GUI = $(SRC_GUI:.cpp=.obj)
+OBJ_NO_GUI  = $(filter-out $(OBJ_GUI), $(OBJ_FILES))
 endif
 
 ifeq ($(IMGUI_DEMO_WINDOW),1)
@@ -138,6 +142,9 @@ imgui_demo: $(IMGUI_DEMO_SRC:.cxx=.obj) $(IMGUI_OBJ_FILES)
 
 zura: $(OBJ_FILES)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
+
+zura-cl: $(OBJ_NO_GUI)
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_EXE)$(BIN_DIR)/$@ 
 
 debug: $(OBJ_FILES:.obj=-d.obj)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(LIBS) $(CXX_EMIT_EXE)$(BIN_DIR)/$@ $(CXX_LIB)$(LIB_DIR) 
@@ -161,4 +168,7 @@ echo_OS:
 echo_SRC: 
 	@echo $(SRC_FILES)
 
+echo_SRC_GUI:
+	@echo $(SRC_GUI)
+	@echo $(OBJ_NO_GUI)
 

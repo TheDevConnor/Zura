@@ -14,8 +14,10 @@
 #if ZURA_GUI
 #include "gui/zura_console.h"
 const bool run_zura_gui = true;
+#define RUN_ZURA_GUI status = (Zura_Exit_Value)zura_gui_main(argc, argv);
 #else
 const bool run_zura_gui = false;
+#define RUN_ZURA_GUI 
 #endif // ZURA_GUI
 
 int main(int argc, char* argv[])
@@ -24,7 +26,7 @@ int main(int argc, char* argv[])
     
     if(run_zura_gui){
 
-        status = (Zura_Exit_Value)zura_gui_main(argc, argv);
+        RUN_ZURA_GUI;
 
     }else{
 

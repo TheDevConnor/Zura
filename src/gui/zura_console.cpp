@@ -49,6 +49,23 @@ struct ZuraConsole {
     int (*pfn_text_edit_callback)(ZuraConsole*, ImGuiInputTextCallbackData*);
 };
 
+
+struct ZuraWindow {
+
+    GLFWwindow* window;
+
+    // Physical Monitor, pixels
+    int monitor_w;
+    int monitor_h;
+
+    // Application Window, pixels
+    int window_w;
+    int window_h;
+
+    ImVec4 clear_color; // four floats
+};
+
+
 int zura_gui_main(int argc, char* argv[])
 {
     // Init Zura
@@ -62,9 +79,10 @@ int zura_gui_main(int argc, char* argv[])
         glfwPollEvents();
         start_imgui_frame();
 
-#if IMGUI_DEMO_WINDOW
-        ImGui::ShowDemoWindow(&imgui_show_window);
-#endif
+        // Current window takes priority over the demo window.
+        if(imgui_show_window){
+            ImGui::ShowDemoWindow(&imgui_show_window);
+        }
         
         draw_zura_console(zurawindow);
 
