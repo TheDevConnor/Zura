@@ -77,6 +77,8 @@ typedef enum {
   SWITCH,
   CASE,
   DEFAULT,
+  ENUM,
+  STRUCT,
 
   // Types!
   I8,

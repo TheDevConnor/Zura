@@ -216,6 +216,10 @@ static TokenKind perfect_hash_lookup(const char *keyword) {
     return STRING_TYPE;
   if (strcmp(keyword, "void") == 0)
     return TK_VOID;
+  if (strcmp(keyword, "enum") == 0)
+    return ENUM;
+  if (strcmp(keyword, "struct") == 0)
+    return STRUCT;
 
   return IDENTIFIER;
 }

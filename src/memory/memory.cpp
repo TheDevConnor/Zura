@@ -78,6 +78,13 @@ static void free_obj(Obj *object) {
       FREE(ObjUpvalue, object);
       break;
     }
+    case OBJ_STRUCT: {
+      ObjStruct *_struct = (ObjStruct *)object;
+      free_table(&_struct->fields);
+      free_table(&_struct->field_types);
+      FREE(ObjStruct, object);
+      break;
+    }
   }
 }
 

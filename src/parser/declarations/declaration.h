@@ -128,6 +128,38 @@ void static_var_decleration() {
   define_static_variable(global);
 }
 
+void struct_declaration() {
+  // struct Persion { // Identifier
+  //   name: "";      // Identifier with type annotation
+  //   age: 0;        // Identifier with type annotation
+  // }
+  parser.consume(IDENTIFIER, "Expected a name for the struct!");
+  uint8_t name_constant = identifier_constant(&parser.previous);
+  declare_variable();
+
+  parser.consume(LEFT_BRACE, "Expected '{' before struct body!");
+  emit_bytes(OP_STRUCT, name_constant);
+  define_variable(name_constant);
+
+  while (!parser.check(RIGHT_BRACE) && !parser.check(EOF_TOKEN)) {
+    parser.consume(IDENTIFIER, "Expected a name for the struct field!");
+    uint8_t field_name = identifier_constant(&parser.previous);
+    parser.consume(COLON, "Expected ':' after struct field name!");
+    parser.consume(IDENTIFIER, "Expected a type for the struct field!");
+    uint8_t field_type = identifier_constant(&parser.previous);
+    parser.consume(SEMICOLON, "Expected ';' after struct field declaration!");
+    emit_bytes(OP_FIELD, field_name);
+    emit_bytes(OP_FIELD_TYPE, field_type);
+  }
+
+  parser.consume(RIGHT_BRACE, "Expected '}' after struct body!");
+  emit_byte(OP_POP);
+}
+
+void enum_declaration() {
+  
+}
+
 void synchronize() {
   parser.panic_mode = false;
 

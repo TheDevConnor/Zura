@@ -161,6 +161,13 @@ ObjUpvalue *new_upvalue(Value *slot) {
   return upvalue;
 }
 
+ObjStruct *new_struct(ObjString *name) {
+  ObjStruct *structure = ALLOCATE_OBJ(ObjStruct, OBJ_STRUCT);
+  structure->name = name;
+  init_table(&structure->fields);
+  return structure; 
+}
+
 void print_function(ObjFunction *function) {
   if (function->name == nullptr) {
     cout << "<script " << function->name << ">";
@@ -215,5 +222,19 @@ void print_object(Value value) {
   case OBJ_UPVALUE:
     cout << "upvalue";
     break;
+  case OBJ_STRUCT: {
+    ObjStruct* structure = AS_STRUCT(value);
+    cout << structure->name->chars << " { ";
+    for (int i = 0; i < structure->fields.capacity; i++) {
+      Entry* entry = &structure->fields.entries[i];
+      if (entry->key != nullptr) {
+        cout << entry->key->chars << ": ";
+        print_value(entry->value);
+        cout << ", ";
+      }
+    }
+    cout << "}";
+    break;
+  }
   }
 }

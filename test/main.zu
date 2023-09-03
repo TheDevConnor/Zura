@@ -1,6 +1,2 @@
-include "std/network";
-
-have severIp := "localhost";
-have port := 5555;
-
-connect(severIp, port);
+have x := 100;
+struct Person {}

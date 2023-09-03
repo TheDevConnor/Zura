@@ -63,6 +63,10 @@ enum OpCode : uint8_t {
   OP_INVOKE,
   // Class operations
   OP_INHERIT,
+  // Struct Operations
+  OP_STRUCT,
+  OP_FIELD,
+  OP_FIELD_TYPE,
   // Statements
   OP_DUP,
   OP_METHOD,

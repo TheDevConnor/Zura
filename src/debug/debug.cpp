@@ -195,6 +195,13 @@ int disassemble_instruction(Chunk *chunk, int offset) {
   case OP_DUP:
     return simple_instruction("OP_DUP", offset);
 
+  case OP_STRUCT:
+    return simple_instruction("OP_STRUCT", offset);
+  case OP_FIELD:
+    return constant_instruction("OP_FIELD", chunk, offset);
+  case OP_FIELD_TYPE:
+    return constant_instruction("OP_FIELD_TYPE", chunk, offset);
+
   case OP_RETURN:
     return simple_instruction("OP_RETURN", offset);
   default:

@@ -870,6 +870,25 @@ static InterpretResult run() {
       pop();
       break;
     }
+    // Struct operation codes
+    case OP_STRUCT: {
+      push(OBJ_VAL(new_struct(AS_STRING(read_constant()))));
+      break;
+    }
+    case OP_FIELD: {
+      ObjStruct *struct_ = AS_STRUCT(peek(0));
+      ObjString *name = AS_STRING(read_constant());
+      table_set(&struct_->fields, name, peek(1));
+      pop();
+      break;
+    }
+    case OP_FIELD_TYPE: {
+      ObjStruct *struct_ = AS_STRUCT(peek(0));
+      ObjString *name = AS_STRING(read_constant());
+      table_set(&struct_->field_types, name, peek(1));
+      pop();
+      break;
+    }
     // Statement operation codes
     case OP_METHOD: {
       define_method(AS_STRING(read_constant()));

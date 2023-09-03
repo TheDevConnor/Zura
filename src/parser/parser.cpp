@@ -280,6 +280,10 @@ void declaration() {
     var_declaration();
   } else if (parser.match(STATIC)) {
     static_var_decleration();
+  } else if (parser.match(STRUCT)) {
+    struct_declaration();
+  } else if (parser.match(ENUM)) {
+    enum_declaration();
   } else {
     statement();
   }

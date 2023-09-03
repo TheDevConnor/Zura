@@ -14,6 +14,7 @@
 #define IS_INSTANCE(value) is_obj_type(value, OBJ_INSTANCE)
 #define IS_NATIVE(value) is_obj_type(value, OBJ_NATIVE)
 #define IS_STRING(value) is_obj_type(value, OBJ_STRING)
+#define IS_STRUCT(value) is_obj_type(value, OBJ_STRUCT)
 
 #define AS_BOUND_METHOD(value) ((ObjBoundMethod *)AS_OBJ(value))
 #define AS_CLASS(value) ((ObjClass *)AS_OBJ(value))
@@ -25,6 +26,7 @@
 #define AS_CSTRING(value) (((ObjString *)AS_OBJ(value))->chars)
 #define AS_MODULE(value) ((ObjModule *)AS_OBJ(value))
 #define AS_TABLE(value) ((Table *)AS_OBJ(value))
+#define AS_STRUCT(value) ((ObjStruct *)AS_OBJ(value))
 
 enum ObjType {
   OBJ_BOUND_METHOD,
@@ -35,6 +37,7 @@ enum ObjType {
   OBJ_NATIVE,
   OBJ_STRING,
   OBJ_UPVALUE,
+  OBJ_STRUCT,
 };
 
 struct Obj {
@@ -112,6 +115,13 @@ struct ObjArray {
   Value *values;
 };
 
+struct ObjStruct {
+  Obj obj;
+  ObjString *name;
+  Table fields;
+  Table field_types;
+};
+
 ObjBoundMethod *new_bound_method(Value receiver, ObjClosure *method);
 
 ObjClass *new_class(ObjString *name);
@@ -131,6 +141,8 @@ Value array_read(ObjArray* array, int index);
 ObjArray* array_write(ObjArray* array, int val, Value value);
 
 ObjUpvalue *new_upvalue(Value *slot);
+
+ObjStruct *new_struct(ObjString *name);
 
 void print_object(Value value);
 

@@ -105,6 +105,13 @@ void blacken_object(Obj* object) {
       case OBJ_UPVALUE:
           mark_value(((ObjUpvalue*)object)->closed);
           break;
+      case OBJ_STRUCT: {
+        ObjStruct* _struct = (ObjStruct*)object;
+        mark_object((Obj*)_struct->name);
+        mark_table(&_struct->fields);
+        mark_table(&_struct->field_types);
+        break;
+      }
       case OBJ_NATIVE:
       case OBJ_STRING:
           ObjString* string = (ObjString*)object;
