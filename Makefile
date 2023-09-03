@@ -3,8 +3,9 @@
 #                             Zura Makefile
 #
 # =============================================================================
-# This Makefile supports the Zura project. It can build on Linux using GCC,
-# Windows using GCC derived from the MinGW project, and Windows using MSVC.
+#
+# This Makefile supports the Zura project. It can build on Linux + GCC,
+# Windows + GCC, and Windows + MSVC.
 #
 # Building for Linux and Windows with GCC is straightforward.
 #
@@ -59,9 +60,8 @@ OBJ_DIR   = obj
 
 OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 
-
 # -----------------------------------------------------------------------------
-# Default build 
+# GCC Default build 
 # -----------------------------------------------------------------------------
 
 CXX              = g++
@@ -170,10 +170,3 @@ clean:
 	
 echo_OS: 
 	@echo $(OS)
-
-echo_SRC: 
-	@echo $(SRC_FILES)
-
-echo_SRC_GUI:
-	@echo $(SRC_GUI)
-	@echo $(OBJ_NO_GUI)

@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
-
 #include <GLFW/glfw3.h>
 
 #include <imgui/imgui.h>
@@ -17,7 +14,7 @@
 #include "../helper/flags.h" // Command-line flags parsing
 #include "../parser/chunk.h" // Chunk data structure and parsing functions
 #include "../vm/vm.h"        // Virtual machine implementation
-                          //
+
 #include "zura_console.h"
 
 // TODO Remove the use of these default values, deferring
@@ -165,7 +162,7 @@ void zc_Draw(ZuraConsole* zc, ZuraWindow* zw, const char* title, bool* p_open)
     int display_w, display_h;
     // TODO Get window size from external variable that is updated in the main loop
     glfwGetFramebufferSize(zw->window, &display_w, &display_h);
-    ImVec2 window_dims = ImVec2(display_w, display_h);
+    ImVec2 window_dims = ImVec2((float)display_w, (float)display_h);
     ImVec2 window_pos  = ImVec2(0, 0);
 
     ImGui::SetNextWindowFocus();
