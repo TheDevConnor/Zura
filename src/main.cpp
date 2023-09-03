@@ -26,7 +26,7 @@ const bool run_zura_gui = true;
 #else
 
 const bool run_zura_gui = false;
-#define RUN_ZURA_GUI(argc, argv) Zura_Exit_Value::UNABLE_TO_INIT_GUI;
+#define RUN_ZURA_GUI(argc, argv) Zura_Exit_Value::RUNTIME_ERROR;
 
 #endif // ZURA_GUI
 

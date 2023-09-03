@@ -64,6 +64,8 @@ OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 # GCC Default build 
 # -----------------------------------------------------------------------------
 
+# Recommended GCC optimization is O2. O3 can be applied to specific parts of
+# code after profiling.
 CXX              = g++
 CXX_FLAGS        = --std=c++20 -O2
 CXX_DEBUG_FLAGS  = --std=c++20 -O0 -g -pedantic
@@ -93,8 +95,11 @@ LIB_DIR = .\lib\win\mingw-w64
 LIBS    = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
 
 # Should work with PowerShell Version 5 and above.
-CLEAN_OBJ = powershell.exe -noprofile -Command " & {Get-ChildItem -recurse *.obj | Remove-Item}"
-CLEAN_EXE = powershell.exe -noprofile -Command " & {Get-ChildItem -recurse *.exe | Remove-Item}"
+# Simply add additional file extensions here to add to clean recipe.
+_CLEAN_FILES = pdb, obj, exe, ilk
+
+CLEAN_FILES = $(addprefix *.,$(_CLEAN_FILES))
+CLEAN_ALL = powershell.exe -noprofile -Command " & {Get-ChildItem -recurse $(CLEAN_FILES) | Remove-Item}"
 
 endif
 
@@ -105,7 +110,7 @@ ifeq ($(MSVC), 1)
 
 CXX          	 = cl.exe 
 CXX_FLAGS        = /std:c++20 /EHsc /nologo /MD /O2
-CXX_DEBUG_FLAGS  = /std:c++20 /EHsc /nologo /MD /W3 /Od
+CXX_DEBUG_FLAGS  = /std:c++20 /EHsc /nologo /MD /W3 /Od /Z7 # /fsanitize=address
 CXX_INC          = /I
 CXX_EMIT_OBJ     = /c /Fo:
 CXX_EMIT_EXE     = /Fe:
@@ -165,8 +170,7 @@ zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 clean: 
-	@$(CLEAN_OBJ)
-	@$(CLEAN_EXE)
+	$(CLEAN_ALL)
 	
 echo_OS: 
 	@echo $(OS)
