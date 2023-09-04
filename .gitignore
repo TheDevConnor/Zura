@@ -6,3 +6,8 @@
 *.pdb
 *.obj
 *.ini
+*.a
+*.lib 
+*.dll
+compile_flags.txt
+edit

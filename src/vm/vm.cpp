@@ -920,6 +920,7 @@ static InterpretResult run() {
 }
 
 InterpretResult interpret(const char *source) {
+
   ObjFunction *function = compile(source);
   if (function == nullptr) {
     delete function;

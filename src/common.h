@@ -20,7 +20,7 @@
 /// reason is encountered to do so. 
 ///
 /// @sa ZuraExit
-typedef enum {
+typedef enum : int {
 
     OK = 0,
 
@@ -30,7 +30,9 @@ typedef enum {
     RUNTIME_ERROR          = 13,
     BAD_GRAY_STACK         = 14,
     MEMORY_FAILURE         = 15,
-    VM_ERROR               = 16
+    VM_ERROR               = 16,
+    UNABLE_TO_INIT_GUI     = 17,
+    FAILED_TO_START_IMGUI  = 18
 
 } Zura_Exit_Value;
 
