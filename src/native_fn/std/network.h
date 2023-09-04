@@ -13,12 +13,13 @@
 #include <WS2tcpip.h>
 #include <iphlpapi.h>
 #include <IcmpAPI.h>
-#else 
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netinet/ip_icmp.h>
+#include <netinet/ip.h> // Added for non-Windows
 #endif
 
 class NetworkFunc {
@@ -76,7 +77,7 @@ private:
         WSACleanup();
 #endif
 
-        return BOOL_VAL(false); // Successfully connected
+        return BOOL_VAL(true); // Successfully connected
     }
 
     static Value ping_native(int arg_count, Value* args) {
@@ -120,17 +121,31 @@ private:
                 return BOOL_VAL(true);
             } else {
                 std::cerr << "Ping to " << address << " failed. Status: " << icmpReply.Status << std::endl;
+                IcmpCloseHandle(icmpFile);
+                WSACleanup();
                 return BOOL_VAL(false);
             }
-            IcmpCloseHandle(icmpFile);
-            WSACleanup();
-            return BOOL_VAL(false);
         }
 
         IcmpCloseHandle(icmpFile);
         WSACleanup();
 
 #else
+        unsigned short checksum(unsigned short *buf, int len) {
+            unsigned long sum = 0;
+            while (len > 1) {
+                sum += *buf++;
+                len -= 2;
+            }
+            if (len == 1) {
+                sum += *(unsigned char*)buf;
+            }
+
+            sum = (sum >> 16) + (sum & 0XFFFF);
+            sum += (sum >> 16);
+            return (unsigned short)(-sum);
+        }
+
         int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
         if (sockfd == -1) {
             std::cerr << "Failed to create socket." << std::endl;
@@ -145,15 +160,34 @@ private:
             return BOOL_VAL(false);
         }
 
-        // Build and send an ICMP echo (ping) request packet here
+        struct icmphdr icmp_header;
+        icmp_header.type = ICMP_ECHO;
+        icmp_header.code = 0;
+        icmp_header.checksum = 0;
+        icmp_header.un.echo.id = 0;
+        icmp_header.un.echo.sequence = 0;
 
-        // Placeholder code for sending ICMP echo request
+        icmp_header.checksum = checksum((unsigned short *)&icmp_header, sizeof(icmp_header));
+
+        struct ip ip_header;
+        ip_header.ip_hl = 5;
+        ip_header.ip_v = 4;
+        ip_header.ip_tos = 0;
+        ip_header.ip_len = sizeof(struct ip) + sizeof(struct icmphdr);
+        ip_header.ip_id = htons(0);
+        ip_header.ip_off = 0;
+        ip_header.ip_ttl = 64;
+        ip_header.ip_p = IPPROTO_ICMP;
+        ip_header.ip_src.s_addr = INADDR_ANY;
+        ip_header.ip_dst = dest_addr.sin_addr;
+
+        sendto(sockfd, &icmp_header, sizeof(struct icmphdr), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+
         std::cout << "Sending ICMP echo request to " << address << std::endl;
 
         close(sockfd); // Close the socket after sending the request
-#endif
-
         return BOOL_VAL(true); // Successfully sent the ping request
+#endif
     }
 
 public:

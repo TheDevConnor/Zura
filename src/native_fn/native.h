@@ -3,10 +3,10 @@
 #include <string>
 
 #include "std/filesystem.h"
-#include "std/network.h"
 #include "std/logger.h"
 #include "std/math.h"
 #include "std/std.h"
+#include "std/network.h"
 
 void define_native(std::string native_name) {
   if (native_name == "fs") {
