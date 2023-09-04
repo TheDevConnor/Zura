@@ -72,13 +72,13 @@ CXX_DEBUG_FLAGS  = --std=c++20 -O0 -g -pedantic
 CXX_EMIT_OBJ     = -c -o
 CXX_EMIT_EXE     = -o
 CXX_INC          = -I
-CXX_LIB          = -L
+# CXX_LIB          = -L
 CXX_MACRO_PREFIX = -D
 
 LIBS         = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
 
 # TODO: Test these
-CLEAN_OBJ = find test -type f -name "*.obj" -delete
+CLEAN_OBJ = find . -type f -name "*.obj" -delete
 CLEAN_EXE = rm ./bin/zura ./bin/debug ./bin/imgui_demo
 
 ECHO = echo
@@ -170,7 +170,8 @@ zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 clean: 
-	$(CLEAN_ALL)
+	$(CLEAN_OBJ)
+	$(CLEAN_EXE)
 	
 echo_OS: 
 	@echo $(OS)
