@@ -24,6 +24,20 @@
 
 class NetworkFunc {
 private:
+    unsigned short checksum(unsigned short *buf, int len) {
+        unsigned long sum = 0;
+        while (len > 1) {
+            sum += *buf++;
+            len -= 2;
+        }
+        if (len == 1) {
+            sum += *(unsigned char*)buf;
+        }
+        sum = (sum >> 16) + (sum & 0XFFFF);
+        sum += (sum >> 16);
+        return (unsigned short)(-sum);
+    }
+
     static Value connect_native(int arg_count, Value* args) {
         if (arg_count != 2 || !IS_STRING(args[0]) || !IS_NUMBER(args[1])) {
             return BOOL_VAL(false);
@@ -131,21 +145,6 @@ private:
         WSACleanup();
 
 #else
-        unsigned short checksum(unsigned short *buf, int len) {
-            unsigned long sum = 0;
-            while (len > 1) {
-                sum += *buf++;
-                len -= 2;
-            }
-            if (len == 1) {
-                sum += *(unsigned char*)buf;
-            }
-
-            sum = (sum >> 16) + (sum & 0XFFFF);
-            sum += (sum >> 16);
-            return (unsigned short)(-sum);
-        }
-
         int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
         if (sockfd == -1) {
             std::cerr << "Failed to create socket." << std::endl;
@@ -188,7 +187,8 @@ private:
         close(sockfd); // Close the socket after sending the request
         return BOOL_VAL(true); // Successfully sent the ping request
 #endif
-    }
+    return BOOL_VAL(false); // Failed to send the ping request
+};
 
 public:
     static void define_network_natives() {

@@ -43,15 +43,7 @@ private:
 
     buffer[bytes_read] = '\0';
     fclose(file);
-
-    delete file;
-    delete path;
-
-    Value ret = OBJ_VAL(copy_string(buffer, (int)bytes_read));
-    
-    free(buffer);
-
-    return ret;
+    return OBJ_VAL(copy_string(buffer, (int)bytes_read));
   }
   static Value write_file_native(int arg_count, Value *args) {
     if (arg_count != 2)
@@ -77,11 +69,6 @@ private:
     }
 
     fclose(file);
-
-    delete file;
-    delete path;
-    delete content;
-
     return BOOL_VAL(true);
   }
   static Value generate_file_native(int arg_count, Value *args) {
@@ -97,9 +84,6 @@ private:
     }
 
     fclose(file);
-
-    delete file;
-
     return BOOL_VAL(true);
   }
   static Value delete_file_native(int arg_count, Value *args) {
@@ -112,8 +96,6 @@ private:
     if (remove(path->chars) != 0) {
       return NIL_VAL;
     }
-
-    delete path;
 
     return BOOL_VAL(true);
   }

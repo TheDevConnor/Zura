@@ -1,6 +1,8 @@
 include "std/network";
+include "std/fs";
 
-have severIp := "localhost";
-have port := 5555;
+info fsReadFile("test/lexer.zu");
+// have severIp := "localhost";
+// have port := 5555;
 
-connect(severIp, port);
+// connect(severIp, port);
