@@ -24,7 +24,7 @@
 
 class NetworkFunc {
 private:
-    unsigned short checksum(unsigned short *buf, int len) {
+    static unsigned short checksum(unsigned short *buf, int len) {
         unsigned long sum = 0;
         while (len > 1) {
             sum += *buf++;
