@@ -1,6 +1,6 @@
 #pragma once
 
-#include <colorize.hpp>
+#include "../../../inc/colorize.hpp"
 #include "../../lexer/lexer.hpp"
 
 class LexerError {

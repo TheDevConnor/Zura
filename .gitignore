@@ -1,0 +1,5 @@
+zbin/
+obj/
+
+# Compiled Object files
+*.obj

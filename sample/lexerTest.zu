@@ -1,2 +1,3 @@
 have x := 45;
-info x; ~
+info x; 
+`

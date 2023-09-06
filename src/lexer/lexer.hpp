@@ -131,7 +131,6 @@ struct Keyword {
 };
 
 static TokenKind perfect_hash_lookup(std::string keyword) {
-
   static const std::unordered_map<std::string, TokenKind> keyword_hash {
     {"class", CLASS},
     {"else", ELSE},
@@ -175,7 +174,10 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
     {"struct", STRUCT}
   };
 
-  return keyword_hash.at(keyword);
+  auto it = keyword_hash.find(keyword);
+  if (it != keyword_hash.end())
+    return it->second;
+  return IDENTIFIER;
 }
 
 static TokenKind identifier_type() {

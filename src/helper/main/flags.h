@@ -53,8 +53,7 @@ inline void run_file(const char *path) {
     init_tokenizer(source);
     do {
         token = scan_token();
-        cout << token.line << " " << token.column << " " 
-             << token.length << " " << token.start << endl;
+        cout << token.kind << " " << token.length << " " << token.start << endl;
     } while (token.kind != EOF_TOKEN);
 }
 

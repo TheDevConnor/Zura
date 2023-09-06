@@ -79,6 +79,6 @@ Token scan_token() {
     return _string();
   }
 
-  LexerError::error_lexer(&scanner, "Unexpected character.");
+  LexerError::error_lexer(&scanner, "Unexpected character: " + std::string(1, c));
   return make_token(ERROR_TOKEN);
 }
