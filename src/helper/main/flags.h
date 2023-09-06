@@ -4,6 +4,8 @@
 #include <sstream>
 
 #include "../../lexer/tokens.hpp"
+#include "../../opCode/chunk.hpp"
+#include "../../debug/debug.hpp"
 #include "./getCurrentTime.h"
 #include "../../common.hpp"
 #include "./version.h"
@@ -41,20 +43,28 @@ static char *read_file(const char *path) {
 
 inline void run_file(const char *path) {
     // !NOTE: consider changing the char* path to use the cpp in built filesystem
-    const char* source = read_file(path);
+    // const char* source = read_file(path);
 
-    // Check to make sure that we have  a .zu file extension
-    if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
-        cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
-        ZuraExit(INVALID_FILE_EXTENSION);
-    }
+    // // Check to make sure that we have  a .zu file extension
+    // if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
+    //     cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
+    //     ZuraExit(INVALID_FILE_EXTENSION);
+    // }
 
-    Token token = {};
-    init_tokenizer(source);
-    do {
-        token = scan_token();
-        cout << token.kind << " " << token.length << " " << token.start << endl;
-    } while (token.kind != EOF_TOKEN);
+    // Token token = {};
+    // init_tokenizer(source);
+    // do {
+    //     token = scan_token();
+    //     cout << token.kind << " " << token.length << " " << token.start << endl;
+    // } while (token.kind != EOF_TOKEN);
+
+    Chunk chunk;
+    initChunk(&chunk);
+    writeChunk(&chunk, OP_RETURN);
+
+    disassembleChunk(&chunk, "test chunk");
+
+    freeChunk(&chunk);
 }
 
 inline void flags(int argc, char *argv[]) {
