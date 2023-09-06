@@ -1,5 +1,5 @@
-zbin/
-obj/
+zbin/*
+obj/*
 
 # Compiled Object files
 *.obj
