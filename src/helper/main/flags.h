@@ -41,7 +41,7 @@ static char *read_file(const char *path) {
 
 inline void run_file(const char *path) {
     // !NOTE: consider changing the char* path to use the cpp in built filesystem
-    std::string source = read_file(path);
+    const char* source = read_file(path);
 
     // Check to make sure that we have  a .zu file extension
     if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
@@ -49,7 +49,8 @@ inline void run_file(const char *path) {
         ZuraExit(INVALID_FILE_EXTENSION);
     }
 
-    Token token;
+    Token token = {};
+    init_tokenizer(source);
     do {
         token = scan_token();
         cout << token.line << " " << token.column << " " 

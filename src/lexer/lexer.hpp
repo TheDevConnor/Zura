@@ -23,7 +23,7 @@ void init_tokenizer(const char *source) {
   scanner.column = 0;
 }
 
-std::string get_source_line_start(int line) {
+const char* get_source_line_start(int line) {
   const char *current = scanner.source;
   int current_line = 1;
 
@@ -77,11 +77,11 @@ static Token make_token(TokenKind kind) {
   return token;
 }
 
-static Token error_token(const char *message) {
+static Token error_token(std::string message) {
   Token token;
   token.kind = ERROR_TOKEN;
-  token.start = message;
-  token.length = (int)strlen(message);
+  token.start = message.c_str();
+  token.length = message.length();
   token.line = scanner.line;
   return token;
 }

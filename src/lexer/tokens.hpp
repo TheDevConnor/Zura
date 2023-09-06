@@ -70,12 +70,12 @@ typedef enum {
 
 typedef struct {
   TokenKind kind;
-  std::string start;
+  const char* start;
   int length;
   int line;
   int column;
 } Token;
 
-std::string get_source_line_start(int line);
-void init_tokenizer(std::string& source);
+const char* get_source_line_start(int line);
+void init_tokenizer(const char* source);
 Token scan_token();
