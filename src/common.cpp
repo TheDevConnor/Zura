@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "common.h"
+#include "common.hpp"
 
 void ZuraExit(Zura_Exit_Value exit_value)
 {

@@ -54,7 +54,7 @@ IMGUI_OBJ_FILES  = $(patsubst %.cpp,%.obj,$(IMGUI_SRC_FILES))
 IMGUI_DEMO_SRC = .\inc\imgui\opengl_demo_main.cxx
 
 
-BIN_DIR   = bin
+BIN_DIR   = zbin
 INC_DIR   = inc
 OBJ_DIR   = obj
 

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.zu": "zu",
+        "xstring": "cpp"
+    }
+}

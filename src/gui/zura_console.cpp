@@ -9,13 +9,13 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 
-#include "../common.h"
+#include "../common.hpp"
 #include "../debug/debug.h"  // Debugging utilities
 #include "../helper/flags.h" // Command-line flags parsing
 #include "../parser/chunk.h" // Chunk data structure and parsing functions
 #include "../vm/vm.h"        // Virtual machine implementation
 
-#include "zura_console.h"
+#include "zura_console.hpp"
 
 // TODO Remove the use of these default values, deferring
 // to using gl or glfw to get the actual pixel dimensions.

@@ -1,5 +1,0 @@
-have test := "hello";
-loop (have i := 0; i < 5) : (i++) {
-    info test[i];
-    info "\n";
-}
