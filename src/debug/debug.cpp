@@ -1,5 +1,7 @@
 #include <iostream>
+#include <iomanip>
 
+#include "../compiler/value.hpp"
 #include "debug.hpp"
 
 void disassembleChunk(Chunk* chunk, const char* name) {
@@ -15,11 +17,26 @@ static int simpleInstruction(const char* name, int offset) {
     return offset + 1;
 }
 
+static int constantInstruction(const char* name, Chunk* chunk, int offset) {
+    uint8_t constant = chunk->code[offset + 1];
+    std::cout << std::left << std::setw(16) << name << " " << std::setw(4) << constant << " '";
+    printValue(chunk->constants.values[constant]);
+    std::cout << "'" << std::endl;
+    return offset + 2;
+}
+
 int disassembleInstruction(Chunk* chunk, int offset) {
-    std::cout << offset << " ";
+    // std::cout << std::setfill('0') << std::setw(4) << offset << " ";
+    std::cout << offset << "  ";
+    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1])
+        std::cout << "   | ";
+    else
+        std::cout << chunk->lines[offset] << " ";
 
     uint8_t instruction = chunk->code[offset];
     switch (instruction) {
+        case OP_CONSTANT:
+            return constantInstruction("OP_CONSTANT", chunk, offset);
         case OP_RETURN:
             return simpleInstruction("OP_RETURN", offset);
         default:
