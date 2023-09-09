@@ -2,6 +2,7 @@
 
 #include "../../../inc/colorize.hpp"
 #include "../../lexer/lexer.hpp"
+#include "../../common.hpp"
 
 class LexerError {
 private:
@@ -12,5 +13,6 @@ public:
                   << termcolor::cyan << scanner->column - 1 << termcolor::reset << "] "
                   << termcolor::red << "Lexer Error: \n" 
                   << termcolor::reset << message << std::endl;
+        ZuraExit(LEXER_ERROR);
     }
 };
