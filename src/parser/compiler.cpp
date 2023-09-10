@@ -1,24 +1,23 @@
 #include <iostream>
 
-#include "../lexer/tokens.hpp"
+#include "../helper/errors/parser_error.hpp"
+#include "samantics/expr/expr.hpp"
 #include "../common.hpp"
 #include "compiler.hpp"
 
-void compile(const char *source) {
+using namespace Zura;
+
+Expr expr;
+
+bool ParserClass::compile(const char *source, Chunk *chunk) {
     init_tokenizer(source);
+    ParserClass::compiling_chunk = chunk;
 
-    int line = -1;
+    ParserClass::advance();
+    expr.expression();
+    ParserClass::consume(EOF_TOKEN, "Expected end of expression");
+    ParserClass::endCompiler();
 
-    while (true) {
-        Token token = scan_token();
-        if (token.line != line) {
-            std::cout << token.line << " ";
-            line = token.line;
-        } else {
-            std::cout << "   | ";
-        }
-        printf("%2d '%.*s'\n", token.kind, token.length, token.start);
-
-        if (token.kind == EOF_TOKEN) break;
-    }
+    // There was no parser error.
+    return true;
 }
