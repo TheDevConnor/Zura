@@ -69,11 +69,12 @@ typedef enum {
 } TokenKind;
 
 typedef struct {
-  TokenKind kind;
+  std::string lexeme;
   const char* start;
+  TokenKind kind;
+  int column;
   int length;
   int line;
-  int column;
 } Token;
 
 const char* get_source_line_start(int line);

@@ -10,6 +10,8 @@ enum OPCode {
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
+    OP_POW,
+    OP_MOD,
     OP_NEGATE,
     OP_RETURN,
 };

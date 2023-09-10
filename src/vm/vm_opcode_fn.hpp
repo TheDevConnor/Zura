@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "../debug/debug.hpp"
 #include "../common.hpp"
@@ -38,6 +39,14 @@ static void opDivide() {
     BINARY_OP([](double a, double b) { return a / b; });
 }
 
+static void opPow() {
+    BINARY_OP([](double a, double b) { return pow(a, b); });
+}
+
+static void opMod() {
+    BINARY_OP([](double a, double b) { return fmod(a, b); });
+}
+
 static void opNegate() {
     push(-pop());
 }
@@ -54,6 +63,8 @@ static OpCodeHandler opCodeHandlers[] = {
     &opSubtract,    // OP_SUBTRACT
     &opMultiply,    // OP_MULTIPLY
     &opDivide,      // OP_DIVIDE
+    &opPow,         // OP_POW
+    &opMod,         // OP_MOD
     &opNegate,      // OP_NEGATE
     &opReturn,      // OP_RETURN
 };

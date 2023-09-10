@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "../parser/compiler.hpp"
 #include "../debug/debug.hpp"
 #include "../common.hpp"
 #include "vm_run.hpp"
@@ -21,9 +22,7 @@ Value pop() {
     return *vm.stackTop;
 }
 
-Zura_Exit_Value interpret(Chunk* chunk) {
-    vm.chunk = chunk;
-    vm.ip = vm.chunk->code;
-
-    return run();
+Zura_Exit_Value interpret(const char *source) {
+    compile(source);
+    return OK;
 }

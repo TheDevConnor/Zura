@@ -10,7 +10,7 @@
 #include "../../common.hpp"
 #include "../../vm/vm.hpp"
 #include "./version.h"
-// #include "./repl.h"
+#include "./repl.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ static char *read_file(const char *path) {
     cout << "+-----------------------------------------+ \n"
          << "| No file path was provided, opening REPL | \n"
          << "+-----------------------------------------+" << endl;
-    // repl(0, NULL);
+    repl(0, NULL);
     cout << "REPL is not implemented yet" << endl;
   }
 
@@ -44,49 +44,19 @@ static char *read_file(const char *path) {
 
 inline void run_file(const char *path) {
     // !NOTE: consider changing the char* path to use the cpp in built filesystem
-    // const char* source = read_file(path);
+    const char* source = read_file(path);
 
-    // // Check to make sure that we have  a .zu file extension
-    // if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
-    //     cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
-    //     ZuraExit(INVALID_FILE_EXTENSION);
-    // }
+    // Check to make sure that we have  a .zu file extension
+    if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
+        cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
+        ZuraExit(INVALID_FILE_EXTENSION);
+    }
 
-    // Token token = {};
-    // init_tokenizer(source);
-    // do {
-    //     token = scan_token();
-    //     cout << token.kind << " " << token.length << " " << token.start << endl;
-    // } while (token.kind != EOF_TOKEN);
+    Zura_Exit_Value result = interpret(source);
+    delete[] source;
 
-    initVM();
-
-    Chunk chunk;
-    initChunk(&chunk);
-
-    int constant = addConstants(&chunk, 1.2);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
-
-    constant = addConstants(&chunk, 3.4);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
-
-    writeChunk(&chunk, OP_ADD, 123);
-
-    constant = addConstants(&chunk, 5.6);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
-
-    writeChunk(&chunk, OP_DIVIDE, 123);
-    writeChunk(&chunk, OP_NEGATE, 123);
-
-    writeChunk(&chunk, OP_RETURN, 123);
-
-    disassembleChunk(&chunk, "test chunk");
-    interpret(&chunk);
-    freeVM();
-    freeChunk(&chunk);
+    if (result == COMPILATION_ERROR) ZuraExit(COMPILATION_ERROR);
+    if (result == RUNTIME_ERROR) ZuraExit(RUNTIME_ERROR);
 }
 
 inline void flags(int argc, char *argv[]) {

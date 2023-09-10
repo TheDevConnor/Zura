@@ -17,7 +17,7 @@ inline VM vm;
 void initVM();
 void freeVM();
 
-Zura_Exit_Value interpret(Chunk* chunk);
+Zura_Exit_Value interpret(const char* source);
 
 void push(Value value);
 Value pop();
