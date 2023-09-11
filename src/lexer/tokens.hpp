@@ -2,7 +2,7 @@
 
 #include <string>
 
-typedef enum {
+enum TokenKind {
   // Single-character Tokens!
   LEFT_PAREN,    // (
   RIGHT_PAREN,   // )
@@ -66,16 +66,16 @@ typedef enum {
   ERROR_TOKEN,
   // End of file!
   EOF_TOKEN
-} TokenKind;
+};
 
-typedef struct {
+struct Token {
   std::string lexeme;
   const char* start;
   TokenKind kind;
   int column;
   int length;
   int line;
-} Token;
+};
 
 const char* get_source_line_start(int line);
 void init_tokenizer(const char* source);

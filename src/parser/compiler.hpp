@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 
+#include "precedence/precedence.hpp"
 #include "../lexer/tokens.hpp"
 #include "../vm/vm.hpp"
 
@@ -14,22 +15,7 @@ namespace Zura {
             Token previous;
         };
 
-        enum Precedence {
-            NONE,
-            ASSIGNMENT,  // =
-            OR,          // or
-            AND,         // and
-            EQUALITY,    // == !=
-            COMPARISON,  // < > <= >=
-            TERM,        // + -
-            FACTOR,      // * /
-            UNARY,       // ! -
-            CALL,        // . ()
-            PRIMARY
-        };
-
         Parser parser;
-        Precedence precedence;
         Chunk* compiling_chunk;
 
         Chunk* currentChunk() {

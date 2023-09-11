@@ -1,3 +1,4 @@
+#include "../../precedence/precedence.hpp"
 #include "../../../lexer/tokens.hpp"
 #include "../../compiler.hpp"
 #include "expr.hpp"
@@ -10,8 +11,8 @@ void Expr::number() {
 
 void Expr::binary() {
     TokenKind operatorKind = parserClass.parser.previous.kind;
-
-    Expr::ParsePrecedence(ParserClass::Precedence::TERM);
+    Prec::ParseRule* rule = prec.getRule(operatorKind);
+    prec.ParsePrecedence((Prec::Precedence)(rule->precedence + 1));
 
     switch (operatorKind) {
         case PLUS: parserClass.emitByte(OP_ADD); break;
@@ -32,7 +33,7 @@ void Expr::grouping() {
 void Expr::unary() {
     TokenKind operatorKind = parserClass.parser.previous.kind;
 
-    Expr::ParsePrecedence(ParserClass::Precedence::UNARY);
+    prec.ParsePrecedence(Prec::Precedence::UNARY);
 
     switch (operatorKind) {
         case MINUS: parserClass.emitByte(OP_NEGATE); break;
@@ -40,17 +41,7 @@ void Expr::unary() {
     }
 }
 
-void Expr::ParsePrecedence(ParserClass::Precedence precedence) {
-    parserClass.advance();
-    switch (parserClass.parser.previous.kind) {
-        case LEFT_PAREN: Expr::grouping(); break;
-        case MINUS: Expr::unary(); break;
-        case NUMBER: Expr::number(); break;
-        default: return;
-    }
-}
-
 void Expr::expression() {
-    Expr::ParsePrecedence(ParserClass::Precedence::ASSIGNMENT);
+    prec.ParsePrecedence(Prec::Precedence::ASSIGNMENT);
     return;
 }

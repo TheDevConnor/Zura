@@ -5,7 +5,6 @@
 namespace Zura{
     class Expr {
         public:
-            void ParsePrecedence(ParserClass::Precedence precedence);
             void expression();
 
             void grouping();
@@ -15,3 +14,5 @@ namespace Zura{
         private:
     };
 };
+
+inline Zura::Expr expr;

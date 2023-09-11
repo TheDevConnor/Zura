@@ -1,13 +1,11 @@
 #include <iostream>
 
 #include "../helper/errors/parser_error.hpp"
-#include "samantics/expr/expr.hpp"
+#include "semantics/expr/expr.hpp"
 #include "../common.hpp"
 #include "compiler.hpp"
 
 using namespace Zura;
-
-Expr expr;
 
 bool ParserClass::compile(const char *source, Chunk *chunk) {
     init_tokenizer(source);
