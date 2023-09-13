@@ -51,8 +51,7 @@ SRC_FILES = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/
 
 IMGUI_SRC_FILES  = $(wildcard inc/imgui/*.cpp) $(wildcard inc/imgui/**/*.cpp)
 IMGUI_OBJ_FILES  = $(patsubst %.cpp,%.obj,$(IMGUI_SRC_FILES))
-IMGUI_DEMO_SRC = .\inc\imgui\opengl_demo_main.cxx
-
+IMGUI_DEMO_SRC   = .\inc\imgui\opengl_demo_main.cxx
 
 BIN_DIR   = zbin
 INC_DIR   = inc
@@ -170,8 +169,7 @@ zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 clean: 
-	$(CLEAN_OBJ)
-	$(CLEAN_EXE)
+	$(CLEAN_ALL)
 	
 echo_OS: 
 	@echo $(OS)
