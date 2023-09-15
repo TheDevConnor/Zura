@@ -47,18 +47,36 @@
 # Append using the += operator as seen below.
 # -----------------------------------------------------------------------------
 
-SRC_FILES = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
+# SRC_FILES = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
 
 IMGUI_SRC_FILES  = $(wildcard inc/imgui/*.cpp) $(wildcard inc/imgui/**/*.cpp)
 IMGUI_OBJ_FILES  = $(patsubst %.cpp,%.obj,$(IMGUI_SRC_FILES))
-IMGUI_DEMO_SRC = .\inc\imgui\opengl_demo_main.cxx
-
+IMGUI_DEMO_SRC   = .\inc\imgui\opengl_demo_main.cxx
 
 BIN_DIR   = zbin
 INC_DIR   = inc
 OBJ_DIR   = obj
 
-OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
+SRC_DIRS  = src
+SRC_DIRS += src/debug
+SRC_DIRS += src/gui
+SRC_DIRS += src/lexer
+SRC_DIRS += src/memory
+SRC_DIRS += src/opCode
+SRC_DIRS += src/parser/precedence
+SRC_DIRS += src/parser/semantics/decl
+SRC_DIRS += src/parser/semantics/expr
+SRC_DIRS += src/parser/semantics/stmt
+SRC_DIRS += src/parser
+SRC_DIRS += src/vm
+SRC_DIRS += src\compiler
+
+VPATH  = $(SRC_DIRS)
+
+SRC_FILES = $(foreach DIR, $(SRC_DIRS), $(wildcard $(DIR)/*.cpp))
+
+# OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
+OBJ_FILES  = $(addprefix $(OBJ_DIR)/,$(notdir $(SRC_FILES:.cpp=.obj)))
 
 # -----------------------------------------------------------------------------
 # GCC Default build 
@@ -169,9 +187,23 @@ zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
 %.obj : %.cxx
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
+$(OBJ_DIR)/%.obj: %.cpp | $(OBJ_DIR)
+	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $< $(CXX_EMIT_OBJ)$@
+
 clean: 
-	$(CLEAN_OBJ)
-	$(CLEAN_EXE)
+	$(CLEAN_ALL)
 	
 echo_OS: 
 	@echo $(OS)
+
+echo_src: 
+	@echo $(SRC_FILES)
+
+echo_dirs: 
+	@echo $(SRC_DIRS)
+
+echo_obj: 
+	@echo $(OBJ_FILES)
+
+echo_vpath: 
+	@echo $(VPATH)
