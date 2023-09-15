@@ -3,16 +3,12 @@
 #include "../../compiler.hpp"
 
 namespace Zura{
-    class Expr {
-        public:
-            void expression();
+    namespace Expr {
+        void expression();
 
-            void grouping();
-            void number();
-            void binary();
-            void unary();
-        private:
+        void grouping();
+        void number();
+        void binary();
+        void unary();
     };
 };
-
-inline Zura::Expr expr;

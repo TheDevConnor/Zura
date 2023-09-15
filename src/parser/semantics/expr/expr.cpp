@@ -11,8 +11,8 @@ void Expr::number() {
 
 void Expr::binary() {
     TokenKind operatorKind = parserClass.parser.previous.kind;
-    Prec::ParseRule* rule = prec.getRule(operatorKind);
-    prec.ParsePrecedence((Prec::Precedence)(rule->precedence + 1));
+    ParseRule* rule = prec.getRule(operatorKind);
+    prec.ParsePrecedence((Precedence)(rule->precedence + 1));
 
     switch (operatorKind) {
         case PLUS: parserClass.emitByte(OP_ADD); break;
@@ -33,7 +33,7 @@ void Expr::grouping() {
 void Expr::unary() {
     TokenKind operatorKind = parserClass.parser.previous.kind;
 
-    prec.ParsePrecedence(Prec::Precedence::UNARY);
+    prec.ParsePrecedence(Precedence::UNARY);
 
     switch (operatorKind) {
         case MINUS: parserClass.emitByte(OP_NEGATE); break;
@@ -42,6 +42,6 @@ void Expr::unary() {
 }
 
 void Expr::expression() {
-    prec.ParsePrecedence(Prec::Precedence::ASSIGNMENT);
+    prec.ParsePrecedence(Precedence::ASSIGNMENT);
     return;
 }
