@@ -1,3 +1,4 @@
+#include "../../helper/errors/parser_error.hpp"
 #include "../semantics/expr/expr.hpp"
 #include "precedence.hpp"
 
@@ -5,11 +6,18 @@ using namespace Zura;
 
 void Prec::ParsePrecedence(Precedence precedence) {
     parserClass.advance();
-    switch (parserClass.parser.previous.kind) {
-        case LEFT_PAREN: Expr::grouping(); break;
-        case MINUS: Expr::unary(); break;
-        case NUMBER: Expr::number(); break;
-        default: return;
+    ParseFn prefixRule = getRule(parserClass.parser.previous.kind)->prefix;
+    if (prefixRule == nullptr) {
+        ParserError::errorAt(&parserClass.parser.previous, "Expected expression.");
+        return;
+    }
+
+    prefixRule();
+
+    while (precedence <= getRule(parserClass.parser.current.kind)->precedence) {
+        parserClass.advance();
+        ParseFn infixRule = getRule(parserClass.parser.previous.kind)->infix;
+        infixRule();
     }
 }
 

@@ -3,6 +3,7 @@
 #include "../helper/errors/parser_error.hpp"
 #include "../lexer/tokens.hpp"
 #include "../opCode/chunk.hpp"
+#include "../debug/debug.hpp"   
 #include "../common.hpp"
 #include "compiler.hpp"
 
@@ -61,4 +62,7 @@ void ParserClass::emitConstant(Value value) {
 
 void ParserClass::endCompiler() {
     ParserClass::emitReturn();
+#ifdef DEBUG_PRINT_CODE
+    disassembleChunk(ParserClass::currentChunk(), "code");
+#endif
 }
