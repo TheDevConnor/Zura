@@ -2,6 +2,7 @@
 
 #include "../parser/compiler.hpp"
 #include "../debug/debug.hpp"
+#include "../types/type.hpp"
 #include "../common.hpp"
 #include "vm_run.hpp"
 #include "vm.hpp"
@@ -14,14 +15,18 @@ void initVM() {
 }
 void freeVM() {}
 
-void push(Value value) {
+void push(Types::Value value) {
     *vm.stackTop = value;
     vm.stackTop++;
 }
 
-Value pop() {
+Types::Value pop() {
     vm.stackTop--;
     return *vm.stackTop;
+}
+
+Types::Value peek(int distance) {
+    return vm.stackTop[-1 - distance];
 }
 
 Zura_Exit_Value interpret(const char *source) {

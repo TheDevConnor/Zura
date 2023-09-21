@@ -2,7 +2,10 @@
 #include <cstdio>
 
 #include "../memory/memory.hpp"
+#include "../types/type.hpp"
 #include "value.hpp"
+
+using namespace Zura;
 
 void initValueArray(ValueArray* array) {
     array->capacity = 0;
@@ -10,7 +13,7 @@ void initValueArray(ValueArray* array) {
     array->values = nullptr;
 }
 
-void writeValueArray(ValueArray* array, Value value) {
+void writeValueArray(ValueArray* array, Types::Value value) {
     if (array->capacity < array->count + 1) {
         int oldCapacity = array->capacity;
         array->capacity = Memory::GROW_CAPACITY(oldCapacity);
@@ -26,6 +29,6 @@ void freeValueArray(ValueArray* array) {
     initValueArray(array);
 }
 
-void printValue(Value value) {
-    std::cout << value;
+void printValue(Types::Value value) {
+    printf("%g", Types::AS_NUMBER(value));
 }

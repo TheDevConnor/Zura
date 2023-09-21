@@ -28,7 +28,7 @@ ParseRule* Prec::getRule(TokenKind kind) {
 Prec::Prec() { 
     using namespace Zura::Expr;
     rules = {
-        {LEFT_PAREN,   {grouping, nullptr, Precedence::NONE}}, // (
+        {LEFT_PAREN,   {grouping, nullptr, Precedence::CALL}}, // (
         {RIGHT_PAREN,   {nullptr, nullptr, Precedence::NONE}}, // )
 
         {LEFT_BRACE,    {nullptr, nullptr, Precedence::NONE}}, // {
@@ -39,16 +39,16 @@ Prec::Prec() {
 
         {COMMA,         {nullptr, nullptr, Precedence::NONE}}, // ,
         {DOT,           {nullptr, nullptr, Precedence::NONE}}, // .
-        {MINUS,         {nullptr,  binary, Precedence::NONE}}, // -
-        {PLUS,          {nullptr,  binary, Precedence::NONE}}, // +
+        {MINUS,         {  unary,  binary, Precedence::TERM}}, // -
+        {PLUS,          {nullptr,  binary, Precedence::TERM}}, // +
         {SEMICOLON,     {nullptr, nullptr, Precedence::NONE}}, // ;
-        {SLASH,         {nullptr,  binary, Precedence::NONE}}, // /
-        {STAR,          {nullptr, nullptr, Precedence::NONE}}, // *
+        {SLASH,         {nullptr,  binary, Precedence::FACTOR}}, // /
+        {STAR,          {nullptr,  binary, Precedence::FACTOR}}, // *
         {HASHTAG,       {nullptr, nullptr, Precedence::NONE}}, // #
         {COLON,         {nullptr, nullptr, Precedence::NONE}}, // :
-        {MODULO,        {nullptr,  binary, Precedence::NONE}}, // %
+        {MODULO,        {nullptr,  binary, Precedence::FACTOR}}, // %
+        {POWER,         {nullptr,  binary, Precedence::FACTOR}}, // **
         {DOLLAR,        {nullptr, nullptr, Precedence::NONE}}, // $
-        {POWER,         {nullptr,  binary, Precedence::NONE}}, // **
         {TILDE,         {nullptr, nullptr, Precedence::NONE}}, // ~
         {AT,            {nullptr, nullptr, Precedence::NONE}}, // @
 

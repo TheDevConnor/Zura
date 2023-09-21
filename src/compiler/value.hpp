@@ -1,17 +1,18 @@
 #pragma once
 
+#include "../types/type.hpp"
 #include "../common.hpp"
 
-typedef double Value;
+using namespace Zura;
 
 struct ValueArray {
     int capacity;
     int count;
-    Value* values;
+    Types::Value* values;
 };
 
 void initValueArray(ValueArray* array);
-void writeValueArray(ValueArray* array, Value value);
+void writeValueArray(ValueArray* array, Types::Value value);
 void freeValueArray(ValueArray* array);
 
-void printValue(Value value);
+void printValue(Types::Value value);

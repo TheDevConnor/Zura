@@ -13,7 +13,7 @@ namespace Zura {
             EQUALITY,    // == !=
             COMPARISON,  // < > <= >=
             TERM,        // + -
-            FACTOR,      // * /
+            FACTOR,      // * / % **
             UNARY,       // ! -
             CALL,        // . ()
             PRIMARY

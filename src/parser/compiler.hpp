@@ -5,6 +5,7 @@
 
 #include "precedence/precedence.hpp"
 #include "../lexer/tokens.hpp"
+#include "../types/type.hpp"
 #include "../vm/vm.hpp"
 
 namespace Zura {
@@ -25,7 +26,7 @@ namespace Zura {
         void emitByte(uint8_t byte);
         void emitBytes(uint8_t byte1, uint8_t byte2);
         void emitReturn();
-        void emitConstant(Value value);
+        void emitConstant(Types::Value value);
         void endCompiler();
         void errorAtCurrent(const std::string& message);
         void advance();
@@ -36,4 +37,4 @@ namespace Zura {
 
 inline Zura::ParserClass parserClass;
 
-static uint8_t makeConstant(Value value);
+static uint8_t makeConstant(Types::Value value);

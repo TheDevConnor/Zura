@@ -1,12 +1,15 @@
 #include "../../precedence/precedence.hpp"
 #include "../../../lexer/tokens.hpp"
+#include "../../../types/type.hpp"
 #include "../../compiler.hpp"
 #include "expr.hpp"
 
 using namespace Zura;
+// using namespace Zura::Types;
 
 void Expr::number() {
     double value = std::strtod(parserClass.parser.previous.start, nullptr);
+    parserClass.emitConstant(Types::NUMBER_VAL(value));
 }
 
 void Expr::binary() {
@@ -15,12 +18,12 @@ void Expr::binary() {
     prec.ParsePrecedence((Precedence)(rule->precedence + 1));
 
     switch (operatorKind) {
-        case PLUS: parserClass.emitByte(OP_ADD); break;
-        case MINUS: parserClass.emitByte(OP_SUBTRACT); break;
-        case STAR: parserClass.emitByte(OP_MULTIPLY); break;
-        case SLASH: parserClass.emitByte(OP_DIVIDE); break;
-        case POWER: parserClass.emitByte(OP_POW); break;
-        case MODULO: parserClass.emitByte(OP_MOD); break;
+        case PLUS:  { parserClass.emitByte(OP_ADD); break; }
+        case MINUS: { parserClass.emitByte(OP_SUBTRACT); break; }
+        case STAR:  { parserClass.emitByte(OP_MULTIPLY); break; }
+        case SLASH: { parserClass.emitByte(OP_DIVIDE); break; }
+        case POWER: { parserClass.emitByte(OP_POW); break; }
+        case MODULO:{ parserClass.emitByte(OP_MOD); break; }
         default: return;
     }
 }

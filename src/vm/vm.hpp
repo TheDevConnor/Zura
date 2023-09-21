@@ -2,14 +2,17 @@
 
 #include "../compiler/value.hpp"
 #include "../opCode/chunk.hpp"
+#include "../types/type.hpp"
 #include "../common.hpp"
+
+using namespace Zura;
 
 struct VM {
     Chunk* chunk;
     uint8_t* ip;
 
-    Value stack[256]; // 256 is the max stack size
-    Value* stackTop;
+    Types::Value stack[256]; // 256 is the max stack size
+    Types::Value* stackTop;
 };
 
 inline VM vm;
@@ -19,5 +22,6 @@ void freeVM();
 
 Zura_Exit_Value interpret(const char* source);
 
-void push(Value value);
-Value pop();
+Types::Value peek(int distance);
+void push(Types::Value value);
+Types::Value pop();

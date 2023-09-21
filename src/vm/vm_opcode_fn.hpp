@@ -2,53 +2,41 @@
 #include <cmath>
 
 #include "../debug/debug.hpp"
+#include "../types/type.hpp"
 #include "../common.hpp"
 #include "vm.hpp"
 
+using namespace Zura;
+
 static constexpr auto READ_BYTE = []() -> uint8_t { return *vm.ip++; };
-static constexpr auto READ_CONSTANT = []() -> Value { 
+static constexpr auto READ_CONSTANT = []() -> Types::Value { 
     return vm.chunk->constants.values[READ_BYTE()]; 
 };
 
-static void BINARY_OP(double (*op)(double, double)) {
-    double b = pop();
-    double a = pop();
-    push(op(a, b));
+template <typename ValueType, typename Operator>
+void BINARY_OP(Operator op) {
+    do {
+        if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) {
+            std::cerr << "Operands must be numbers" << std::endl;
+            exit(RUNTIME_ERROR);
+        }
+        ValueType b = AS_NUMBER(pop());
+        ValueType a = AS_NUMBER(pop());
+        push(Types::NUMBER_VAL(op(a, b)));
+    } while (false);
 }
 
 using OpCodeHandler = void (*)();
 
 static void opConstant() {
-    Value constant = READ_CONSTANT();
+    std::cout << "opConstant" << std::endl;
+    Types::Value constant = READ_CONSTANT();
     push(constant);
 }
 
 static void opAdd() {
-    BINARY_OP([](double a, double b) { return a + b; });
-}
-
-static void opSubtract() {
-    BINARY_OP([](double a, double b) { return a - b; });
-}
-
-static void opMultiply() {
-    BINARY_OP([](double a, double b) { return a * b; });
-}
-
-static void opDivide() {
-    BINARY_OP([](double a, double b) { return a / b; });
-}
-
-static void opPow() {
-    BINARY_OP([](double a, double b) { return pow(a, b); });
-}
-
-static void opMod() {
-    BINARY_OP([](double a, double b) { return fmod(a, b); });
-}
-
-static void opNegate() {
-    push(-pop());
+    std::cout << "opAdd" << std::endl;
+    BINARY_OP<double>(std::plus<double>());
 }
 
 static void opReturn() {
@@ -60,11 +48,11 @@ static void opReturn() {
 static OpCodeHandler opCodeHandlers[] = {
     &opConstant,    // OP_CONSTANT
     &opAdd,         // OP_ADD
-    &opSubtract,    // OP_SUBTRACT
-    &opMultiply,    // OP_MULTIPLY
-    &opDivide,      // OP_DIVIDE
-    &opPow,         // OP_POW
-    &opMod,         // OP_MOD
-    &opNegate,      // OP_NEGATE
+    // &opSubtract,    // OP_SUBTRACT
+    // &opMultiply,    // OP_MULTIPLY
+    // &opDivide,      // OP_DIVIDE
+    // &opPow,         // OP_POW
+    // &opMod,         // OP_MOD
+    // &opNegate,      // OP_NEGATE
     &opReturn,      // OP_RETURN
 };

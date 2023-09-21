@@ -4,12 +4,13 @@
 #include "../lexer/tokens.hpp"
 #include "../opCode/chunk.hpp"
 #include "../debug/debug.hpp"   
+#include "../types/type.hpp"
 #include "../common.hpp"
 #include "compiler.hpp"
 
 using namespace Zura;
 
-static uint8_t makeConstant(Value value) {
+static uint8_t makeConstant(Types::Value value) {
     int constant = addConstants(parserClass.currentChunk(), value);
     if (constant > UINT8_MAX) {
         parserClass.errorAtCurrent("Too many constants in one chunk.");
@@ -56,7 +57,7 @@ void ParserClass::emitReturn() {
     ParserClass::emitByte(OP_RETURN);
 }
 
-void ParserClass::emitConstant(Value value) {
+void ParserClass::emitConstant(Types::Value value) {
     ParserClass::emitBytes(OP_CONSTANT, makeConstant(value));
 }
 
