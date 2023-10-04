@@ -6,3 +6,11 @@ obj/*
 
 # Compiled Object files
 *.obj
+
+*~
+*.ini
+compile_flags.txt
+build.ps1
+tags
+*.swp
+*.rdbg

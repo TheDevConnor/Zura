@@ -40,6 +40,19 @@
 #
 # =============================================================================
 
+# -----------------------------------------------------------------------------
+# Shell Selection 
+# 
+# Default Shells:
+# 	Windows : PowerShell (base)
+# 	Linux   : sh?
+# -----------------------------------------------------------------------------
+
+ifeq ($(OS), Windows_NT)
+
+SHELL=powershell.exe
+
+endif
 
 # -----------------------------------------------------------------------------
 # Build variables
@@ -48,6 +61,7 @@
 # -----------------------------------------------------------------------------
 
 # SRC_FILES = $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
+
 
 IMGUI_SRC_FILES  = $(wildcard inc/imgui/*.cpp) $(wildcard inc/imgui/**/*.cpp)
 IMGUI_OBJ_FILES  = $(patsubst %.cpp,%.obj,$(IMGUI_SRC_FILES))
@@ -69,7 +83,7 @@ SRC_DIRS += src/parser/semantics/expr
 SRC_DIRS += src/parser/semantics/stmt
 SRC_DIRS += src/parser
 SRC_DIRS += src/vm
-SRC_DIRS += src\compiler
+SRC_DIRS += src/compiler
 
 VPATH  = $(SRC_DIRS)
 
@@ -77,6 +91,7 @@ SRC_FILES = $(foreach DIR, $(SRC_DIRS), $(wildcard $(DIR)/*.cpp))
 
 # OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 OBJ_FILES  = $(addprefix $(OBJ_DIR)/,$(notdir $(SRC_FILES:.cpp=.obj)))
+DEBUG_OBJ_FILES  = $(OBJ_FILES:.obj=-d.obj)
 
 # -----------------------------------------------------------------------------
 # GCC Default build 
@@ -108,16 +123,15 @@ ECHO = echo
 ifeq ($(OS), Windows_NT)
 
 CXX     += $(CXX_MACRO_PREFIX)_CRT_SECURE_NO_WARNINGS
-
-LIB_DIR = .\lib\win\mingw-w64
-LIBS    = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
+LIB_DIR  = .\lib\win\mingw-w64
+LIBS     = -lmingw32 -lopengl32 -lglfw3 -lshell32 -luser32 -lgdi32
 
 # Should work with PowerShell Version 5 and above.
 # Simply add additional file extensions here to add to clean recipe.
 _CLEAN_FILES = pdb, obj, exe, ilk
 
 CLEAN_FILES = $(addprefix *.,$(_CLEAN_FILES))
-CLEAN_ALL = powershell.exe -noprofile -Command " & {Get-ChildItem -recurse $(CLEAN_FILES) | Remove-Item}"
+CLEAN_ALL = Get-ChildItem -recurse $(CLEAN_FILES) | Remove-Item
 
 endif
 
@@ -178,13 +192,10 @@ zura-gui-debug: $(OBJ_FILES:.obj=-d.obj) $(IMGUI_OBJ_FILES:.obj=-d.obj)
 zura-cli-debug: $(OBJ_NO_GUI:.obj=-d.obj)
 	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_EXE)$(BIN_DIR)/$@
 
-%-d.obj : %.cpp
+$(OBJ_DIR)/%-d.obj : %.cpp
 	$(CXX) $(CXX_DEBUG_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
-%.obj : %.cpp
-	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
-
-%.obj : %.cxx
+$(OBJ_DIR)/%.obj : %.cxx
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $^ $(CXX_EMIT_OBJ)$@
 
 $(OBJ_DIR)/%.obj: %.cpp | $(OBJ_DIR)
@@ -192,18 +203,3 @@ $(OBJ_DIR)/%.obj: %.cpp | $(OBJ_DIR)
 
 clean: 
 	$(CLEAN_ALL)
-	
-echo_OS: 
-	@echo $(OS)
-
-echo_src: 
-	@echo $(SRC_FILES)
-
-echo_dirs: 
-	@echo $(SRC_DIRS)
-
-echo_obj: 
-	@echo $(OBJ_FILES)
-
-echo_vpath: 
-	@echo $(VPATH)
