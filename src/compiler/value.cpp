@@ -15,7 +15,7 @@ void initValueArray(ValueArray* array) {
 
 void writeValueArray(ValueArray* array, Types::Value value) {
     if (array->capacity < array->count + 1) {
-        int oldCapacity = array->capacity;
+        size_t oldCapacity = array->capacity;
         array->capacity = Memory::GROW_CAPACITY(oldCapacity);
         array->values = Memory::GROW_ARRAY(array->values, oldCapacity, array->capacity);
     }

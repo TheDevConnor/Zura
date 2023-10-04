@@ -73,7 +73,7 @@ struct Token {
   const char* start;
   TokenKind kind;
   int column;
-  int length;
+  size_t length;
   int line;
 };
 

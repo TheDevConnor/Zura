@@ -21,8 +21,8 @@ enum OPCode {
 
 struct Chunk {
     uint8_t* code;
-    int capacity;
-    int count;
+    size_t capacity;
+    size_t count;
     int* lines;
 
     ValueArray constants;
