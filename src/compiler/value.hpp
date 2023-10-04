@@ -6,8 +6,8 @@
 using namespace Zura;
 
 struct ValueArray {
-    int capacity;
-    int count;
+    size_t capacity;
+    size_t count;
     Types::Value* values;
 };
 

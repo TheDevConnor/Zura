@@ -23,7 +23,7 @@ void freeChunk(Chunk* chunk) {
 
 void writeChunk(Chunk* chunk, uint8_t byte, int line) {
     if (chunk->capacity < chunk->count + 1) {
-        int oldCapacity = chunk->capacity;
+        size_t oldCapacity = chunk->capacity;
         chunk->capacity = Memory::GROW_CAPACITY(oldCapacity);
         chunk->code = Memory::GROW_ARRAY(chunk->code, oldCapacity, chunk->capacity);
         chunk->lines = Memory::GROW_ARRAY(chunk->lines, oldCapacity, chunk->capacity);
