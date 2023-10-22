@@ -72,6 +72,7 @@ INC_DIR   = inc
 OBJ_DIR   = obj
 
 SRC_DIRS  = src
+SRC_DIRS += src/compiler
 SRC_DIRS += src/debug
 SRC_DIRS += src/gui
 SRC_DIRS += src/lexer
@@ -83,7 +84,6 @@ SRC_DIRS += src/parser/semantics/expr
 SRC_DIRS += src/parser/semantics/stmt
 SRC_DIRS += src/parser
 SRC_DIRS += src/vm
-SRC_DIRS += src/compiler
 
 VPATH  = $(SRC_DIRS)
 
@@ -112,7 +112,8 @@ LIBS         = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
 
 # TODO: Test these
 CLEAN_OBJ = find . -type f -name "*.obj" -delete
-CLEAN_EXE = rm ./bin/zura ./bin/debug ./bin/imgui_demo
+CLEAN_EXE = rm ./zbin/zura-cli
+CLEAN_ALL = $(CLEAN_OBJ) && $(CLEAN_EXE)
 
 ECHO = echo
 

@@ -9,8 +9,8 @@
 using namespace Zura;
 
 static constexpr auto READ_BYTE = []() -> uint8_t { return *vm.ip++; };
-static constexpr auto READ_CONSTANT = []() -> Types::Value { 
-    return vm.chunk->constants.values[READ_BYTE()]; 
+static constexpr auto READ_CONSTANT = []() -> Value { 
+    return vm.chunk->constants.values[READ_BYTE()];
 };
 
 template <typename ValueType, typename Operator>
@@ -22,7 +22,7 @@ void BINARY_OP(Operator op) {
         }
         ValueType b = AS_NUMBER(pop());
         ValueType a = AS_NUMBER(pop());
-        push(Types::NUMBER_VAL(op(a, b)));
+        push(NUMBER_VAL(op(a, b)));
     } while (false);
 }
 
@@ -30,7 +30,7 @@ using OpCodeHandler = void (*)();
 
 static void opConstant() {
     std::cout << "opConstant" << std::endl;
-    Types::Value constant = READ_CONSTANT();
+    Value constant = READ_CONSTANT();
     push(constant);
 }
 

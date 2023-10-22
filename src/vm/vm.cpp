@@ -15,17 +15,17 @@ void initVM() {
 }
 void freeVM() {}
 
-void push(Types::Value value) {
+void push(Value value) {
     *vm.stackTop = value;
     vm.stackTop++;
 }
 
-Types::Value pop() {
+Value pop() {
     vm.stackTop--;
     return *vm.stackTop;
 }
 
-Types::Value peek(int distance) {
+Value peek(int distance) {
     return vm.stackTop[-1 - distance];
 }
 

@@ -9,7 +9,7 @@ using namespace Zura;
 
 void Expr::number() {
     double value = std::strtod(parserClass.parser.previous.start, nullptr);
-    parserClass.emitConstant(Types::NUMBER_VAL(value));
+    parserClass.emitConstant(NUMBER_VAL(value));
 }
 
 void Expr::binary() {

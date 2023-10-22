@@ -26,7 +26,7 @@ ParseRule* Prec::getRule(TokenKind kind) {
 }
 
 Prec::Prec() { 
-    using namespace Zura::Expr;
+    using namespace Expr;
     rules = {
         {LEFT_PAREN,   {grouping, nullptr, Precedence::CALL}}, // (
         {RIGHT_PAREN,   {nullptr, nullptr, Precedence::NONE}}, // )

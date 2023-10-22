@@ -1,18 +1,18 @@
 #pragma once
 
+#include <cstddef>
+
 #include "../types/type.hpp"
 #include "../common.hpp"
-
-using namespace Zura;
 
 struct ValueArray {
     size_t capacity;
     size_t count;
-    Types::Value* values;
+    Value* values;
 };
 
 void initValueArray(ValueArray* array);
-void writeValueArray(ValueArray* array, Types::Value value);
+void writeValueArray(ValueArray* array, Value value);
 void freeValueArray(ValueArray* array);
 
-void printValue(Types::Value value);
+void printValue(Value value);

@@ -5,15 +5,13 @@
 #include "../types/type.hpp"
 #include "value.hpp"
 
-using namespace Zura;
-
 void initValueArray(ValueArray* array) {
     array->capacity = 0;
     array->count = 0;
     array->values = nullptr;
 }
 
-void writeValueArray(ValueArray* array, Types::Value value) {
+void writeValueArray(ValueArray* array, Value value) {
     if (array->capacity < array->count + 1) {
         size_t oldCapacity = array->capacity;
         array->capacity = Memory::GROW_CAPACITY(oldCapacity);
@@ -29,6 +27,6 @@ void freeValueArray(ValueArray* array) {
     initValueArray(array);
 }
 
-void printValue(Types::Value value) {
-    printf("%g", Types::AS_NUMBER(value));
+void printValue(Value value) {
+    printf("%g", AS_NUMBER(value));
 }

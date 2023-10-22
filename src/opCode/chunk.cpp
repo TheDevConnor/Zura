@@ -5,8 +5,6 @@
 #include "../types/type.hpp"
 #include "chunk.hpp"
 
-using namespace Zura;
-
 void initChunk(Chunk* chunk) {
     chunk->capacity = 0;
     chunk->count = 0;
@@ -34,7 +32,7 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
     chunk->count++;
 }
 
-int addConstants(Chunk* chunk, Types::Value value) {
+int addConstants(Chunk* chunk, Value value) {
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;
 }

@@ -26,7 +26,7 @@ namespace Zura {
         void emitByte(uint8_t byte);
         void emitBytes(uint8_t byte1, uint8_t byte2);
         void emitReturn();
-        void emitConstant(Types::Value value);
+        void emitConstant(Value value);
         void endCompiler();
         void errorAtCurrent(const std::string& message);
         void advance();
@@ -37,4 +37,4 @@ namespace Zura {
 
 inline Zura::ParserClass parserClass;
 
-static uint8_t makeConstant(Types::Value value);
+static uint8_t makeConstant(Value value);

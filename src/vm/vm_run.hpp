@@ -12,7 +12,7 @@ static Zura_Exit_Value run() {
     while (true) {
     #ifdef DEBUG_TRACE_EXECUTION
         std::cout << "          ";
-        for (Types::Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+        for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
             std::cout << "[ ";
             printValue(*slot);
             std::cout << " ]";

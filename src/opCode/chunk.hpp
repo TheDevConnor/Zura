@@ -5,8 +5,6 @@
 #include "../compiler/value.hpp"
 #include "../types/type.hpp"
 
-using namespace Zura;
-
 enum OPCode {
     OP_CONSTANT,
     OP_ADD,
@@ -32,4 +30,4 @@ void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);
 
-int addConstants(Chunk* chunk, Types::Value value);
+int addConstants(Chunk* chunk, Value value);
