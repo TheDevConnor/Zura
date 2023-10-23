@@ -16,6 +16,5 @@ bool ParserClass::compile(const char *source, Chunk *chunk) {
     ParserClass::consume(EOF_TOKEN, "Expected end of expression");
     ParserClass::endCompiler();
 
-    // There was no parser error.
-    return true;
+    return !ParserClass::parser_error;
 }

@@ -15,6 +15,7 @@ struct VM {
 
 inline VM vm;
 
+void resetStack();
 void initVM();
 void freeVM();
 

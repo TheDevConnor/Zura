@@ -9,10 +9,14 @@
 
 using namespace Zura;
 
-void initVM() {
-    // this will reset the stackTop to the beginning of the stack
+void resetStack() {
     vm.stackTop = vm.stack;
 }
+
+void initVM() {
+    resetStack();
+}
+
 void freeVM() {}
 
 void push(Value value) {

@@ -1,12 +1,38 @@
+#pragma once
+
 #include <iostream>
+#include <cmath>
 
 #include "../debug/debug.hpp"
 #include "../types/type.hpp"
-#include "vm_opcode_fn.hpp"
 #include "../common.hpp"
 #include "vm.hpp"
 
-using namespace Zura;
+#define READ_BYTE() (*vm.ip++)
+#define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+
+bool isOpNumber() {
+    return IS_NUMBER(peek(0)) && IS_NUMBER(peek(1));
+}
+
+void performBinaryOp(uint8_t op) {
+    if(!isOpNumber()) {
+        std::cout << "Operands must be numbers." << std::endl;
+        return;
+    }
+
+    double b = AS_NUMBER(pop());
+    double a = AS_NUMBER(pop());
+
+    switch (op) {
+        case OP_ADD:      push(NUMBER_VAL(a + b)); break;
+        case OP_SUBTRACT: push(NUMBER_VAL(a - b)); break;
+        case OP_MULTIPLY: push(NUMBER_VAL(a * b)); break;
+        case OP_DIVIDE:   push(NUMBER_VAL(a / b)); break;
+        case OP_POW:      push(NUMBER_VAL(pow(a, b))); break;
+        case OP_MOD:      push(NUMBER_VAL(fmod(a, b))); break;
+    }
+}
 
 static Zura_Exit_Value run() {
     while (true) {
@@ -20,14 +46,50 @@ static Zura_Exit_Value run() {
         std::cout << std::endl;
         disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
     #endif
-        uint8_t instruction = *vm.ip++;
-        if (instruction < sizeof(opCodeHandlers) / sizeof(opCodeHandlers[0])) {
-            // execute the instruction
-            std::cout << "Executing " << instruction << std::endl;
-            opCodeHandlers[instruction]();
-        } else {
-            std::cout << "Unknown opcode " << instruction << std::endl;
-            return Zura_Exit_Value::RUNTIME_ERROR;
+
+        for (;;){
+            uint8_t instruction;
+            switch (instruction = READ_BYTE()) {
+                // Constantss
+                case OP_CONSTANT: {
+                    Value constant = READ_CONSTANT();
+                    push(constant);
+                    break;
+                }
+
+                // Numaric operations
+                case OP_ADD:
+                case OP_SUBTRACT:
+                case OP_MULTIPLY:
+                case OP_DIVIDE:
+                case OP_POW:
+                case OP_MOD: performBinaryOp(instruction); break;
+
+                case OP_NEGATE: {
+                    if (!IS_NUMBER(peek(0))) {
+                        std::cout << "Operand must be a number." << std::endl;
+                        return RUNTIME_ERROR;
+                    }
+                    push(NUMBER_VAL(-AS_NUMBER(pop())));
+                    break;
+                }
+                
+                // Logical operations
+                case OP_RETURN: {
+                    printValue(pop());
+                    std::cout << std::endl;
+                    return OK;
+                }
+
+            default: {
+                std::cout << "Unknown opcode " << instruction << std::endl;
+                return RUNTIME_ERROR;
+            }
+            }
         }
+
     }
 }
+
+#undef READ_BYTE
+#undef READ_CONSTANT

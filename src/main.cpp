@@ -3,11 +3,14 @@
 
 #include "helper/main/flags.h"
 #include "common.hpp"
+#include "vm/vm.hpp"
 
 int main(int argc, char* argv[]) {
+    initVM();
+
     flags(argc, argv);
-
     run_file(argv[1]);
-
+    
+    freeVM();
     return 0;
 }   

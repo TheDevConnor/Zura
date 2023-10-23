@@ -19,6 +19,8 @@ namespace Zura {
         Parser parser;
         Chunk* compiling_chunk;
 
+        bool parser_error = false;
+
         Chunk* currentChunk() {
             return compiling_chunk;
         }

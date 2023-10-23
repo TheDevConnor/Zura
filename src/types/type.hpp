@@ -9,7 +9,6 @@ struct Value {
     union {
         bool boolean;
         double number;
-
     } as;
 };
 
