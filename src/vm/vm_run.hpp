@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "../helper/errors/vm_error.hpp"
 #include "../debug/debug.hpp"
 #include "../types/type.hpp"
 #include "../common.hpp"
@@ -17,7 +18,7 @@ bool isOpNumber() {
 
 void performBinaryOp(uint8_t op) {
     if(!isOpNumber()) {
-        std::cout << "Operands must be numbers." << std::endl;
+        VMError::vm_error("Operands must be numbers.");
         return;
     }
 
@@ -67,7 +68,7 @@ static Zura_Exit_Value run() {
 
                 case OP_NEGATE: {
                     if (!IS_NUMBER(peek(0))) {
-                        std::cout << "Operand must be a number." << std::endl;
+                        VMError::vm_error("Operand must be a number.");
                         return RUNTIME_ERROR;
                     }
                     push(NUMBER_VAL(-AS_NUMBER(pop())));
@@ -82,7 +83,7 @@ static Zura_Exit_Value run() {
                 }
 
             default: {
-                std::cout << "Unknown opcode " << instruction << std::endl;
+                VMError::vm_error("Unknown opcode.");
                 return RUNTIME_ERROR;
             }
             }
