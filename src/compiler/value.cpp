@@ -28,5 +28,9 @@ void freeValueArray(ValueArray* array) {
 }
 
 void printValue(Value value) {
-    printf("%g", AS_NUMBER(value));
+    switch (value.type) {
+        case Bool:   std::cout << (AS_BOOL(value) ? "true" : "false"); break;
+        case Nil:    std::cout << "nil"; break;
+        case Number: std::cout << AS_NUMBER(value); break;
+    }
 }

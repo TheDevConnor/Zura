@@ -73,17 +73,17 @@ Prec::Prec() {
 
         {CLASS,         {nullptr, nullptr, Precedence::NONE}}, // class
         {ELSE,          {nullptr, nullptr, Precedence::NONE}}, // else
-        {TK_FALSE,      {nullptr, nullptr, Precedence::NONE}}, // false
+        {TK_FALSE,      {literal, nullptr, Precedence::NONE}}, // false
         {FN,            {nullptr, nullptr, Precedence::NONE}}, // fn
         {FOR,           {nullptr, nullptr, Precedence::NONE}}, // for
         {IF,            {nullptr, nullptr, Precedence::NONE}}, // if
-        {NIL,           {nullptr, nullptr, Precedence::NONE}}, // nil
+        {NIL,           {literal, nullptr, Precedence::NONE}}, // nil
         {INFO,          {nullptr, nullptr, Precedence::NONE}}, // info
         {TK_INPUT,      {nullptr, nullptr, Precedence::NONE}}, // input
         {RETURN,        {nullptr, nullptr, Precedence::NONE}}, // return
         {SUPER,         {nullptr, nullptr, Precedence::NONE}}, // super
         {TK_THIS,       {nullptr, nullptr, Precedence::NONE}}, // this
-        {TK_TRUE,       {nullptr, nullptr, Precedence::NONE}}, // true
+        {TK_TRUE,       {literal, nullptr, Precedence::NONE}}, // true
         {HAVE,          {nullptr, nullptr, Precedence::NONE}}, // have
         {STATIC,        {nullptr, nullptr, Precedence::NONE}}, // static
         {LOOP,          {nullptr, nullptr, Precedence::NONE}}, // loop

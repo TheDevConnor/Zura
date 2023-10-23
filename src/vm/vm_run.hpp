@@ -74,6 +74,11 @@ static Zura_Exit_Value run() {
                     push(NUMBER_VAL(-AS_NUMBER(pop())));
                     break;
                 }
+
+                // Boolean operations
+                case OP_NIL:   push(NIL_VAL()); break;
+                case OP_TRUE:  push(BOOL_VAL(true)); break;
+                case OP_FALSE: push(BOOL_VAL(false)); break;
                 
                 // Logical operations
                 case OP_RETURN: {

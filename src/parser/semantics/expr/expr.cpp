@@ -33,6 +33,14 @@ void Expr::grouping() {
     parserClass.consume(RIGHT_PAREN, "Expected ')' after expression.");
 }
 
+void Expr::literal() {
+    switch (parserClass.parser.previous.kind) {
+        case TK_FALSE: parserClass.emitByte(OP_FALSE); break;
+        case NIL: parserClass.emitByte(OP_NIL); break;
+        case TK_TRUE: parserClass.emitByte(OP_TRUE); break;
+    }
+}
+
 void Expr::unary() {
     TokenKind operatorKind = parserClass.parser.previous.kind;
 

@@ -6,6 +6,7 @@ namespace Expr {
     void expression();
 
     void grouping();
+    void literal();
     void number();
     void binary();
     void unary();

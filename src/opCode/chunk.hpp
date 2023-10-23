@@ -6,7 +6,10 @@
 #include "../types/type.hpp"
 
 enum OPCode {
+    // Constants
     OP_CONSTANT,
+
+    // Numeric operations
     OP_ADD,
     OP_SUBTRACT,
     OP_MULTIPLY,
@@ -14,6 +17,13 @@ enum OPCode {
     OP_POW,
     OP_MOD,
     OP_NEGATE,
+
+    // Boolean operations
+    OP_NIL,
+    OP_TRUE,
+    OP_FALSE,
+
+    // Logical operations
     OP_RETURN,
 };
 

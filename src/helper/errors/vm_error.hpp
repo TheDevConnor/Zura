@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../inc/colorize.hpp"
+#include "../../../inc/colorize.hpp"
 #include "../../common.hpp"
 
 class VMError {
