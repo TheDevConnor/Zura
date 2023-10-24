@@ -15,12 +15,17 @@ struct VM {
 
 inline VM vm;
 
+void push(Value value);
 void resetStack();
-void initVM();
 void freeVM();
+void initVM();
 
 Zura_Exit_Value interpret(const char* source);
 
 Value peek(int distance);
-void push(Value value);
 Value pop();
+
+
+bool valuesEqual(Value a, Value b);
+bool isFalsey(Value value);
+bool isOpNumber();

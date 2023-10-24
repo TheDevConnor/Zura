@@ -12,10 +12,6 @@
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
 
-bool isOpNumber() {
-    return IS_NUMBER(peek(0)) && IS_NUMBER(peek(1));
-}
-
 void performBinaryOp(uint8_t op) {
     if(!isOpNumber()) {
         VMError::vm_error("Operands must be numbers.");
@@ -32,6 +28,10 @@ void performBinaryOp(uint8_t op) {
         case OP_DIVIDE:   push(NUMBER_VAL(a / b)); break;
         case OP_POW:      push(NUMBER_VAL(pow(a, b))); break;
         case OP_MOD:      push(NUMBER_VAL(fmod(a, b))); break;
+
+        // Comparison operations
+        case OP_GREATER: push(BOOL_VAL(a > b)); break;
+        case OP_LESS: push(BOOL_VAL(a < b)); break;
     }
 }
 
@@ -79,6 +79,17 @@ static Zura_Exit_Value run() {
                 case OP_NIL:   push(NIL_VAL()); break;
                 case OP_TRUE:  push(BOOL_VAL(true)); break;
                 case OP_FALSE: push(BOOL_VAL(false)); break;
+
+                // Comparison operations
+                case OP_NOT: push(BOOL_VAL(isFalsey(pop()))); break;
+                case OP_EQUAL: {
+                    Value b = pop();
+                    Value a = pop();
+                    push(BOOL_VAL(valuesEqual(a, b)));
+                    break;
+                }
+                case OP_GREATER: performBinaryOp(instruction); break;
+                case OP_LESS: performBinaryOp(instruction); break;
                 
                 // Logical operations
                 case OP_RETURN: {

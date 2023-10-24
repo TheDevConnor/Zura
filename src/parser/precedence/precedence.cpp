@@ -52,13 +52,13 @@ Prec::Prec() {
         {TILDE,         {nullptr, nullptr, Precedence::NONE}}, // ~
         {AT,            {nullptr, nullptr, Precedence::NONE}}, // @
 
-        {BANG,          {nullptr, nullptr, Precedence::NONE}}, // !
-        {BANG_EQUAL,    {nullptr, nullptr, Precedence::NONE}}, // !=
-        {EQUAL,         {nullptr, nullptr, Precedence::NONE}}, // =
-        {GREATER,       {nullptr, nullptr, Precedence::NONE}}, // >
-        {GREATER_EQUAL, {nullptr, nullptr, Precedence::NONE}}, // >=
-        {LESS,          {nullptr, nullptr, Precedence::NONE}}, // <
-        {LESS_EQUAL,    {nullptr, nullptr, Precedence::NONE}}, // <=
+        {BANG,          {  unary, nullptr, Precedence::NONE}}, // !
+        {BANG_EQUAL,    {nullptr, binary, Precedence::EQUALITY}}, // !=
+        {EQUAL,         {nullptr, binary, Precedence::EQUALITY}}, // =
+        {GREATER,       {nullptr, binary, Precedence::COMPARISON}}, // >
+        {GREATER_EQUAL, {nullptr, binary, Precedence::COMPARISON}}, // >=
+        {LESS,          {nullptr, binary, Precedence::COMPARISON}}, // <
+        {LESS_EQUAL,    {nullptr, binary, Precedence::COMPARISON}}, // <=
         {WALRUS,        {nullptr, nullptr, Precedence::NONE}}, // :=
         {EXTENDS,       {nullptr, nullptr, Precedence::NONE}}, // extends
         {INCREMENT,     {nullptr, nullptr, Precedence::NONE}}, // ++

@@ -23,6 +23,12 @@ enum OPCode {
     OP_TRUE,
     OP_FALSE,
 
+    // Comparison operations
+    OP_NOT,
+    OP_GREATER,
+    OP_LESS,
+    OP_EQUAL,
+
     // Logical operations
     OP_RETURN,
 };
