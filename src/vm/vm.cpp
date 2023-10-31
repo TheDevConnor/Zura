@@ -40,6 +40,7 @@ bool isFalsey(Value value) {
 }
 
 bool isOpNumber() {
+    // TODO: Add support for strings
     return IS_NUMBER(peek(0)) && IS_NUMBER(peek(1));
 }
 

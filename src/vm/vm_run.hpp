@@ -11,10 +11,11 @@
 
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define LINE_READ (vm.chunk->lines[vm.ip - vm.chunk->code - 1])
 
 void performBinaryOp(uint8_t op) {
     if(!isOpNumber()) {
-        VMError::vm_error("Operands must be numbers.");
+        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Operands must be numbers.");
         return;
     }
 
@@ -68,7 +69,7 @@ static Zura_Exit_Value run() {
 
                 case OP_NEGATE: {
                     if (!IS_NUMBER(peek(0))) {
-                        VMError::vm_error("Operand must be a number.");
+                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Operand must be numbers.");
                         return RUNTIME_ERROR;
                     }
                     push(NUMBER_VAL(-AS_NUMBER(pop())));
@@ -99,7 +100,7 @@ static Zura_Exit_Value run() {
                 }
 
             default: {
-                VMError::vm_error("Unknown opcode.");
+                VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Unknown OpCode.");
                 return RUNTIME_ERROR;
             }
             }
