@@ -1,0 +1,3 @@
+// "string" = "string" // (true)
+// "string" = "String" // (false)
+"str" + "in" + "g"  // (true)

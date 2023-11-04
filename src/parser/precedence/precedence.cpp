@@ -67,7 +67,7 @@ Prec::Prec() {
         {ARROW_R,       {nullptr, nullptr, Precedence::NONE}}, // ->
 
         {IDENTIFIER,    {nullptr, nullptr, Precedence::NONE}}, // identifier
-        {STRING,        {nullptr, nullptr, Precedence::NONE}}, // string
+        {STRING,        { string, nullptr, Precedence::NONE}}, // string
         {NUMBER,        { number, nullptr, Precedence::NONE}}, // number
         {INAPPEND,      {nullptr, nullptr, Precedence::NONE}}, // inappend
 

@@ -23,7 +23,6 @@ void performBinaryOp(uint8_t op) {
     double a = AS_NUMBER(pop());
 
     switch (op) {
-        case OP_ADD:      push(NUMBER_VAL(a + b)); break;
         case OP_SUBTRACT: push(NUMBER_VAL(a - b)); break;
         case OP_MULTIPLY: push(NUMBER_VAL(a * b)); break;
         case OP_DIVIDE:   push(NUMBER_VAL(a / b)); break;
@@ -60,7 +59,19 @@ static Zura_Exit_Value run() {
                 }
 
                 // Numaric operations
-                case OP_ADD:
+                case OP_ADD: {
+                    if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
+                        concatenate();
+                    } else if (IS_NUMBER(peek(0)) && IS_NUMBER(peek(1))) {
+                        double b = AS_NUMBER(pop());
+                        double a = AS_NUMBER(pop());
+                        push(NUMBER_VAL(a + b));
+                    } else {
+                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Operands must be two numbers or two strings.");
+                        return RUNTIME_ERROR;
+                    }
+                    break;
+                }
                 case OP_SUBTRACT:
                 case OP_MULTIPLY:
                 case OP_DIVIDE:

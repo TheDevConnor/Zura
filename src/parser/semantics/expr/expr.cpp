@@ -1,10 +1,15 @@
 #include "../../precedence/precedence.hpp"
+#include "../../../object/object.hpp"
 #include "../../../lexer/tokens.hpp"
 #include "../../../types/type.hpp"
 #include "../../compiler.hpp"
 #include "expr.hpp"
 
 using namespace Zura;
+
+void Expr::string() {
+    parserClass.emitConstant(OBJECT_VAL(copyString(parserClass.parser.previous.start + 1, parserClass.parser.previous.length - 2)));
+}
 
 void Expr::number() {
     double value = std::strtod(parserClass.parser.previous.start, nullptr);

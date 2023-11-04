@@ -11,11 +11,13 @@ struct VM {
 
     Value stack[256]; // 256 is the max stack size
     Value* stackTop;
+    Obj* objects;
 };
 
 inline VM vm;
 
 void push(Value value);
+void concatenate();
 void resetStack();
 void freeVM();
 void initVM();

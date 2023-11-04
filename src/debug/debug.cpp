@@ -13,25 +13,24 @@ void disassembleChunk(Chunk* chunk, const char* name) {
 }
 
 static int simpleInstruction(const char* name, int offset) {
-    std::cout << name << std::endl;
+    printf("%s\n", name);
     return offset + 1;
 }
 
 static int constantInstruction(const char* name, Chunk* chunk, int offset) {
     uint8_t constant = chunk->code[offset + 1];
-    std::cout << std::left << std::setw(16) << name << " " << std::setw(4) << constant << " '";
+    printf("%-16s %4d '", name, constant);
     printValue(chunk->constants.values[constant]);
-    std::cout << "'" << std::endl;
+    printf("'\n");
     return offset + 2;
 }
 
 int disassembleInstruction(Chunk* chunk, int offset) {
-    // std::cout << std::setfill('0') << std::setw(4) << offset << " ";
-    std::cout << offset << "  ";
+    printf("%0d ", offset);
     if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1])
-        std::cout << "   | ";
+        printf("   | ");
     else
-        std::cout << chunk->lines[offset] << " ";
+        printf("%4d ", chunk->lines[offset]);
 
     uint8_t instruction = chunk->code[offset];
     switch (instruction) {

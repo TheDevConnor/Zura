@@ -2,6 +2,7 @@
 #include <cstdio>
 
 #include "../memory/memory.hpp"
+#include "../object/object.hpp"
 #include "../types/type.hpp"
 #include "value.hpp"
 
@@ -32,5 +33,6 @@ void printValue(Value value) {
         case Bool:   std::cout << (AS_BOOL(value) ? "true" : "false"); break;
         case Nil:    std::cout << "nil"; break;
         case Number: std::cout << AS_NUMBER(value); break;
+        case Object: printObject(value); break;
     }
 }

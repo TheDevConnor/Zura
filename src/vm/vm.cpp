@@ -1,6 +1,9 @@
 #include <iostream>
+#include <cstring>
 
 #include "../parser/compiler.hpp"
+#include "../memory/memory.hpp"
+#include "../object/object.hpp"
 #include "../debug/debug.hpp"
 #include "../types/type.hpp"
 #include "../common.hpp"
@@ -15,9 +18,12 @@ void resetStack() {
 
 void initVM() {
     resetStack();
+    vm.objects = nullptr;
 }
 
-void freeVM() {}
+void freeVM() {
+    Memory::freeObjects();
+}
 
 void push(Value value) {
     *vm.stackTop = value;
@@ -31,6 +37,13 @@ bool valuesEqual(Value a, Value b) {
         case Bool:   return AS_BOOL(a) == AS_BOOL(b);
         case Nil:    return true;
         case Number: return AS_NUMBER(a) == AS_NUMBER(b);
+        case Object: {
+            ObjString* aString = AS_STRING(a);
+            ObjString* bString = AS_STRING(b);
+            return aString->length == bString->length && 
+                   memcmp(aString->chars, bString->chars, 
+                          aString->length) == 0;
+        }
         default: return false; // Unreachable
     }
 }

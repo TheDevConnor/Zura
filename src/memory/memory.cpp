@@ -2,7 +2,29 @@
 #include <cstdlib>
 #include <ostream>
 
+#include "../object/object.hpp"
+#include "../vm/vm.hpp"
 #include "memory.hpp"
+
+void freeObject(Obj* object) {
+    switch (object->type) {
+        case OBJ_STRING: {
+            ObjString* string = (ObjString*)object;
+            Memory::FREE_ARRAY<char>(string->chars, string->length + 1);
+            FREE(ObjString, object);
+            break;
+        }
+    }
+}
+
+void Memory::freeObjects() {
+    Obj* object = vm.objects;
+    while (object != nullptr) {
+        Obj* next = object->next;
+        freeObject(object);
+        object = next;
+    }
+}
 
 void *Memory::reallocate(void *pointer, size_t oldSize, size_t newSize){
     if (newSize == 0) {
