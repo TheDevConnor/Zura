@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "../helper/errors/vm_error.hpp"
+#include "../object/object.hpp"
 #include "../debug/debug.hpp"
 #include "../types/type.hpp"
 #include "../common.hpp"
