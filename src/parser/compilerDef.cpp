@@ -11,7 +11,7 @@
 using namespace Zura;
 
 static uint8_t makeConstant(Value value) {
-    int constant = addConstants(parserClass.currentChunk(), value);
+    size_t constant = addConstants(parserClass.currentChunk(), value);
     if (constant > UINT8_MAX) {
         parserClass.errorAtCurrent("Too many constants in one chunk.");
         return 0;
