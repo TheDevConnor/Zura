@@ -13,6 +13,6 @@ public:
                   << termcolor::cyan << scanner->column - 1 << termcolor::reset << "] "
                   << termcolor::red << "Lexer Error: \n" 
                   << termcolor::reset << message << std::endl;
-        ZuraExit(LEXER_ERROR);
+        Zura::Exit(Zura::Exit_Value::LEXER_ERROR);
     }
 };

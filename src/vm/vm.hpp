@@ -24,7 +24,7 @@ void resetStack();
 void freeVM();
 void initVM();
 
-Zura_Exit_Value interpret(const char* source);
+Zura::Exit_Value interpret(const char* source);
 
 Value peek(int distance);
 Value pop();

@@ -34,7 +34,7 @@ void *Memory::reallocate(void *pointer, size_t oldSize, size_t newSize){
 
     void *result = realloc(pointer, newSize);
     if (result == nullptr) {
-        ZuraExit(MEMORY_FAILURE);
+        Zura::Exit(Zura::Exit_Value::MEMORY_FAILURE);
         std::cerr << "Failed to reallocate memory!" << std::endl;
         std::exit(1);
     }

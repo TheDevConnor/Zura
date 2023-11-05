@@ -11,6 +11,6 @@ private:
 public:
     static void vm_error(std::string message) {
         std::cout << termcolor::red << "VM Error: " << termcolor::reset << message << std::endl;
-        ZuraExit(VM_ERROR);
+        Zura::Exit(Zura::Exit_Value::VM_ERROR);
     }
 };
