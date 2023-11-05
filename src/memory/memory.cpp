@@ -28,7 +28,7 @@ void Memory::freeObjects() {
 
 void *Memory::reallocate(void *pointer, size_t oldSize, size_t newSize){
     if (newSize == 0) {
-        delete[] static_cast<char*>(pointer);
+        free(pointer);
         return nullptr;
     }
 

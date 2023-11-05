@@ -79,6 +79,7 @@ SRC_DIRS += src/lexer
 SRC_DIRS += src/memory
 SRC_DIRS += src/opCode
 SRC_DIRS += src/object
+SRC_DIRS += src/hash
 SRC_DIRS += src/parser/precedence
 SRC_DIRS += src/parser/semantics/decl
 SRC_DIRS += src/parser/semantics/expr
