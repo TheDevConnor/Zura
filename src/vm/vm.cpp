@@ -19,9 +19,11 @@ void resetStack() {
 void initVM() {
     resetStack();
     vm.objects = nullptr;
+    HashTable::initTable(&vm.strings);
 }
 
 void freeVM() {
+    HashTable::freeTable(&vm.strings);
     Memory::freeObjects();
 }
 
@@ -37,13 +39,7 @@ bool valuesEqual(Value a, Value b) {
         case Bool:   return AS_BOOL(a) == AS_BOOL(b);
         case Nil:    return true;
         case Number: return AS_NUMBER(a) == AS_NUMBER(b);
-        case Object: {
-            ObjString* aString = AS_STRING(a);
-            ObjString* bString = AS_STRING(b);
-            return aString->length == bString->length && 
-                   memcmp(aString->chars, bString->chars, 
-                          aString->length) == 0;
-        }
+        case Object: return AS_OBJ(a) == AS_OBJ(b);
         default: return false; // Unreachable
     }
 }
