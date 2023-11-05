@@ -35,7 +35,7 @@ namespace Zura {
         void consume(TokenKind kind, const std::string& message);
         bool compile(const char* source, Chunk* chunk);
     };
-};
+}
 
 inline Zura::ParserClass parserClass;
 

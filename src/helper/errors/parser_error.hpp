@@ -30,4 +30,4 @@ namespace Zura {
             ZuraExit(PARSER_ERROR);
         }
     };
-};
+}
