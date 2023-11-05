@@ -6,11 +6,11 @@
 #include "../../lexer/tokens.hpp"
 #include "../../opCode/chunk.hpp"
 #include "../../debug/debug.hpp"
-#include "./getCurrentTime.h"
+#include "./getCurrentTime.hpp"
 #include "../../common.hpp"
 #include "../../vm/vm.hpp"
-#include "./version.h"
-#include "./repl.h"
+#include "./version.hpp"
+#include "./repl.hpp"
 
 using namespace std;
 
@@ -27,7 +27,7 @@ static char *read_file(const char *path) {
   ifstream file(path, ios::binary);
   if (!file) {
     cerr << "Could not open file \"" << path << "\"." << endl;
-    ZuraExit(INVALID_FILE);
+    Zura::Exit(Zura::Exit_Value::INVALID_FILE);
   }
 
   file.seekg(0, ios::end);
@@ -49,14 +49,14 @@ inline void run_file(const char *path) {
     // Check to make sure that we have  a .zu file extension
     if (strcmp(path + strlen(path) - 3, ".zu") != 0) {
         cerr << "File \"" << path << "\" does not have a .zu extension." << endl;
-        ZuraExit(INVALID_FILE_EXTENSION);
+        Zura::Exit(Zura::Exit_Value::INVALID_FILE_EXTENSION);
     }
 
-    Zura_Exit_Value result = interpret(source);
+    Zura::Exit_Value result = interpret(source);
     delete[] source;
 
-    if (result == COMPILATION_ERROR) ZuraExit(COMPILATION_ERROR);
-    if (result == RUNTIME_ERROR) ZuraExit(RUNTIME_ERROR);
+    if (result == Zura::Exit_Value::COMPILATION_ERROR) Zura::Exit(Zura::Exit_Value::COMPILATION_ERROR);
+    if (result == Zura::Exit_Value::RUNTIME_ERROR) Zura::Exit(Zura::Exit_Value::RUNTIME_ERROR);
 }
 
 inline void flags(int argc, char *argv[]) {
@@ -67,17 +67,17 @@ inline void flags(int argc, char *argv[]) {
     cout << "  --help\t\t\tPrints this help message" << endl;
     cout << "  --version\t\t\tPrints the version of the compiler" << endl;
     cout << "  --license\t\t\tPrints the license of the Zura Lang" << endl;
-    ZuraExit(OK);
+    Zura::Exit(Zura::Exit_Value::OK);
   }
 
   if (argc == 2 && strcmp(argv[1], "--version") == 0) {
     cout << get_Zura_version_string() << "(" << getCurrentTime() << ")" << endl;
-    ZuraExit(OK);
+    Zura::Exit(Zura::Exit_Value::OK);
   }
   if (argc == 2 && strcmp(argv[1], "--license") == 0) {
     cout << "Zura Lang is licenesed under GPL-3.0 "
             "license(https://www.gnu.org/licenses/gpl-3.0.en.html) "
          << endl;
-    ZuraExit(OK);
+    Zura::Exit(Zura::Exit_Value::OK);
   }
 }
