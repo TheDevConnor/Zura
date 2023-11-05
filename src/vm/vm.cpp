@@ -63,19 +63,19 @@ Value peek(int distance) {
 }
 
 
-Zura_Exit_Value interpret(const char *source) {
+Zura::Exit_Value interpret(const char *source) {
    Chunk chunk;
    initChunk(&chunk);
 
     if (!parserClass.compile(source, &chunk)) {
          freeChunk(&chunk);
-         return COMPILATION_ERROR;
+         return Zura::Exit_Value::COMPILATION_ERROR;
     }
 
     vm.chunk = &chunk;
     vm.ip = vm.chunk->code;
 
-    Zura_Exit_Value result = run();
+    Zura::Exit_Value result = run();
     
     freeChunk(&chunk);
     return result;

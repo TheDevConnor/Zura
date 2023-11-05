@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "helper/main/flags.h"
+#include "helper/main/flags.hpp"
 #include "common.hpp"
 #include "vm/vm.hpp"
 

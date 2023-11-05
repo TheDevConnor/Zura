@@ -2,9 +2,9 @@
 
 #define REPL_H
 
-#include "getCurrentTime.h"
+#include "getCurrentTime.hpp"
 #include "../../vm/vm.hpp"
-#include "version.h"
+#include "version.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>

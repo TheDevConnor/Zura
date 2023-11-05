@@ -27,7 +27,7 @@ namespace Zura {
             }
 
             std::cout << ": " << termcolor::reset << message << std::endl;
-            ZuraExit(PARSER_ERROR);
+            Zura::Exit(Zura::Exit_Value::PARSER_ERROR);
         }
     };
 }

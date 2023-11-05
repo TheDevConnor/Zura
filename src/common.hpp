@@ -12,13 +12,16 @@
 
 #define UINT8_COUNT (UINT8_MAX + 1)
 
+namespace Zura {
+
 /// Exit codes used in the Zura Interpreter.
 ///
 /// Add additional exit codes to this list whenever an appropriate
 /// reason is encountered to do so. 
 ///
-/// @sa ZuraExit
-typedef enum {
+/// @sa Exit
+
+enum class Exit_Value : int {
 
     OK = 0,
 
@@ -32,9 +35,11 @@ typedef enum {
     LEXER_ERROR            = 17,
     PARSER_ERROR           = 18
 
-} Zura_Exit_Value;
+};
 
 /// Exits the Zura interpreter using an appropriate exit value.
 /// @param exit_value An exit value specific to the Zura interpreter code base.
 /// @sa Zura_Exit_Value
-void ZuraExit(Zura_Exit_Value exit_value);
+void Exit(Exit_Value exit_value);
+
+} // Namespace Zura

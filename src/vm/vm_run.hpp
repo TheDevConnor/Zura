@@ -36,7 +36,7 @@ void performBinaryOp(uint8_t op) {
     }
 }
 
-static Zura_Exit_Value run() {
+static Zura::Exit_Value run() {
     while (true) {
     #ifdef DEBUG_TRACE_EXECUTION
         std::cout << "          ";
@@ -69,7 +69,7 @@ static Zura_Exit_Value run() {
                         push(NUMBER_VAL(a + b));
                     } else {
                         VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Operands must be two numbers or two strings.");
-                        return RUNTIME_ERROR;
+                        return Zura::Exit_Value::RUNTIME_ERROR;
                     }
                     break;
                 }
@@ -82,7 +82,7 @@ static Zura_Exit_Value run() {
                 case OP_NEGATE: {
                     if (!IS_NUMBER(peek(0))) {
                         VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Operand must be numbers.");
-                        return RUNTIME_ERROR;
+                        return Zura::Exit_Value::RUNTIME_ERROR;
                     }
                     push(NUMBER_VAL(-AS_NUMBER(pop())));
                     break;
@@ -108,12 +108,12 @@ static Zura_Exit_Value run() {
                 case OP_RETURN: {
                     printValue(pop());
                     std::cout << std::endl;
-                    return OK;
+                    return Zura::Exit_Value::OK;
                 }
 
             default: {
                 VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Unknown OpCode.");
-                return RUNTIME_ERROR;
+                return Zura::Exit_Value::RUNTIME_ERROR;
             }
             }
         }
