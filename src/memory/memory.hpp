@@ -4,8 +4,6 @@
 
 #include "../common.hpp"
 
-#define FREE(type, pointer) Memory::reallocate(pointer, sizeof(type), 0)
-
 class Memory {
 public:
     template <typename T>
@@ -21,6 +19,11 @@ public:
     static T* GROW_ARRAY(T* pointer, size_t oldCount, size_t newCount){
         return static_cast<T*>(reallocate(pointer, sizeof(T) * (oldCount), 
                             sizeof(T) * (newCount)));
+    }
+
+    template <typename T>
+    static T* FREE(T* pointer){
+        return static_cast<T*>(reallocate(pointer, sizeof(T), 0));
     }
 
     template <typename T>

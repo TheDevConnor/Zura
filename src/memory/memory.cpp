@@ -11,7 +11,7 @@ void freeObject(Obj* object) {
         case OBJ_STRING: {
             ObjString* string = (ObjString*)object;
             Memory::FREE_ARRAY<char>(string->chars, string->length + 1);
-            FREE(ObjString, object);
+            Memory::FREE(object);
             break;
         }
     }
