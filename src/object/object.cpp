@@ -18,7 +18,7 @@ static Obj* allocateObject(size_t size, ObjType type) {
     return object;
 }
 
-static ObjString* allocateString(char* chars, int length) {
+static ObjString* allocateString(char* chars, size_t length) {
     ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
     string->length = length;
     string->chars = chars;
@@ -33,7 +33,7 @@ ObjString* copyString(const char* chars, size_t length) {
     return allocateString(heapChars, length);
 }
 
-ObjString* takeString(char* chars, int length) {
+ObjString* takeString(char* chars, size_t length) {
     return allocateString(chars, length);
 }
 
@@ -49,7 +49,7 @@ void concatenate() {
     ObjString* b = AS_STRING(pop());
     ObjString* a = AS_STRING(pop());
 
-    int length = a->length + b->length;
+    size_t length = a->length + b->length;
     char* chars = Memory::ALLOCATE<char>(length + 1);
     memcpy(chars, a->chars, a->length);
     memcpy(chars + a->length, b->chars, b->length);

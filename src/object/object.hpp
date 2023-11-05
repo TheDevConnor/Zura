@@ -14,12 +14,12 @@ struct Obj {
 
 struct  ObjString {
     Obj obj;
-    int length;
+    size_t length;
     char* chars;
 };
 
 ObjString* copyString(const char* chars, size_t length);
-ObjString* takeString(char* chars, int length);
+ObjString* takeString(char* chars, size_t length);
 
 void printObject(Value value);
 void concatenate();
