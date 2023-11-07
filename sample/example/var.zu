@@ -3,6 +3,11 @@
 
 // have p: any;
 // have q: string;
-have x: nil;
+// have x: nil;
 // have y: int;
 // have z: bool;
+
+have x := "cafe au lait";
+x := "cafe noir";
+have breakfast := "croissant " + x;
+info breakfast;

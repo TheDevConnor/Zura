@@ -20,7 +20,7 @@ namespace Zura {
             PRIMARY
     };
 
-    typedef void (*ParseFn)();
+    typedef void (*ParseFn)(bool canAssign);
 
     struct ParseRule {
         ParseFn prefix;

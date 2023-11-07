@@ -14,12 +14,17 @@ void Prec::ParsePrecedence(Precedence precedence) {
         return;
     }
 
-    prefixRule();
+    bool canAssign = precedence <= Precedence::ASSIGNMENT;
+    prefixRule(canAssign);
 
     while (precedence <= getRule(parserClass.parser.current.kind)->precedence) {
         parserClass.advance();
         ParseFn infixRule = getRule(parserClass.parser.previous.kind)->infix;
-        infixRule();
+        infixRule(canAssign);
+    }
+
+    if (canAssign && parserClass.match(WALRUS)) {
+        ParserError::errorAt(&parserClass.parser.previous, "Invalid assignment target. Please use ':=' instead of '='.");
     }
 }
 
@@ -81,7 +86,7 @@ Prec::Prec() {
         {ARROW_L,       {nullptr, nullptr, Precedence::NONE}}, // <-
         {ARROW_R,       {nullptr, nullptr, Precedence::NONE}}, // ->
 
-        {IDENTIFIER,    {nullptr, nullptr, Precedence::NONE}}, // identifier
+        {IDENTIFIER,    {    var, nullptr, Precedence::NONE}}, // identifier
         {STRING,        { string, nullptr, Precedence::NONE}}, // string
         {NUMBER,        { number, nullptr, Precedence::NONE}}, // number
         {INAPPEND,      {nullptr, nullptr, Precedence::NONE}}, // inappend

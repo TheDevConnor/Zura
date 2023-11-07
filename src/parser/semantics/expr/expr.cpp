@@ -1,3 +1,4 @@
+#include "../../../helper/errors/parser_error.hpp"
 #include "../../precedence/precedence.hpp"
 #include "../../../object/object.hpp"
 #include "../../../lexer/tokens.hpp"
@@ -7,16 +8,18 @@
 
 using namespace Zura;
 
-void Expr::string() {
+void Expr::string(bool canAssign) {
+    (void)canAssign;
     parserClass.emitConstant(OBJECT_VAL(copyString(parserClass.parser.previous.start + 1, parserClass.parser.previous.length - 2)));
 }
 
-void Expr::number() {
+void Expr::number(bool canAssign) {
     double value = std::strtod(parserClass.parser.previous.start, nullptr);
     parserClass.emitConstant(NUMBER_VAL(value));
 }
 
-void Expr::binary() {
+void Expr::binary(bool canAssign) {
+    (void)canAssign;
     TokenKind operatorKind = parserClass.parser.previous.kind;
     ParseRule* rule = prec.getRule(operatorKind);
     prec.ParsePrecedence((Precedence)(rule->precedence + 1));
@@ -41,12 +44,14 @@ void Expr::binary() {
     }
 }
 
-void Expr::grouping() {
+void Expr::grouping(bool canAssign) {
+    (void)canAssign;
     Expr::expression();
     parserClass.consume(RIGHT_PAREN, "Expected ')' after expression.");
 }
 
-void Expr::literal() {
+void Expr::literal(bool canAssign) {
+    (void)canAssign;
     switch (parserClass.parser.previous.kind) {
         case TK_FALSE: parserClass.emitByte(OP_FALSE); break;
         case NIL: parserClass.emitByte(OP_NIL); break;
@@ -54,7 +59,8 @@ void Expr::literal() {
     }
 }
 
-void Expr::unary() {
+void Expr::unary(bool canAssign) {
+    (void)canAssign;
     TokenKind operatorKind = parserClass.parser.previous.kind;
 
     prec.ParsePrecedence(Precedence::UNARY);
@@ -69,4 +75,22 @@ void Expr::unary() {
 void Expr::expression() {
     prec.ParsePrecedence(Precedence::ASSIGNMENT);
     return;
+}
+
+void namedVariable(Token name, bool canAssign) {
+    uint8_t arg = prec.identifierConstant(&name);
+    
+    if (parserClass.match(EQUAL) || parserClass.match(COLON))
+        ParserError::errorAt(&parserClass.parser.previous, "Invalid assignment target. Please use ':=' instead of '=' or ':'.");
+
+    else if (canAssign && parserClass.match(WALRUS)) {
+        Expr::expression();
+        parserClass.emitBytes(OP_SET_GLOBAL, arg);
+    } else {
+        parserClass.emitBytes(OP_GET_GLOBAL, arg);
+    }
+}
+
+void Expr::var(bool canAssign) {
+    namedVariable(parserClass.parser.previous, canAssign);
 }

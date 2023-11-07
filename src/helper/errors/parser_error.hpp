@@ -37,12 +37,12 @@ namespace Zura {
                       << termcolor::reset   << std::endl;
 
             //Print the carrot to tell where the error is at
-            //             ~
-            int num_spaces = token->column - 1;
-            for (int i = 0; i < num_spaces; i++) std::cout << " ";
-            std::cout << termcolor::red << "~" << termcolor::reset << std::endl;
-
-            Zura::Exit(Zura::Exit_Value::PARSER_ERROR);
+            //        --------
+            int num_spaces = token->column - 2;
+            // Highlight from the error token to the end of the line
+            std::cout << termcolor::red << std::string(num_spaces, ' ') << "^";
+            for (int i = 0; i < token->length; i++) std::cout << "~";
+            std::cout << termcolor::reset << std::endl;
         }
     };
 }
