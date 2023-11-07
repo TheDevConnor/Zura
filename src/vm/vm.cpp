@@ -21,12 +21,12 @@ void initVM() {
     
     vm.objects = nullptr;
 
-    HashTable::initTable(&vm.globals);
+    HashTable::initTable(&vm.globalNames);
     HashTable::initTable(&vm.strings);
 }
 
 void freeVM() {
-    HashTable::freeTable(&vm.globals);
+    HashTable::freeTable(&vm.globalNames);
     HashTable::freeTable(&vm.strings);
 
     Memory::freeObjects();

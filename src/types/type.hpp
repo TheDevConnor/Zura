@@ -18,6 +18,7 @@ enum ValueType {
     Number,
     Object,
     Nil,
+    NAN,
 };
 
 struct Value {
@@ -28,6 +29,9 @@ struct Value {
         Obj* obj;
     } as;
 };
+
+constexpr Value UNDEFINED_VAL()          { return Value{Nil, {.number = NAN}};      }
+constexpr bool IS_UNDEFINED(Value value) { return (value).type == Nil;              }
 
 constexpr Value BOOL_VAL(bool value)     { return Value{Bool, {.boolean = value}};  }
 constexpr Value NUMBER_VAL(double value) { return Value{Number, {.number = value}}; }

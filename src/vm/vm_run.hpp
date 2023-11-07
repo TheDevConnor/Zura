@@ -62,28 +62,25 @@ static Zura::Exit_Value run() {
 
                 // Variables
                 case OP_GET_GLOBAL: {
-                    ObjString* name = READ_STRING();
-                    Value value;
-                    if (!HashTable::tableGet(&vm.globals, name, &value)) {
-                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Undefined variable '" + name->chars + "'.");
+                    Value value = vm.globalValues.values[READ_BYTE()];
+                    if (IS_UNDEFINED(value)) {
+                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Undefined variable.");
                         return Zura::Exit_Value::RUNTIME_ERROR;
                     }
                     push(value);
                     break;
                 }
                 case OP_SET_GLOBAL: {
-                    ObjString* name = READ_STRING();
-                    if (HashTable::tableSet(&vm.globals, name, peek(0))) {
-                        HashTable::tableDelete(&vm.globals, name);
-                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Undefined variable '" + name->chars + "'.");
+                    uint8_t index = READ_BYTE();
+                    if (IS_UNDEFINED(vm.globalValues.values[index])) {
+                        VMError::vm_error("[line: " + std::to_string(LINE_READ) + "] Undefined variable.");
                         return Zura::Exit_Value::RUNTIME_ERROR;
                     }
+                    vm.globalValues.values[index] = peek(0);
                     break;
                 }
                 case OP_DEFINE_GLOBAL: {
-                    ObjString* name = READ_STRING();
-                    HashTable::tableSet(&vm.globals, name, peek(0));
-                    pop();
+                    vm.globalValues.values[READ_BYTE()] = peek(0);
                     break;
                 }
 

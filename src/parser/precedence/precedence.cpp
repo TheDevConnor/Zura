@@ -32,17 +32,19 @@ void Prec::ParsePrecedence(Precedence precedence) {
 // ! is already found. That's because we don't have a GC yet.
 uint8_t Prec::identifierConstant(Token* name) {
     // See if we already have a constant for this identifier.
-    ObjString* string = copyString(name->start, name->length);
-    Value indexValue;
-    if (HashTable::tableGet(&parserClass.stringConstants, string, &indexValue)) {
+    Value index;
+    ObjString* ident = copyString(name->start, name->length);
+    if (HashTable::tableGet(&vm.globalNames, ident, &index)) {
         // We already have it.
-        return static_cast<uint8_t>(AS_NUMBER(indexValue));
+        return static_cast<uint8_t>(AS_NUMBER(index));
     }
 
     // If not, add it.
-    uint8_t index = makeConstant(OBJECT_VAL(string));
-    HashTable::tableSet(&parserClass.stringConstants, string, NUMBER_VAL(static_cast<double>(index)));
-    return index;
+    uint8_t newIndex = static_cast<uint8_t>(vm.globalNames.count);
+    writeValueArray(&vm.globalValues, UNDEFINED_VAL());
+
+    HashTable::tableSet(&vm.globalNames, ident, NUMBER_VAL(newIndex));
+    return newIndex;
 }
 
 uint8_t Prec::parseVariable(const char* errorMessage) {
