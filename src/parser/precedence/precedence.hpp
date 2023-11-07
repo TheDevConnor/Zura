@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <cstdint>
 
 #include "../../lexer/tokens.hpp"
 
@@ -30,6 +31,10 @@ namespace Zura {
     class Prec {
     public:
         void ParsePrecedence(Precedence precedence);
+
+        uint8_t identifierConstant(Token* name);
+        uint8_t parseVariable(const char* errorMessage);
+        void defineVariable(uint8_t global);
 
         ParseRule* getRule(TokenKind kind);
 

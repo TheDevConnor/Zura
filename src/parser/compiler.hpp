@@ -25,6 +25,9 @@ namespace Zura {
             return compiling_chunk;
         }
 
+        void declaration();
+        void statement();
+
         void emitByte(uint8_t byte);
         void emitBytes(uint8_t byte1, uint8_t byte2);
         void emitReturn();
@@ -33,10 +36,10 @@ namespace Zura {
         void errorAtCurrent(const std::string& message);
         void advance();
         void consume(TokenKind kind, const std::string& message);
+        bool match(TokenKind kind);
         bool compile(const char* source, Chunk* chunk);
     };
 }
+uint8_t makeConstant(Value value);
 
 inline Zura::ParserClass parserClass;
-
-static uint8_t makeConstant(Value value);

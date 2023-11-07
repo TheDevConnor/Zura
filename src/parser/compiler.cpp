@@ -12,8 +12,11 @@ bool ParserClass::compile(const char *source, Chunk *chunk) {
     ParserClass::compiling_chunk = chunk;
 
     ParserClass::advance();
-    Expr::expression();
-    ParserClass::consume(EOF_TOKEN, "Expected end of expression");
+
+    while (!ParserClass::match(EOF_TOKEN)) {
+        ParserClass::declaration();
+    }
+
     ParserClass::endCompiler();
 
     return !ParserClass::parser_error;

@@ -11,6 +11,7 @@ struct VM {
     uint8_t* ip;
 
     HashTable::Table strings;
+    HashTable::Table globals;
     Value stack[256]; // 256 is the max stack size
     Value* stackTop;
     Obj* objects;

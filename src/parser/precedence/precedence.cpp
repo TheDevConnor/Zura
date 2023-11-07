@@ -1,5 +1,7 @@
 #include "../../helper/errors/parser_error.hpp"
 #include "../semantics/expr/expr.hpp"
+#include "../../object/object.hpp"
+#include "../compiler.hpp"
 #include "precedence.hpp"
 
 using namespace Zura;
@@ -19,6 +21,19 @@ void Prec::ParsePrecedence(Precedence precedence) {
         ParseFn infixRule = getRule(parserClass.parser.previous.kind)->infix;
         infixRule();
     }
+}
+
+uint8_t Prec::identifierConstant(Token* name) {
+    return makeConstant(OBJECT_VAL(copyString(name->start, name->length)));
+}
+
+uint8_t Prec::parseVariable(const char* errorMessage) {
+    parserClass.consume(IDENTIFIER, errorMessage);
+    return Prec::identifierConstant(&parserClass.parser.previous);
+}
+
+void Prec::defineVariable(uint8_t global) {
+    parserClass.emitBytes(OP_DEFINE_GLOBAL, global);
 }
 
 ParseRule* Prec::getRule(TokenKind kind) {
@@ -101,16 +116,9 @@ Prec::Prec() {
         {ENUM,          {nullptr, nullptr, Precedence::NONE}}, // enum
         {STRUCT,        {nullptr, nullptr, Precedence::NONE}}, // struct
 
-        {I8,            {nullptr, nullptr, Precedence::NONE}}, // i8
-        {I16,           {nullptr, nullptr, Precedence::NONE}}, // i16
-        {I32,           {nullptr, nullptr, Precedence::NONE}}, // i32
-        {I64,           {nullptr, nullptr, Precedence::NONE}}, // i64
-        {I128,          {nullptr, nullptr, Precedence::NONE}}, // i128
-
-        {F32,           {nullptr, nullptr, Precedence::NONE}}, // f32
-        {F64,           {nullptr, nullptr, Precedence::NONE}}, // f64
-        {F128,          {nullptr, nullptr, Precedence::NONE}}, // f128
-
+        {INT,           {nullptr, nullptr, Precedence::NONE}}, // int
+        {FLOAT,         {nullptr, nullptr, Precedence::NONE}}, // float
+        {STRING_TYPE,   {nullptr, nullptr, Precedence::NONE}}, // string
         {TK_BOOL,       {nullptr, nullptr, Precedence::NONE}}, // bool
         {ANY,           {nullptr, nullptr, Precedence::NONE}}, // any
 

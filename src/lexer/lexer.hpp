@@ -140,7 +140,6 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
     {"if", IF},
     {"info", INFO},
     {"input", TK_INPUT},
-    {"nil", NIL},
     {"return", RETURN},
     {"super", SUPER},
     {"this", TK_THIS},
@@ -159,17 +158,12 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
     {"default", DEFAULT},
     
     // types
-    {"i8", I8},
-    {"i16", I16},
-    {"i32", I32},
-    {"i64", I64},
-    {"i128", I128},
-    {"f32", F32},
-    {"f64", F64},
-    {"f128", F128},
+    {"int", INT},
+    {"float", FLOAT},
+    {"string", STRING_TYPE},
     {"bool", TK_BOOL},
-    {"string", STRING},
-    {"void", ANY},
+    {"any", ANY},
+    {"nil", NIL},
     {"enum", ENUM},
     {"struct", STRUCT}
   };

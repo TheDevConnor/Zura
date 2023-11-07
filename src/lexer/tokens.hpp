@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "../types/type.hpp"
+
 enum TokenKind {
   // Single-character Tokens!
   LEFT_PAREN,    // (
@@ -58,8 +60,8 @@ enum TokenKind {
   BIT_OR, MATCH, CASE, DEFAULT, ENUM, STRUCT,
 
   // Types!
-  I8, I16, I32, I64, I128,
-  F32, F64, F128,
+  INT, FLOAT,
+  STRING_TYPE,
   TK_BOOL,
   ANY,
 
@@ -75,6 +77,7 @@ struct Token {
   int column;
   size_t length;
   int line;
+  Types value;
 };
 
 const char* get_source_line_start(int line);

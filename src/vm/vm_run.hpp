@@ -12,6 +12,7 @@
 
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define READ_STRING() AS_STRING(READ_CONSTANT())
 #define LINE_READ (vm.chunk->lines[vm.ip - vm.chunk->code - 1])
 
 void performBinaryOp(uint8_t op) {
@@ -59,6 +60,14 @@ static Zura::Exit_Value run() {
                     break;
                 }
 
+                // Variables
+                case OP_DEFINE_GLOBAL: {
+                    ObjString* name = READ_STRING();
+                    HashTable::tableSet(&vm.globals, name, peek(0));
+                    pop();
+                    break;
+                }
+
                 // Numaric operations
                 case OP_ADD: {
                     if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
@@ -92,6 +101,7 @@ static Zura::Exit_Value run() {
                 case OP_NIL:   push(NIL_VAL()); break;
                 case OP_TRUE:  push(BOOL_VAL(true)); break;
                 case OP_FALSE: push(BOOL_VAL(false)); break;
+                case OP_POP:   pop(); break;
 
                 // Comparison operations
                 case OP_NOT: push(BOOL_VAL(isFalsey(pop()))); break;
@@ -105,9 +115,12 @@ static Zura::Exit_Value run() {
                 case OP_LESS: performBinaryOp(instruction); break;
                 
                 // Logical operations
-                case OP_RETURN: {
+                case OP_PRINT: {
                     printValue(pop());
                     std::cout << std::endl;
+                    break;
+                }
+                case OP_RETURN: {
                     return Zura::Exit_Value::OK;
                 }
 
@@ -122,4 +135,6 @@ static Zura::Exit_Value run() {
 }
 
 #undef READ_BYTE
+#undef READ_STRING
 #undef READ_CONSTANT
+#undef LINE_READ

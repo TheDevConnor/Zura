@@ -1,0 +1,8 @@
+// have x := 1;
+// info x;
+
+// have p: any;
+// have q: string;
+have x: nil;
+// have y: int;
+// have z: bool;

@@ -1,7 +1,17 @@
 #pragma once
 
+#include <string>
+
 typedef struct Obj Obj;
 typedef struct ObjString ObjString;
+
+struct Types {
+  int asInt;
+  float asFloat;
+  std::string asString;
+  bool asBool;
+  void* asAny;
+};
 
 enum ValueType {
     Bool, 

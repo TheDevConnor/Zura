@@ -9,6 +9,12 @@ enum OPCode {
     // Constants
     OP_CONSTANT,
 
+    // Type casting
+    OP_CAST_INT,
+    
+    // Variables
+    OP_DEFINE_GLOBAL,
+
     // Numeric operations
     OP_ADD,
     OP_SUBTRACT,
@@ -30,6 +36,8 @@ enum OPCode {
     OP_EQUAL,
 
     // Logical operations
+    OP_POP,
+    OP_PRINT,
     OP_RETURN,
 };
 

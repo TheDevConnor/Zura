@@ -18,12 +18,17 @@ void resetStack() {
 
 void initVM() {
     resetStack();
+    
     vm.objects = nullptr;
+
+    HashTable::initTable(&vm.globals);
     HashTable::initTable(&vm.strings);
 }
 
 void freeVM() {
+    HashTable::freeTable(&vm.globals);
     HashTable::freeTable(&vm.strings);
+
     Memory::freeObjects();
 }
 

@@ -10,7 +10,7 @@
 
 using namespace Zura;
 
-static uint8_t makeConstant(Value value) {
+uint8_t makeConstant(Value value) {
     size_t constant = addConstants(parserClass.currentChunk(), value);
     if (constant > UINT8_MAX) {
         parserClass.errorAtCurrent("Too many constants in one chunk.");
@@ -66,4 +66,11 @@ void ParserClass::endCompiler() {
 #ifdef DEBUG_PRINT_CODE
     disassembleChunk(ParserClass::currentChunk(), "code");
 #endif
+}
+
+bool ParserClass::match(TokenKind kind) {
+    if (ParserClass::parser.current.kind != kind) return false;
+
+    ParserClass::advance();
+    return true;
 }

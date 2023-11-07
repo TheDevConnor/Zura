@@ -23,6 +23,7 @@ ObjString* copyString(const char* chars, size_t length);
 ObjString* takeString(char* chars, size_t length);
 
 void printObject(Value value);
+void printObjectType(Value value);
 void concatenate();
 
 static inline bool isObjType(Value value, ObjType type) {
