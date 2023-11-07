@@ -6,6 +6,7 @@
 #include "precedence/precedence.hpp"
 #include "../lexer/tokens.hpp"
 #include "../types/type.hpp"
+#include "../hash/table.hpp"
 #include "../vm/vm.hpp"
 
 namespace Zura {
@@ -18,6 +19,7 @@ namespace Zura {
 
         Parser parser;
         Chunk* compiling_chunk;
+        HashTable::Table stringConstants;
 
         bool parser_error = false;
 

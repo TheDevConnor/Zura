@@ -28,8 +28,21 @@ void Prec::ParsePrecedence(Precedence precedence) {
     }
 }
 
+// !NOTE: that we leak memory for the identifier string in identifierConstant() if the name 
+// ! is already found. That's because we don't have a GC yet.
 uint8_t Prec::identifierConstant(Token* name) {
-    return makeConstant(OBJECT_VAL(copyString(name->start, name->length)));
+    // See if we already have a constant for this identifier.
+    ObjString* string = copyString(name->start, name->length);
+    Value indexValue;
+    if (HashTable::tableGet(&parserClass.stringConstants, string, &indexValue)) {
+        // We already have it.
+        return static_cast<uint8_t>(AS_NUMBER(indexValue));
+    }
+
+    // If not, add it.
+    uint8_t index = makeConstant(OBJECT_VAL(string));
+    HashTable::tableSet(&parserClass.stringConstants, string, NUMBER_VAL(static_cast<double>(index)));
+    return index;
 }
 
 uint8_t Prec::parseVariable(const char* errorMessage) {
