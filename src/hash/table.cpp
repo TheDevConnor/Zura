@@ -15,8 +15,8 @@ void HashTable::freeTable(Table* table) {
     initTable(table);
 }
 
-HashTable::Entry* HashTable::findEntry(Entry* entries, int capacity, ObjString* key) {
-    uint32_t index = key->hash % capacity;
+HashTable::Entry* HashTable::findEntry(Entry* entries, size_t capacity, ObjString* key) {
+    size_t index = key->hash % capacity;
     Entry* tombstone = nullptr;
 
     for (;;) {
@@ -38,10 +38,10 @@ void HashTable::tableAddAll(Table* from, Table* to) {
     }
 }
 
-ObjString* HashTable::findString(Table* table, const char* chars, int length, uint32_t hash) {
+ObjString* HashTable::findString(Table* table, const char* chars, size_t length, size_t hash) {
     if (table->count == 0) return nullptr;
 
-    uint32_t index = hash % table->capacity;
+    size_t index = hash % table->capacity;
 
     for (;;) {
         HashTable::Entry* entry = &table->entries[index];
@@ -59,7 +59,7 @@ ObjString* HashTable::findString(Table* table, const char* chars, int length, ui
 
 }
 
-void HashTable::adjustCapacity(Table* table, int capacity) {
+void HashTable::adjustCapacity(Table* table, size_t capacity) {
     Entry* entries = Memory::ALLOCATE<Entry>(capacity);
     for (int i = 0; i < capacity; i++) {
         entries[i].key = nullptr;
@@ -94,7 +94,7 @@ bool HashTable::tableGet(Table* table, ObjString* key, Value* value) {
 
 bool HashTable::tableSet(Table* table, ObjString* key, Value value) {
     if (table->count + 1 > table->capacity * HashTable::TABLE_MAX_LOAD) {
-        int capacity = Memory::GROW_CAPACITY(table->capacity);
+        size_t capacity = Memory::GROW_CAPACITY(table->capacity);
         adjustCapacity(table, capacity);
     }
 

@@ -16,7 +16,7 @@ struct  ObjString {
     Obj obj;
     size_t length;
     char* chars;
-    uint32_t hash;
+    size_t hash;
 };
 
 ObjString* copyString(const char* chars, size_t length);

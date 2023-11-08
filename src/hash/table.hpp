@@ -12,7 +12,7 @@ public:
 
     struct Table {
         int count; 
-        int capacity;
+        size_t capacity;
         Entry* entries;
     };
 
@@ -21,11 +21,11 @@ public:
     static void initTable(Table* table);
     static void freeTable(Table* table);
     static void tableAddAll(Table* from, Table* to);
-    static void adjustCapacity(Table* table, int capacity);
+    static void adjustCapacity(Table* table, size_t capacity);
 
-    static Entry* findEntry(Entry* entries, int capacity, ObjString* key);
+    static Entry* findEntry(Entry* entries, size_t capacity, ObjString* key);
 
-    static ObjString* findString(Table* table, const char* chars, int length, uint32_t hash);
+    static ObjString* findString(Table* table, const char* chars, size_t length, size_t hash);
 
     static bool tableGet(Table* table, ObjString* key, Value* value);
     static bool tableSet(Table* table, ObjString* key, Value value);
