@@ -6,6 +6,7 @@
 #include "expr.hpp"
 
 using namespace Zura;
+using namespace Element;
 
 void Expr::string() {
     parserClass.emitConstant(OBJECT_VAL(copyString(parserClass.parser.previous.start + 1, parserClass.parser.previous.length - 2)));

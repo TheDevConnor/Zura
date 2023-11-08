@@ -10,10 +10,11 @@
 
 namespace Zura {
     class ParserClass {
+
     public:
         struct Parser {
-            Token current;
-            Token previous;
+            Element::Token current;
+            Element::Token previous;
         };
 
         Parser parser;
@@ -35,8 +36,8 @@ namespace Zura {
         void endCompiler();
         void errorAtCurrent(const std::string& message);
         void advance();
-        void consume(TokenKind kind, const std::string& message);
-        bool match(TokenKind kind);
+        void consume(Element::TokenKind kind, const std::string& message);
+        bool match(Element::TokenKind kind);
         bool compile(const char* source, Chunk* chunk);
     };
 }

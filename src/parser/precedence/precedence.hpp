@@ -29,16 +29,18 @@ namespace Zura {
     };
 
     class Prec {
+
+
     public:
         void ParsePrecedence(Precedence precedence);
 
-        uint8_t identifierConstant(Token* name);
+        uint8_t identifierConstant(Element::Token* name);
         uint8_t parseVariable(const char* errorMessage);
         void defineVariable(uint8_t global);
 
-        ParseRule* getRule(TokenKind kind);
+        ParseRule* getRule(Element::TokenKind kind);
 
-        std::unordered_map<TokenKind, ParseRule> rules;
+        std::unordered_map<Element::TokenKind, ParseRule> rules;
 
         Prec();
     };

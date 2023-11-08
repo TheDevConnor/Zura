@@ -6,6 +6,8 @@
 #include "lexer.hpp"
 #include "tokens.hpp"
 
+using namespace Element;
+
 Token scan_token() {
   skip_whitespace();
   scanner.start = scanner.current;

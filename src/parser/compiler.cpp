@@ -6,6 +6,7 @@
 #include "compiler.hpp"
 
 using namespace Zura;
+using namespace Element;
 
 bool ParserClass::compile(const char *source, Chunk *chunk) {
     init_tokenizer(source);

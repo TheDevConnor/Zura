@@ -5,6 +5,7 @@
 #include "../expr/expr.hpp"
 
 using namespace Zura; 
+using namespace Element;
 
 void expressionStatement() {
     Expr::expression();

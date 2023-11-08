@@ -8,10 +8,13 @@
 #include "../../common.hpp"
 
 namespace Zura {
-    class ParserError {
-    private:
-    public:
-        static void errorAt(Token* token, std::string message) {
+
+    struct ParserError {
+
+        static void errorAt(Element::Token* token, std::string message) {
+
+            using namespace Element;
+
             // [line -> 1] [pos -> 3] Parser Error 
             std::cout << "[" << termcolor::green  << "line: " << termcolor::yellow << token->line << termcolor::reset << 
                         "] ["<< termcolor::green  << "pos: " << termcolor::yellow << token->column << termcolor::reset <<

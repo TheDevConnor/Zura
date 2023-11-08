@@ -9,6 +9,7 @@
 #include "compiler.hpp"
 
 using namespace Zura;
+using namespace Element;
 
 uint8_t makeConstant(Value value) {
     size_t constant = addConstants(parserClass.currentChunk(), value);

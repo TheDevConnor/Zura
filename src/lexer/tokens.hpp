@@ -4,6 +4,8 @@
 
 #include "../types/type.hpp"
 
+namespace Element {
+
 enum TokenKind {
   // Single-character Tokens!
   LEFT_PAREN,    // (
@@ -80,6 +82,9 @@ struct Token {
   Types value;
 };
 
+}
+
 const char* get_source_line_start(int line);
 void init_tokenizer(const char* source);
-Token scan_token();
+Element::Token scan_token();
+

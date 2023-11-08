@@ -4,6 +4,7 @@
 #include "../expr/expr.hpp"
 
 using namespace Zura;
+using namespace Element;
 
 void synchronize() {
     parserClass.parser_error = false;   
@@ -33,11 +34,11 @@ void varDeclaration() {
     else if (parserClass.match(COLON)) {
         switch (parserClass.parser.current.kind)
         {
-            case INT:
+            case Element::INT:
                 std::cout << "INT_TYPE not yet implemented" << std::endl;
                 Zura::Exit(Zura::Exit_Value::PARSER_ERROR);
                 break;
-            case FLOAT:
+            case Element::FLOAT:
                 std::cout << "FLOAT_TYPE not yet implemented" << std::endl;
                 Zura::Exit(Zura::Exit_Value::PARSER_ERROR);
                 break;

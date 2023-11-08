@@ -67,8 +67,8 @@ static bool match(char expected) {
   return true;
 }
 
-static Token make_token(TokenKind kind) {
-  Token token;
+static Element::Token make_token(Element::TokenKind kind) {
+    Element::Token token;
   token.kind = kind;
   token.line = scanner.line;
   token.start = scanner.start;
@@ -77,9 +77,10 @@ static Token make_token(TokenKind kind) {
   return token;
 }
 
-static Token error_token(std::string message) {
-  Token token;
-  token.kind = ERROR_TOKEN;
+static Element::Token error_token(std::string message) {
+
+    Element::Token token;
+  token.kind = Element::ERROR_TOKEN;
   token.start = message.c_str();
   token.length = message.length();
   token.line = scanner.line;
@@ -113,7 +114,7 @@ static void skip_whitespace() {
   }
 }
 
-static Token _string() {
+static Element::Token _string() {
   while ((peek() != '"') && !is_at_end()) {
     if (peek() == '\n')
       scanner.line++;
@@ -122,15 +123,18 @@ static Token _string() {
   if (is_at_end())
     error_token("Unterminated string.");
   advance(); // advance past the closing '"'
-  return make_token(STRING);
+  return make_token(Element::STRING);
 }
 
 struct Keyword {
-  std::string keyword;
-  TokenKind kind;
+    std::string keyword;
+    Element::TokenKind kind; 
 };
 
-static TokenKind perfect_hash_lookup(std::string keyword) {
+static Element::TokenKind perfect_hash_lookup(std::string keyword) {
+  
+    using namespace Element;
+
   static const std::unordered_map<std::string, TokenKind> keyword_hash {
     {"class", CLASS},
     {"else", ELSE},
@@ -158,8 +162,10 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
     {"default", DEFAULT},
     
     // types
-    {"int", INT},
-    {"float", FLOAT},
+    // use of scope resolution, this remains ambiguous due to 
+    // #include <windows.h> from colorize.hpp
+    {"int", Element::INT}, 
+    {"float", Element::FLOAT},
     {"string", STRING_TYPE},
     {"bool", TK_BOOL},
     {"any", ANY},
@@ -174,18 +180,18 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
   return IDENTIFIER;
 }
 
-static TokenKind identifier_type() {
+static Element::TokenKind identifier_type() {
   std::string keyword(scanner.start, scanner.current);
   return perfect_hash_lookup(keyword.c_str());
 }
 
-static Token identifier() {
+static Element::Token identifier() {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
   return make_token(identifier_type());
 }
 
-static Token number() {
+static Element::Token number() {
   while (is_digit(peek()))
     advance();
 
@@ -197,5 +203,5 @@ static Token number() {
       advance();
   }
   // print out the number
-  return make_token(NUMBER);
+  return make_token(Element::NUMBER);
 }
