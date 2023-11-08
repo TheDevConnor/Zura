@@ -158,8 +158,8 @@ static TokenKind perfect_hash_lookup(std::string keyword) {
     {"default", DEFAULT},
     
     // types
-    {"int", INT},
-    {"float", FLOAT},
+    {"int", TK_INT},
+    {"float", TK_FLOAT},
     {"string", STRING_TYPE},
     {"bool", TK_BOOL},
     {"any", ANY},

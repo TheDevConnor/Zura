@@ -60,7 +60,7 @@ enum TokenKind {
   BIT_OR, MATCH, CASE, DEFAULT, ENUM, STRUCT,
 
   // Types!
-  INT, FLOAT,
+  TK_INT, TK_FLOAT,
   STRING_TYPE,
   TK_BOOL,
   ANY,

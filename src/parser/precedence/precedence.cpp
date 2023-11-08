@@ -136,8 +136,8 @@ Prec::Prec() {
         {ENUM,          {nullptr, nullptr, Precedence::NONE}}, // enum
         {STRUCT,        {nullptr, nullptr, Precedence::NONE}}, // struct
 
-        {INT,           {nullptr, nullptr, Precedence::NONE}}, // int
-        {FLOAT,         {nullptr, nullptr, Precedence::NONE}}, // float
+        {TK_INT,           {nullptr, nullptr, Precedence::NONE}}, // int
+        {TK_FLOAT,         {nullptr, nullptr, Precedence::NONE}}, // float
         {STRING_TYPE,   {nullptr, nullptr, Precedence::NONE}}, // string
         {TK_BOOL,       {nullptr, nullptr, Precedence::NONE}}, // bool
         {ANY,           {nullptr, nullptr, Precedence::NONE}}, // any
