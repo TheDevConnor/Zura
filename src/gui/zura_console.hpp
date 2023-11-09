@@ -5,7 +5,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-typedef struct ZuraWindow ZuraWindow;
+typedef struct ZuraWindow  ZuraWindow;
 typedef struct ZuraConsole ZuraConsole;
 
 int zura_gui_main(int argc, char* argv[]);

@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-#include "../types/type.hpp"
 #include "../common.hpp"
+#include "../types/type.hpp"
 
 struct ValueArray {
     size_t capacity;

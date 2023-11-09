@@ -86,10 +86,13 @@ SRC_DIRS += src/parser/semantics/expr
 SRC_DIRS += src/parser/semantics/stmt
 SRC_DIRS += src/parser
 SRC_DIRS += src/vm
+SRC_DIRS += src/helper/main
+
 
 VPATH  = $(SRC_DIRS)
 
-SRC_FILES = $(foreach DIR, $(SRC_DIRS), $(wildcard $(DIR)/*.cpp))
+SRC_FILES     = $(foreach DIR, $(SRC_DIRS), $(wildcard $(DIR)/*.cpp))
+SRC_HPP_FILES = $(foreach DIR, $(SRC_DIRS), $(wildcard $(DIR)/*.hpp))
 
 # OBJ_FILES  = $(patsubst %.cpp,%.obj,$(SRC_FILES))
 OBJ_FILES  = $(addprefix $(OBJ_DIR)/,$(notdir $(SRC_FILES:.cpp=.obj)))
@@ -203,6 +206,9 @@ $(OBJ_DIR)/%.obj : %.cxx
 
 $(OBJ_DIR)/%.obj: %.cpp | $(OBJ_DIR)
 	$(CXX) $(CXX_FLAGS) $(CXX_INC)$(INC_DIR) $< $(CXX_EMIT_OBJ)$@
+
+format: 
+	clang-format -i --style=file $(SRC_FILES) $(SRC_HPP_FILES)
 
 clean: 
 	$(CLEAN_ALL)

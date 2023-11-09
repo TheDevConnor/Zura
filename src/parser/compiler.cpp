@@ -1,18 +1,19 @@
 #include <iostream>
 
-#include "../helper/errors/parser_error.hpp"
-#include "semantics/expr/expr.hpp"
-#include "../hash/table.hpp"
 #include "../common.hpp"
+#include "../hash/table.hpp"
+#include "../helper/errors/parser_error.hpp"
 #include "compiler.hpp"
+#include "semantics/expr/expr.hpp"
 
 using namespace Zura;
 
-bool ParserClass::compile(const char *source, Chunk *chunk) {
+bool ParserClass::compile(const char* source, Chunk* chunk)
+{
     init_tokenizer(source);
 
     ParserClass::compiling_chunk = chunk;
-    parserClass.parser_error = false;
+    parserClass.parser_error     = false;
     HashTable::initTable(&parserClass.stringConstants);
 
     ParserClass::advance();

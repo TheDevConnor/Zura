@@ -17,7 +17,7 @@ namespace Zura {
 /// Exit codes used in the Zura Interpreter.
 ///
 /// Add additional exit codes to this list whenever an appropriate
-/// reason is encountered to do so. 
+/// reason is encountered to do so.
 ///
 /// @sa Exit
 

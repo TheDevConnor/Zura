@@ -4,16 +4,16 @@
 
 #define GETCURRENTTIME_H
 
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-char *getCurrentTime()
+char* getCurrentTime()
 {
-    time_t rawtime;
-    struct tm *timeinfo;
-    char *buffer = (char *)malloc(80 * sizeof(char));
+    time_t     rawtime;
+    struct tm* timeinfo;
+    char*      buffer = (char*)malloc(80 * sizeof(char));
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
