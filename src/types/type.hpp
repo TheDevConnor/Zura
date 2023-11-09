@@ -33,7 +33,7 @@ struct Value {
 
 };
 
-constexpr Value UNDEFINED_VAL()          { return Value{Nil, {.number = NAN}};      }
+constexpr Value UNDEFINED_VAL()          { return Value{Nil, {.number = NaN}};      }
 constexpr bool IS_UNDEFINED(Value value) { return (value).type == Nil;              }
 
 constexpr Value BOOL_VAL(bool value)     { return Value{Bool, {.boolean = value}};  }
