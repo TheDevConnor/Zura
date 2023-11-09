@@ -18,16 +18,19 @@ enum ValueType {
     Number,
     Object,
     Nil,
-    NAN,
+    NaN
 };
 
 struct Value {
+
     ValueType type;
+
     union {
         bool boolean;
         double number;
         Obj* obj;
     } as;
+
 };
 
 constexpr Value UNDEFINED_VAL()          { return Value{Nil, {.number = NAN}};      }
