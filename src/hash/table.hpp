@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../types/type.hpp"
 #include "../common.hpp"
+#include "../types/type.hpp"
 
 class HashTable {
-public:
+  public:
     struct Entry {
         ObjString* key;
-        Value value;
+        Value      value;
     };
 
     struct Table {
-        int count; 
-        int capacity;
+        int    count;
+        int    capacity;
         Entry* entries;
     };
 
@@ -31,5 +31,5 @@ public:
     static bool tableSet(Table* table, ObjString* key, Value value);
     static bool tableDelete(Table* table, ObjString* key);
 
-private:
+  private:
 };

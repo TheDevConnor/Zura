@@ -11,7 +11,7 @@ enum OPCode {
 
     // Type casting
     OP_CAST_INT,
-    
+
     // Variables
     OP_DEFINE_GLOBAL,
     OP_GET_GLOBAL,
@@ -45,9 +45,9 @@ enum OPCode {
 
 struct Chunk {
     uint8_t* code;
-    size_t capacity;
-    size_t count;
-    int* lines;
+    size_t   capacity;
+    size_t   count;
+    int*     lines;
 
     ValueArray constants;
 };

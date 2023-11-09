@@ -8,7 +8,6 @@
 // #include <imgui/imgui_impl_glfw.h>
 // #include <imgui/imgui_impl_opengl3.h>
 
-
 // #include "../common.hpp"
 // #include "../debug/debug.h"  // Debugging utilities
 // #include "../helper/flags.h" // Command-line flags parsing
@@ -46,7 +45,6 @@
 //     int (*pfn_text_edit_callback)(ZuraConsole*, ImGuiInputTextCallbackData*);
 // };
 
-
 // struct ZuraWindow {
 
 //     GLFWwindow* window;
@@ -61,7 +59,6 @@
 
 //     ImVec4 clear_color; // four floats
 // };
-
 
 // int zura_gui_main(int argc, char* argv[])
 // {
@@ -80,7 +77,7 @@
 //         if(imgui_show_window){
 //             ImGui::ShowDemoWindow(&imgui_show_window);
 //         }
-        
+
 //         draw_zura_console(zurawindow);
 
 //         // Rendering
@@ -100,8 +97,6 @@
 
 //     return int(OK);
 // }
-
-
 
 // ZuraConsole* init_ZuraConsole()
 // {
@@ -603,7 +598,6 @@
 //     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 //     glfwSwapBuffers(zurawindow->window);
 // }
-
 
 // void cleanup_imgui(void)
 // {
